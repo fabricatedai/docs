@@ -185,9 +185,9 @@
   .topic-ns { background: #111827; border: 1px solid #1f2937; border-radius: 12px; padding: 20px; font-family: 'SF Mono', monospace; font-size: 13px; line-height: 2.2; overflow-x: auto; }
   .topic-ns .root { color: #94a3b8; } .topic-ns .seg-tenant { color: #fbbf24; } .topic-ns .seg-device { color: #4ade80; } .topic-ns .seg-verb { color: #22d3ee; } .topic-ns .seg-name { color: #a78bfa; } .topic-ns .dim { color: #475569; }
   .sec-caps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 12px; }
-  .sec-cap { background: #111827; border: 1px solid #1f2937; border-radius: 10px; padding: 14px; }
+  .sec-cap { background: #111827; border: 1px solid #1f2937; border-radius: 10px; padding: 14px; display: flex; flex-direction: column; }
   .sec-cap .cap-name { font-size: 13px; font-weight: 700; color: #e2e8f0; margin-bottom: 4px; }
-  .sec-cap .cap-what { font-size: 11px; color: #94a3b8; line-height: 1.4; }
+  .sec-cap .cap-what { font-size: 11px; color: #94a3b8; line-height: 1.4; flex: 1; }
   .sec-cap .cap-when { font-size: 10px; color: #64748b; margin-top: 8px; font-style: normal; text-align: center; }
   .sec-cap .cap-when span { display: block; background: #1a2030; padding: 4px 8px; border-radius: 4px; border: 1px solid #2a3a50; }
   .sec-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
@@ -518,12 +518,12 @@
 <div class="layer-title" style="color:#e2e8f0;">Security Architecture</div>
 <div class="layer-desc">Encryption in transit, per-device identity, device onboarding, and fine-grained access control.</div>
 <div class="sec-caps" style="margin-top:14px;">
-  <div class="sec-cap"><div class="cap-name">Encryption in Transit</div><div class="cap-what">All messages encrypted via TLS so they can't be intercepted on the network.</div><div class="cap-when"><span style="background:#1a2030;padding:2px 8px;border-radius:4px;border:1px solid #2a3a50;">Any deployment beyond a trusted lab</span></div></div>
-  <div class="sec-cap"><div class="cap-name">Device Identity</div><div class="cap-what">Every device gets its own cryptographic identity (certificate or JWT), so the system knows exactly who is connecting.</div><div class="cap-when"><span style="background:#1a2030;padding:2px 8px;border-radius:4px;border:1px solid #2a3a50;">Verify devices are who they claim</span></div></div>
-  <div class="sec-cap"><div class="cap-name">Commissioning</div><div class="cap-what">Secure onboarding for new devices. Admin provisions credentials, delivers them via PIN-based handshake.</div><div class="cap-when"><span style="background:#1a2030;padding:2px 8px;border-radius:4px;border:1px solid #2a3a50;">Shipping devices to remote sites</span></div></div>
-  <div class="sec-cap"><div class="cap-name">Access Control (ACLs)</div><div class="cap-what">Per-device rules about what each device can see and do. A camera can't command a robot unless allowed.</div><div class="cap-when"><span style="background:#1a2030;padding:2px 8px;border-radius:4px;border:1px solid #2a3a50;">Multi-tenant or multi-team</span></div></div>
-  <div class="sec-cap"><div class="cap-name">Audit Logging</div><div class="cap-what">Full history of every action persisted to MongoDB. Who invoked what, on which device, when.</div><div class="cap-when"><span style="background:#1a2030;padding:2px 8px;border-radius:4px;border:1px solid #2a3a50;">Compliance &amp; forensics</span></div></div>
-  <div class="sec-cap"><div class="cap-name">Telemetry</div><div class="cap-what">OpenTelemetry traces and metrics exported to any OTEL-compatible collector.</div><div class="cap-when"><span style="background:#1a2030;padding:2px 8px;border-radius:4px;border:1px solid #2a3a50;">Monitoring at scale</span></div></div>
+  <div class="sec-cap"><div class="cap-name">Encryption in Transit</div><div class="cap-what">All messages encrypted via TLS so they can't be intercepted on the network.</div><div class="cap-when"><span>Protect data moving between devices</span></div></div>
+  <div class="sec-cap"><div class="cap-name">Device Identity</div><div class="cap-what">Every device gets its own cryptographic identity (certificate or JWT), so the system knows exactly who is connecting.</div><div class="cap-when"><span>Verify devices are who they claim</span></div></div>
+  <div class="sec-cap"><div class="cap-name">Commissioning</div><div class="cap-what">Secure onboarding for new devices. Admin provisions credentials, delivers them via PIN-based handshake.</div><div class="cap-when"><span>Onboard new devices safely at scale</span></div></div>
+  <div class="sec-cap"><div class="cap-name">Access Control (ACLs)</div><div class="cap-what">Per-device rules about what each device can see and do. A camera can't command a robot unless allowed.</div><div class="cap-when"><span>Control who can do what on each device</span></div></div>
+  <div class="sec-cap"><div class="cap-name">Audit Logging</div><div class="cap-what">Full history of every action persisted to MongoDB. Who invoked what, on which device, when.</div><div class="cap-when"><span>Track every action for compliance</span></div></div>
+  <div class="sec-cap"><div class="cap-name">Telemetry</div><div class="cap-what">OpenTelemetry traces and metrics exported to any OTEL-compatible collector.</div><div class="cap-when"><span>Monitor fleet health in real time</span></div></div>
 </div>
 </div>
 
