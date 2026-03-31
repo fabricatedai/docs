@@ -6,6 +6,7 @@
 <title>Device Connect — Stack Architecture</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { overflow-x: hidden; }
   body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: #0a0e1a; color: #e0e4ef; min-height: 100vh; }
   .header { text-align: center; padding: 28px 20px 14px; }
   .header h1 { font-size: 28px; font-weight: 700; color: #fff; letter-spacing: -0.5px; }
@@ -220,6 +221,10 @@
     .action-arrows { flex-direction: row; padding: 8px 0; }
     .action-arrows .arr-line { width: 0; height: 20px; border-top: none; border-left: 1.5px solid #3d5570; }
     .action-arrows .arr-line::after { right: auto; top: auto; bottom: -1px; left: -4px; border: 4px solid transparent; border-top-color: #3d5570; border-left-color: transparent; }
+    .layer, .action-panel { overflow: hidden; }
+    .l-agent-logos { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .server-diagram { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .hero { max-width: 100%; }
     .func-chips { grid-template-columns: 1fr; }
   }
 </style>
