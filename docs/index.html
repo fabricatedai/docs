@@ -90,7 +90,8 @@
   .device-nodes { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 12px; position: relative; z-index: 1; }
   .device-node { background: #1a3020; border: 1px solid #2d5a30; border-radius: 10px; padding: 12px; text-align: center; display: flex; flex-direction: column; align-items: center; transition: all 0.2s; position: relative; }
   .device-node:hover { border-color: #4ade80; background: #1e3828; transform: translateY(-2px); box-shadow: 0 4px 16px rgba(74,222,128,0.1); }
-  .device-node .dn-icon { margin-bottom: 6px; }
+  .device-node .dn-icon { margin-bottom: 8px; }
+  .device-node .dn-icon svg { width: 40px; height: 40px; }
   .device-node .dn-name { font-weight: 700; font-size: 12px; color: #86efac; }
   .device-node .dn-desc { font-size: 10px; color: #5a9a60; margin-top: 2px; line-height: 1.3; }
   .device-node .dn-decs { margin-top: 6px; display: flex; gap: 3px; flex-wrap: wrap; justify-content: center; }
@@ -418,7 +419,7 @@
     </div>
   </div>
   <div class="device-node">
-    <div class="dn-icon"><svg width="28" height="28" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="9" stroke="#4ade80" stroke-width="1.5"/><path d="M16 10v6l4 2" stroke="#4ade80" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 7v1M16 24v1M7 16h1M24 16h1" stroke="#4ade80" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/></svg></div>
+    <div class="dn-icon"><svg width="28" height="28" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="6" stroke="#4ade80" stroke-width="1.5" fill="none"/><circle cx="16" cy="16" r="2" fill="#4ade80" opacity="0.6"/><path d="M16 6v2M16 24v2M6 16h2M24 16h2" stroke="#4ade80" stroke-width="2" stroke-linecap="round"/><path d="M9.17 9.17l1.42 1.42M21.41 21.41l1.42 1.42M9.17 22.83l1.42-1.42M21.41 10.59l1.42-1.42" stroke="#4ade80" stroke-width="1.5" stroke-linecap="round"/><path d="M16 10a6 6 0 014.24 1.76" stroke="#4ade80" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.4"/><path d="M22 16a6 6 0 01-1.76 4.24" stroke="#4ade80" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.4"/></svg></div>
     <div class="dn-name">Actuators</div>
     <div class="dn-desc">Valves, motors, locks</div>
     <div class="dn-decs"><code>@rpc</code><code>@emit</code></div>
