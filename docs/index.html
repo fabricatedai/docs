@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Device Connect — Executive Stack</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: #0a0e1a; color: #e0e4ef; min-height: 100vh; }
+  
+  .header { text-align: center; padding: 40px 20px 20px; }
+  .header h1 { font-size: 28px; font-weight: 700; color: #fff; letter-spacing: -0.5px; }
+  .header .sub { font-size: 14px; color: #7a8299; margin-top: 6px; }
+  .header .arm-badge { display: inline-block; background: #00c1de; color: #000; font-weight: 700; font-size: 11px; padding: 3px 10px; border-radius: 4px; margin-top: 10px; letter-spacing: 0.5px; }
+
+  .tabs { display: flex; justify-content: center; gap: 4px; margin: 20px auto; max-width: 500px; background: #131825; border-radius: 10px; padding: 4px; }
+  .tab { flex: 1; text-align: center; padding: 10px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; color: #7a8299; }
+  .tab.active { background: #1e2538; color: #fff; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+  .tab:hover:not(.active) { color: #b0b8cc; }
+
+  .view { display: none; max-width: 960px; margin: 0 auto; padding: 20px; }
+  .view.active { display: block; }
+
+  /* === EXEC VIEW === */
+  .stack-exec { position: relative; display: flex; flex-direction: column; align-items: center; gap: 0; }
+  .layer { width: 100%; border-radius: 14px; padding: 24px 28px; position: relative; transition: transform 0.2s; }
+  .layer:hover { transform: scale(1.01); }
+  .layer-label { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 10px; }
+  .layer-title { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+  .layer-desc { font-size: 13px; line-height: 1.5; opacity: 0.8; }
+
+  .l-agents { background: linear-gradient(135deg, #1a1040, #251555); border: 1px solid #3d2680; }
+  .l-agents .layer-label { color: #a78bfa; }
+  .l-agents .layer-title { color: #c4b5fd; }
+  .l-agent-logos { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+  .l-agent-logos span { background: #2d1a6b; color: #c4b5fd; font-size: 11px; font-weight: 600; padding: 4px 12px; border-radius: 6px; border: 1px solid #4c3190; }
+
+  .connector { display: flex; flex-direction: column; align-items: center; padding: 4px 0; }
+  .connector .arrow { width: 2px; height: 20px; background: linear-gradient(to bottom, #3d2680, #0e7490); }
+  .connector .dot { width: 6px; height: 6px; border-radius: 50%; background: #22d3ee; }
+
+  .l-agenttools { background: linear-gradient(135deg, #0c2a3d, #0f3555); border: 1px solid #155e75; }
+  .l-agenttools .layer-label { color: #22d3ee; }
+  .l-agenttools .layer-title { color: #67e8f9; }
+  .func-chips { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+  .func-chips code { background: #0e3a50; color: #67e8f9; font-size: 12px; padding: 5px 12px; border-radius: 6px; font-family: 'SF Mono', 'Fira Code', monospace; border: 1px solid #1a5568; }
+
+  .l-mesh { background: linear-gradient(90deg, #1a2332, #1e2b3d); border: 1px solid #2d4a5e; position: relative; overflow: hidden; }
+  .l-mesh .layer-label { color: #94a3b8; }
+  .l-mesh .layer-title { color: #cbd5e1; }
+  .mesh-inner { display: flex; gap: 12px; margin-top: 12px; }
+  .mesh-inner .backend { background: #162030; border: 1px solid #2d4a5e; border-radius: 8px; padding: 10px 16px; flex: 1; text-align: center; }
+  .mesh-inner .backend .name { font-weight: 700; font-size: 14px; color: #e2e8f0; }
+  .mesh-inner .backend .note { font-size: 11px; color: #64748b; margin-top: 2px; }
+  .mesh-inner .backend.default { border-color: #22d3ee; }
+  .mesh-inner .backend.default .name { color: #22d3ee; }
+  .mesh-pulse { position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(34,211,238,0.03), transparent); animation: meshPulse 4s infinite; pointer-events: none; }
+  @keyframes meshPulse { 0% { left: -100%; } 100% { left: 100%; } }
+
+  .l-devices { background: linear-gradient(135deg, #1a2e1a, #1f3a1f); border: 1px solid #2d6b2d; }
+  .l-devices .layer-label { color: #4ade80; }
+  .l-devices .layer-title { color: #86efac; }
+  .device-grid { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+  .device-card { background: #1a3020; border: 1px solid #2d5a30; border-radius: 10px; padding: 14px; flex: 1; min-width: 140px; }
+  .device-card .icon { font-size: 24px; margin-bottom: 6px; }
+  .device-card .dname { font-weight: 700; font-size: 13px; color: #86efac; }
+  .device-card .ddesc { font-size: 11px; color: #5a9a60; margin-top: 2px; }
+  .device-card .decorators { margin-top: 8px; display: flex; gap: 4px; flex-wrap: wrap; }
+  .device-card .decorators span { font-size: 10px; font-family: monospace; background: #143818; color: #4ade80; padding: 2px 6px; border-radius: 4px; }
+
+  .l-server { background: linear-gradient(135deg, #2a1f0a, #3a2a10); border: 1px solid #6b5520; margin-top: 16px; }
+  .l-server .layer-label { color: #fbbf24; }
+  .l-server .layer-title { color: #fcd34d; }
+  .l-server .opt { display: inline-block; background: #3a2a10; color: #fbbf24; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px; margin-left: 8px; border: 1px solid #6b5520; vertical-align: middle; }
+  .server-mods { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+  .server-mods .mod { background: #2a1f0a; border: 1px solid #5a4510; border-radius: 8px; padding: 10px 14px; text-align: center; min-width: 100px; }
+  .server-mods .mod .mname { font-weight: 700; font-size: 13px; color: #fcd34d; }
+  .server-mods .mod .mdesc { font-size: 10px; color: #a08530; margin-top: 2px; }
+
+  /* === TECH VIEW === */
+  .tech-section { margin-bottom: 32px; }
+  .tech-section h2 { font-size: 16px; font-weight: 700; color: #94a3b8; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid #1e2538; }
+
+  .dep-graph { display: flex; flex-direction: column; align-items: center; gap: 0; }
+  .pkg-box { border-radius: 12px; padding: 18px 22px; width: 100%; max-width: 420px; }
+  .pkg-box h3 { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+  .pkg-box .deps { font-size: 12px; line-height: 1.8; font-family: 'SF Mono', monospace; }
+  .pkg-box .deps .dep { color: #94a3b8; }
+  .pkg-box .deps .ver { color: #64748b; }
+
+  .pkg-sdk { background: #0f1d2d; border: 1px solid #1a4060; }
+  .pkg-sdk h3 { color: #38bdf8; }
+  .pkg-srv { background: #1a1508; border: 1px solid #4a3a10; }
+  .pkg-srv h3 { color: #fbbf24; }
+  .pkg-agt { background: #120828; border: 1px solid #3d1a80; }
+  .pkg-agt h3 { color: #a78bfa; }
+
+  .branch { display: flex; justify-content: center; gap: 20px; width: 100%; }
+  .branch-line { display: flex; flex-direction: column; align-items: center; }
+  .branch-line .vline { width: 2px; height: 16px; background: #2a3a50; }
+
+  .topic-ns { background: #111827; border: 1px solid #1f2937; border-radius: 12px; padding: 20px; font-family: 'SF Mono', monospace; font-size: 13px; line-height: 2.2; overflow-x: auto; }
+  .topic-ns .root { color: #94a3b8; }
+  .topic-ns .seg-tenant { color: #fbbf24; }
+  .topic-ns .seg-device { color: #4ade80; }
+  .topic-ns .seg-verb { color: #22d3ee; }
+  .topic-ns .seg-name { color: #a78bfa; }
+  .topic-ns .dim { color: #475569; }
+
+  .sec-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .sec-card { border-radius: 12px; padding: 18px; }
+  .sec-card h4 { font-size: 14px; font-weight: 700; margin-bottom: 8px; }
+  .sec-card .steps { font-size: 12px; line-height: 1.8; }
+  .sec-card .steps .step-num { display: inline-block; width: 18px; height: 18px; border-radius: 50%; text-align: center; line-height: 18px; font-size: 10px; font-weight: 700; margin-right: 6px; }
+  .sec-zenoh { background: #0f1d2d; border: 1px solid #1a4060; }
+  .sec-zenoh h4 { color: #38bdf8; }
+  .sec-zenoh .step-num { background: #1a4060; color: #38bdf8; }
+  .sec-nats { background: #120828; border: 1px solid #3d1a80; }
+  .sec-nats h4 { color: #a78bfa; }
+  .sec-nats .step-num { background: #2d1560; color: #a78bfa; }
+
+  .core-opt { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .core-box, .opt-box { border-radius: 12px; padding: 20px; }
+  .core-box { background: linear-gradient(135deg, #0a1a2a, #0f2540); border: 2px solid #0e7490; }
+  .core-box h3 { color: #22d3ee; font-size: 15px; margin-bottom: 10px; }
+  .opt-box { background: linear-gradient(135deg, #1a1508, #201a0a); border: 1px solid #4a3a10; }
+  .opt-box h3 { color: #fbbf24; font-size: 15px; margin-bottom: 10px; }
+  .item-list { list-style: none; font-size: 12px; line-height: 2; }
+  .item-list li::before { content: "→ "; color: #475569; }
+  .item-list li { color: #cbd5e1; }
+
+  .modes-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .mode-card { border-radius: 12px; padding: 20px; }
+  .mode-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+  .mode-card .mode-sub { font-size: 12px; margin-bottom: 12px; }
+  .mode-card .stat { display: flex; justify-content: space-between; font-size: 12px; padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+  .mode-card .stat .sk { color: #64748b; }
+  .mode-card .stat .sv { color: #e2e8f0; font-weight: 600; }
+  .mode-d2d { background: #0a1a12; border: 1px solid #166534; }
+  .mode-d2d h3 { color: #4ade80; }
+  .mode-d2d .mode-sub { color: #3a8a50; }
+  .mode-full { background: #0a0e1a; border: 1px solid #1e3a5f; }
+  .mode-full h3 { color: #38bdf8; }
+  .mode-full .mode-sub { color: #2a6090; }
+
+  @media (max-width: 700px) {
+    .sec-grid, .core-opt, .modes-row, .branch { flex-direction: column; grid-template-columns: 1fr; }
+    .device-grid { flex-direction: column; }
+    .mesh-inner { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Device Connect</h1>
+  <div class="sub">Open-source framework for connecting devices, robots, and AI agents</div>
+  <div class="arm-badge">BY ARM</div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('exec')">Executive View</div>
+  <div class="tab" onclick="switchTab('tech')">Technical View</div>
+</div>
+
+<!-- ==================== EXECUTIVE VIEW ==================== -->
+<div class="view active" id="view-exec">
+  <div class="stack-exec">
+
+    <div class="layer l-agents">
+      <div class="layer-label">AI / Orchestration</div>
+      <div class="layer-title">AI Agents</div>
+      <div class="layer-desc">Any AI agent can discover and control physical devices through natural language.</div>
+      <div class="l-agent-logos">
+        <span>Claude</span><span>Strands Agents</span><span>LangChain</span><span>MCP Clients</span><span>Plain Python</span>
+      </div>
+    </div>
+
+    <div class="connector"><div class="dot"></div><div class="arrow"></div><div class="dot"></div></div>
+
+    <div class="layer l-agenttools">
+      <div class="layer-label">Agent SDK</div>
+      <div class="layer-title">device-connect-agent-tools</div>
+      <div class="layer-desc">Framework-agnostic bridge. Adapters for Strands, LangChain, and MCP. Turns devices into callable tools.</div>
+      <div class="func-chips">
+        <code>discover_devices()</code>
+        <code>invoke_device()</code>
+        <code>get_device_status()</code>
+        <code>subscribe events</code>
+      </div>
+    </div>
+
+    <div class="connector"><div class="dot"></div><div class="arrow"></div><div class="dot"></div></div>
+
+    <div class="layer l-mesh">
+      <div class="mesh-pulse"></div>
+      <div class="layer-label">Messaging Mesh</div>
+      <div class="layer-title">Pub/Sub Transport</div>
+      <div class="layer-desc">JSON-RPC over pub/sub. Devices and agents communicate through topic-based routing.</div>
+      <div class="mesh-inner">
+        <div class="backend default"><div class="name">Zenoh</div><div class="note">Default · D2D + router</div></div>
+        <div class="backend"><div class="name">NATS</div><div class="note">Optional · JWT auth</div></div>
+        <div class="backend"><div class="name">MQTT</div><div class="note">Optional · Legacy IoT</div></div>
+      </div>
+    </div>
+
+    <div class="connector"><div class="dot"></div><div class="arrow"></div><div class="dot"></div></div>
+
+    <div class="layer l-devices">
+      <div class="layer-label">Edge / Device</div>
+      <div class="layer-title">device-connect-sdk</div>
+      <div class="layer-desc">Lightweight Python runtime on physical hardware. Write a driver, expose capabilities, join the mesh.</div>
+      <div class="device-grid">
+        <div class="device-card">
+          <div class="icon">📡</div>
+          <div class="dname">Sensors</div>
+          <div class="ddesc">Temperature, humidity, pressure</div>
+          <div class="decorators"><span>@rpc</span><span>@emit</span><span>@periodic</span></div>
+        </div>
+        <div class="device-card">
+          <div class="icon">🤖</div>
+          <div class="dname">Robots</div>
+          <div class="ddesc">Arms, AMRs, cleaning bots</div>
+          <div class="decorators"><span>@rpc</span><span>@emit</span><span>@on</span></div>
+        </div>
+        <div class="device-card">
+          <div class="icon">📷</div>
+          <div class="dname">Cameras</div>
+          <div class="ddesc">Surveillance, inspection</div>
+          <div class="decorators"><span>@rpc</span><span>@emit</span></div>
+        </div>
+        <div class="device-card">
+          <div class="icon">⚙️</div>
+          <div class="dname">Actuators</div>
+          <div class="ddesc">Valves, motors, locks</div>
+          <div class="decorators"><span>@rpc</span><span>@before_emit</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="layer l-server">
+      <div class="layer-label">Server Services</div>
+      <div class="layer-title">device-connect-server <span class="opt">OPTIONAL</span></div>
+      <div class="layer-desc">Add when you need production security, persistent state, or management at scale.</div>
+      <div class="server-mods">
+        <div class="mod"><div class="mname">Registry</div><div class="mdesc">HTTP :8080</div></div>
+        <div class="mod"><div class="mname">Security</div><div class="mdesc">TLS · JWT · ACLs</div></div>
+        <div class="mod"><div class="mname">State</div><div class="mdesc">etcd KV</div></div>
+        <div class="mod"><div class="mname">devctl</div><div class="mdesc">CLI</div></div>
+        <div class="mod"><div class="mname">statectl</div><div class="mdesc">CLI</div></div>
+        <div class="mod"><div class="mname">Audit Log</div><div class="mdesc">MongoDB</div></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="height: 32px;"></div>
+  <div class="modes-row">
+    <div class="mode-card mode-d2d">
+      <h3>D2D Mode (Zero Infra)</h3>
+      <div class="mode-sub">pip install → run → done</div>
+      <div class="stat"><span class="sk">Infrastructure</span><span class="sv">None</span></div>
+      <div class="stat"><span class="sk">Discovery</span><span class="sv">LAN multicast</span></div>
+      <div class="stat"><span class="sk">Scale</span><span class="sv">~50–100 devices</span></div>
+      <div class="stat"><span class="sk">State</span><span class="sv">Ephemeral</span></div>
+      <div class="stat"><span class="sk">Network</span><span class="sv">LAN only</span></div>
+      <div class="stat"><span class="sk">Auth</span><span class="sv">None (dev)</span></div>
+    </div>
+    <div class="mode-card mode-full">
+      <h3>Full Infrastructure</h3>
+      <div class="mode-sub">docker compose up → production</div>
+      <div class="stat"><span class="sk">Infrastructure</span><span class="sv">Zenoh + etcd + registry</span></div>
+      <div class="stat"><span class="sk">Discovery</span><span class="sv">Registry service</span></div>
+      <div class="stat"><span class="sk">Scale</span><span class="sv">1000s of devices</span></div>
+      <div class="stat"><span class="sk">State</span><span class="sv">Persistent (etcd)</span></div>
+      <div class="stat"><span class="sk">Network</span><span class="sv">Cross-network</span></div>
+      <div class="stat"><span class="sk">Auth</span><span class="sv">mTLS / JWT + ACLs</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== TECHNICAL VIEW ==================== -->
+<div class="view" id="view-tech">
+
+  <!-- Package Dependency Graph -->
+  <div class="tech-section">
+    <h2>Package Dependency Graph</h2>
+    <div class="dep-graph">
+      <div class="pkg-box pkg-sdk">
+        <h3>device-connect-sdk <span style="font-weight:400;font-size:12px;color:#64748b;">v0.1.1 · CORE</span></h3>
+        <div class="deps">
+          <div><span class="dep">eclipse-zenoh</span> <span class="ver">≥1.0.0</span></div>
+          <div><span class="dep">nats-py</span> <span class="ver">≥2.5.0</span></div>
+          <div><span class="dep">pydantic</span> <span class="ver">≥2.7.1</span></div>
+          <div><span class="dep">nkeys</span> <span class="ver">≥0.2.0</span></div>
+          <div><span class="dep">pyyaml</span> <span class="ver">≥6.0</span></div>
+          <div style="color:#475569;margin-top:4px;">opt: [telemetry] → OpenTelemetry SDK + OTLP</div>
+        </div>
+      </div>
+      <div class="connector"><div class="dot" style="background:#2a3a50;"></div><div class="arrow" style="background:#2a3a50;height:12px;"></div></div>
+      <div class="branch">
+        <div class="branch-line">
+          <div class="pkg-box pkg-srv">
+            <h3>device-connect-server <span style="font-weight:400;font-size:12px;color:#64748b;">v0.1.1</span></h3>
+            <div class="deps">
+              <div><span class="dep">[security]</span> <span class="ver">bcrypt, aiohttp, zeroconf, qrcode</span></div>
+              <div><span class="dep">[state]</span> <span class="ver">etcd3gw</span></div>
+              <div><span class="dep">[logging]</span> <span class="ver">pymongo</span></div>
+              <div><span class="dep">[telemetry]</span> <span class="ver">OTEL exporters</span></div>
+              <div><span class="dep">[mqtt]</span> <span class="ver">aiomqtt</span></div>
+              <div style="color:#6b5520;margin-top:6px;">CLIs: devctl · statectl</div>
+            </div>
+          </div>
+        </div>
+        <div class="branch-line">
+          <div class="pkg-box pkg-agt">
+            <h3>device-connect-agent-tools <span style="font-weight:400;font-size:12px;color:#64748b;">v0.1.1</span></h3>
+            <div class="deps">
+              <div><span class="dep">[strands]</span> <span class="ver">strands-agents ≥1.0</span></div>
+              <div><span class="dep">[langchain]</span> <span class="ver">langchain-core ≥0.2</span></div>
+              <div><span class="dep">[mcp]</span> <span class="ver">fastmcp ≥1.0</span></div>
+              <div style="color:#3d1a80;margin-top:6px;">MCP bridge: bridge · router · discovery · schema · device_tools</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Topic Namespace -->
+  <div class="tech-section">
+    <h2>Messaging Topic Namespace</h2>
+    <div class="topic-ns">
+      <span class="root">device-connect</span><span class="dim">.</span><span class="seg-tenant">{tenant}</span><span class="dim">.</span><span class="seg-device">{device_id}</span><span class="dim">.</span><span class="seg-verb">{verb}</span><span class="dim">.</span><span class="seg-name">{name}</span><br>
+      <br>
+      <span class="dim">Examples:</span><br>
+      <span class="root">device-connect</span><span class="dim">.</span><span class="seg-tenant">default</span><span class="dim">.</span><span class="seg-device">cam-001</span><span class="dim">.</span><span class="seg-verb">rpc.req</span><span class="dim">.</span><span class="seg-name">get_status</span><br>
+      <span class="root">device-connect</span><span class="dim">.</span><span class="seg-tenant">default</span><span class="dim">.</span><span class="seg-device">sensor-003</span><span class="dim">.</span><span class="seg-verb">event</span><span class="dim">.</span><span class="seg-name">temperature_alert</span><br>
+      <span class="root">device-connect</span><span class="dim">.</span><span class="seg-tenant">production</span><span class="dim">.</span><span class="seg-device">robot-007</span><span class="dim">.</span><span class="seg-verb">presence</span><br>
+      <span class="root">device-connect</span><span class="dim">.</span><span class="seg-tenant">default</span><span class="dim">.</span><span class="seg-device">*</span><span class="dim">.</span><span class="seg-verb">heartbeat</span><br>
+      <br>
+      <span class="dim">Verbs:</span> <span class="seg-verb">rpc.req</span> <span class="dim">·</span> <span class="seg-verb">rpc.res</span> <span class="dim">·</span> <span class="seg-verb">event</span> <span class="dim">·</span> <span class="seg-verb">presence</span> <span class="dim">·</span> <span class="seg-verb">heartbeat</span>
+    </div>
+  </div>
+
+  <!-- Security -->
+  <div class="tech-section">
+    <h2>Security Architecture</h2>
+    <div class="sec-grid">
+      <div class="sec-card sec-zenoh">
+        <h4>Zenoh Path — mTLS</h4>
+        <div class="steps">
+          <div><span class="step-num">1</span>generate_tls_certs.sh zenoh → CA + router cert</div>
+          <div><span class="step-num">2</span>generate_tls_certs.sh --client &lt;id&gt; → device cert</div>
+          <div><span class="step-num">3</span>Router validates client certs against CA</div>
+          <div><span class="step-num">4</span>All traffic encrypted TLS 1.3</div>
+        </div>
+      </div>
+      <div class="sec-card sec-nats">
+        <h4>NATS Path — JWT / NKey</h4>
+        <div class="steps">
+          <div><span class="step-num">1</span>setup_jwt_auth.sh → Operator + Account</div>
+          <div><span class="step-num">2</span>gen_creds.sh --all → registry, devctl, orchestrator</div>
+          <div><span class="step-num">3</span>gen_creds.sh --user &lt;id&gt; → per-device JWT</div>
+          <div><span class="step-num">4</span>devctl commission &lt;id&gt; --pin XXXX → deliver creds</div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:12px; background:#111827; border:1px solid #1f2937; border-radius:12px; padding:16px;">
+      <div style="font-size:12px;font-weight:700;color:#fbbf24;margin-bottom:8px;">Commissioning Flow (NATS)</div>
+      <div style="font-size:12px; color:#94a3b8; font-family:monospace; line-height:2.2;">
+        <span style="color:#fbbf24;">Factory</span> → NKey keypair + PIN &nbsp;→&nbsp; <span style="color:#a78bfa;">Admin</span> → gen_creds.sh &nbsp;→&nbsp; <span style="color:#22d3ee;">Commission</span> → devctl commission --pin &nbsp;→&nbsp; <span style="color:#4ade80;">Runtime</span> → load creds, connect, register
+      </div>
+    </div>
+  </div>
+
+  <!-- Core vs Optional -->
+  <div class="tech-section">
+    <h2>Core vs Optional Components</h2>
+    <div class="core-opt">
+      <div class="core-box">
+        <h3>Core (Always Required)</h3>
+        <ul class="item-list">
+          <li>device-connect-sdk</li>
+          <li>DeviceRuntime + DeviceDriver</li>
+          <li>@rpc, @emit, @periodic, @on, @before_emit</li>
+          <li>Zenoh adapter (default messaging)</li>
+          <li>D2D multicast discovery</li>
+          <li>JSON-RPC protocol</li>
+          <li>NATS adapter (bundled)</li>
+        </ul>
+      </div>
+      <div class="opt-box">
+        <h3>Optional — Add as Needed</h3>
+        <ul class="item-list">
+          <li><strong style="color:#a78bfa;">agent-tools</strong> — AI agent integration</li>
+          <li>&nbsp;&nbsp;[strands] Strands Agents adapter</li>
+          <li>&nbsp;&nbsp;[langchain] LangChain adapter</li>
+          <li>&nbsp;&nbsp;[mcp] FastMCP bridge</li>
+          <li><strong style="color:#fbbf24;">server</strong> — Production infrastructure</li>
+          <li>&nbsp;&nbsp;[security] Commissioning + ACLs</li>
+          <li>&nbsp;&nbsp;[state] etcd distributed KV</li>
+          <li>&nbsp;&nbsp;[logging] MongoDB audit</li>
+          <li>&nbsp;&nbsp;[telemetry] OpenTelemetry</li>
+          <li>&nbsp;&nbsp;[mqtt] MQTT backend</li>
+          <li><strong style="color:#64748b;">Infra</strong> — Docker services</li>
+          <li>&nbsp;&nbsp;Zenoh Router :7447</li>
+          <li>&nbsp;&nbsp;NATS Server :4222</li>
+          <li>&nbsp;&nbsp;etcd :2379</li>
+          <li>&nbsp;&nbsp;Registry Service :8080</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Module Map -->
+  <div class="tech-section">
+    <h2>Source Module Map</h2>
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px;">
+      <div style="background:#0f1d2d; border:1px solid #1a4060; border-radius:12px; padding:16px;">
+        <div style="font-size:13px;font-weight:700;color:#38bdf8;margin-bottom:10px;">device_connect_sdk/</div>
+        <div style="font-family:monospace;font-size:11px;color:#94a3b8;line-height:2;">
+          device.py <span style="color:#475569;">(67K)</span><br>
+          discovery.py <span style="color:#475569;">(11K)</span><br>
+          types.py · errors.py<br>
+          <span style="color:#38bdf8;">drivers/</span><br>
+          &nbsp;&nbsp;base.py <span style="color:#475569;">(39K)</span><br>
+          &nbsp;&nbsp;decorators.py <span style="color:#475569;">(30K)</span><br>
+          &nbsp;&nbsp;transport.py<br>
+          <span style="color:#38bdf8;">messaging/</span><br>
+          &nbsp;&nbsp;zenoh_adapter <span style="color:#475569;">(29K)</span><br>
+          &nbsp;&nbsp;nats_adapter <span style="color:#475569;">(18K)</span><br>
+          &nbsp;&nbsp;mqtt_adapter <span style="color:#475569;">(17K)</span><br>
+          &nbsp;&nbsp;base.py · config.py<br>
+          <span style="color:#38bdf8;">telemetry/</span><br>
+        </div>
+      </div>
+      <div style="background:#1a1508; border:1px solid #4a3a10; border-radius:12px; padding:16px;">
+        <div style="font-size:13px;font-weight:700;color:#fbbf24;margin-bottom:10px;">device_connect_server/</div>
+        <div style="font-family:monospace;font-size:11px;color:#94a3b8;line-height:2;">
+          <span style="color:#fbbf24;">registry/</span><br>
+          &nbsp;&nbsp;service/main.py <span style="color:#475569;">(15K)</span><br>
+          &nbsp;&nbsp;client.py <span style="color:#475569;">(11K)</span><br>
+          <span style="color:#fbbf24;">security/</span><br>
+          &nbsp;&nbsp;acl.py <span style="color:#475569;">(10K)</span><br>
+          &nbsp;&nbsp;commissioning.py <span style="color:#475569;">(10K)</span><br>
+          &nbsp;&nbsp;credentials.py <span style="color:#475569;">(9.5K)</span><br>
+          <span style="color:#fbbf24;">state/</span><br>
+          &nbsp;&nbsp;etcd_store.py <span style="color:#475569;">(13K)</span><br>
+          <span style="color:#fbbf24;">devctl/</span> · <span style="color:#fbbf24;">statectl/</span><br>
+          <span style="color:#fbbf24;">logging/</span> · <span style="color:#fbbf24;">telemetry/</span><br>
+        </div>
+      </div>
+      <div style="background:#120828; border:1px solid #3d1a80; border-radius:12px; padding:16px;">
+        <div style="font-size:13px;font-weight:700;color:#a78bfa;margin-bottom:10px;">device_connect_agent_tools/</div>
+        <div style="font-family:monospace;font-size:11px;color:#94a3b8;line-height:2;">
+          connection.py <span style="color:#475569;">(24K)</span><br>
+          tools.py <span style="color:#475569;">(7K)</span><br>
+          agent.py <span style="color:#475569;">(7.5K)</span><br>
+          <span style="color:#a78bfa;">adapters/</span><br>
+          &nbsp;&nbsp;strands.py<br>
+          &nbsp;&nbsp;langchain.py<br>
+          <span style="color:#a78bfa;">mcp/</span> <span style="color:#475569;">(87K total)</span><br>
+          &nbsp;&nbsp;bridge.py <span style="color:#475569;">(10K)</span><br>
+          &nbsp;&nbsp;device_tools.py <span style="color:#475569;">(31K)</span><br>
+          &nbsp;&nbsp;device_connect_mcp.py <span style="color:#475569;">(16K)</span><br>
+          &nbsp;&nbsp;discovery.py · router.py<br>
+          &nbsp;&nbsp;schema.py · config.py<br>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelector(`.tab[onclick*="${name}"]`).classList.add('active');
+  document.getElementById(`view-${name}`).classList.add('active');
+}
+</script>
+
+</body>
+</html>
