@@ -1031,7 +1031,7 @@ const slides=[
       h+='<div style="text-align:center;padding:40px 0;color:#555568;font-size:0.9rem;">Three problems compound &#8594;</div>';
     } else {
       const i=s-1;
-      h+='<div style="min-height:80px;display:flex;align-items:center;margin-top:0.8rem;"><div style="flex:1;">'+cards[i].outerHTML.replace('<div class="card"','<div class="card" style="min-height:80px;"')+'</div></div>';
+      h+='<div style="margin-top:0.8rem;"><div>'+cards[i].outerHTML.replace('<div class="card"','<div class="card" style="min-height:160px;"')+'</div></div>';
       h+='<div style="margin-top:0.6rem;">'+visuals[i]+'</div>';
       h+='<div style="display:flex;gap:8px;justify-content:center;margin-top:1rem;">';
       for(let j=0;j<3;j++){h+='<div style="width:8px;height:8px;border-radius:50%;background:'+(j===i?'#ff6b35':'#2a2a3a')+';"></div>';}
