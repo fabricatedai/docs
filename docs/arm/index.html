@@ -70,9 +70,9 @@ section:last-of-type{border-bottom:none}
 .stat .stat-value{font-size:1.7rem;font-weight:800;letter-spacing:-0.03em;color:var(--accent-cyan);line-height:1;margin-bottom:0.4rem}
 .stat .stat-label{font-size:0.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;font-weight:600}
 .stat .expand-hint{font-size:0.62rem;color:var(--text-muted);margin-top:0.3rem;opacity:0.6}
-.robot-list-panel{display:none;background:var(--bg-card);border:1px solid var(--border);border-top:none;border-radius:0 0 12px 12px;padding:1.5rem 2rem;margin-top:-1px}
+.robot-list-panel{display:none;background:var(--bg-card);border:1px solid var(--border);border-top:none;border-radius:0 0 12px 12px;padding:0.8rem 1.2rem;margin-top:-1px}
 .robot-list-panel.open{display:block}
-.robot-list-panel h4{font-size:0.78rem;font-weight:700;color:var(--text-secondary);margin-bottom:1rem;text-transform:uppercase;letter-spacing:0.06em}
+.robot-list-panel h4{font-size:0.78rem;font-weight:700;color:var(--text-secondary);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.06em}
 .robot-chips{display:flex;flex-wrap:wrap;gap:0.4rem}
 .robot-chip{font-size:0.72rem;font-weight:500;font-family:'JetBrains Mono',monospace;padding:4px 10px;border-radius:5px;background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--text-secondary)}
 
@@ -327,8 +327,6 @@ footer{padding:3rem 0;text-align:center;font-size:0.72rem;color:var(--text-muted
 <!-- PASSWORD GATE -->
 <div id="authGate" style="position:fixed;inset:0;z-index:9999;background:var(--bg-primary);display:flex;align-items:center;justify-content:center;flex-direction:column">
   <div class="auth-inner" style="text-align:center;max-width:340px;width:100%;padding:0 20px">
-    <div style="font-weight:700;font-size:1.1rem;margin-bottom:0.3rem;display:flex;align-items:center;justify-content:center;gap:0.5rem">Agent Fabric <span style="background:var(--accent-cyan);color:var(--bg-primary);font-size:0.55rem;font-weight:800;padding:2px 6px;border-radius:3px;letter-spacing:0.06em;text-transform:uppercase">Arm</span></div>
-    <p style="color:var(--text-muted);font-size:0.82rem;margin-bottom:1.5rem">Internal page. Enter access code to continue.</p>
     <div style="display:flex;gap:0.5rem">
       <input id="authInput" type="password" placeholder="Access code" autocomplete="off"
         style="flex:1;background:var(--bg-card);border:1px solid var(--border-accent);border-radius:8px;padding:10px 14px;color:var(--text-primary);font-family:inherit;font-size:0.88rem;outline:none;transition:border-color 0.2s"
@@ -364,7 +362,7 @@ footer{padding:3rem 0;text-align:center;font-size:0.72rem;color:var(--text-muted
   <div class="nav-links">
     <a href="#problem" data-section="problem">Problem</a>
     <a href="#solution" data-section="solution">Solution</a>
-    <a href="#traction" data-section="traction">Traction</a>
+    <a href="#traction" data-section="traction">Validation</a>
     <a href="#roadmap" data-section="roadmap">Roadmap</a>
     <a href="#ask" data-section="ask">The Ask</a>
   </div>
@@ -527,7 +525,7 @@ footer{padding:3rem 0;text-align:center;font-size:0.72rem;color:var(--text-muted
       <div class="card">
         <div class="card-label red">Problem 2</div>
         <h3>Agents lack device awareness</h3>
-        <p>Agentic frameworks (Strands, LangChain, Google ADK, Anthropic) were built for cloud reasoning, not physical device coordination. IoT platforms (AWS IoT Core, Azure IoT Hub) were built for telemetry and provisioning. Neither lets an AI agent dynamically discover a device, call a function, and enforce safety before execution. No standard layer bridges the gap.</p>
+        <p>Agentic frameworks were built for cloud reasoning, not physical device coordination. IoT platforms were built for telemetry and provisioning. Neither lets an AI agent dynamically discover a device, call a function, and enforce safety before execution. No standard layer bridges the gap.</p>
       </div>
       <div class="card">
         <div class="card-label red">Problem 3</div>
@@ -574,6 +572,39 @@ footer{padding:3rem 0;text-align:center;font-size:0.72rem;color:var(--text-muted
       <h2>The missing layer between agents and physical devices</h2>
       <p>Device Connect is an open-source Python framework from Arm that lets any AI agent discover and invoke functions on any physical device. Framework-agnostic, works device-to-device with zero infrastructure, and scales to thousands.</p>
     </div>
+
+    <!-- Architecture Overview -->
+    <svg viewBox="0 0 800 200" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;margin-bottom:2rem;border-radius:12px;background:#08080d;border:1px solid var(--border);padding:20px 0;">
+      <!-- AI Agent block -->
+      <rect x="40" y="60" width="160" height="80" rx="10" fill="#111119" stroke="#a855f7" stroke-width="1.5"/>
+      <text x="120" y="90" text-anchor="middle" fill="#a855f7" font-size="11" font-weight="700" font-family="Inter,system-ui">AI Agent</text>
+      <text x="120" y="108" text-anchor="middle" fill="#555568" font-size="9" font-family="Inter,system-ui">Strands · LangGraph</text>
+      <text x="120" y="122" text-anchor="middle" fill="#555568" font-size="9" font-family="Inter,system-ui">Claude · Native Python</text>
+
+      <!-- Arrow: Agent → Device Connect -->
+      <line x1="200" y1="100" x2="290" y2="100" stroke="#333" stroke-width="1.5"/>
+      <polygon points="290,96 298,100 290,104" fill="#555"/>
+
+      <!-- Device Connect block (highlighted) -->
+      <rect x="300" y="40" width="200" height="120" rx="10" fill="rgba(0,212,255,0.06)" stroke="#00d4ff" stroke-width="2"/>
+      <text x="400" y="68" text-anchor="middle" fill="#00d4ff" font-size="12" font-weight="700" font-family="Inter,system-ui">Device Connect</text>
+      <text x="400" y="88" text-anchor="middle" fill="#8888a0" font-size="9" font-family="Inter,system-ui">Discover · Invoke · Govern</text>
+      <line x1="330" y1="98" x2="470" y2="98" stroke="#1e1e2a" stroke-width="1"/>
+      <text x="400" y="116" text-anchor="middle" fill="#555568" font-size="9" font-family="Inter,system-ui">Pub/Sub Mesh</text>
+      <text x="400" y="132" text-anchor="middle" fill="#555568" font-size="9" font-family="Inter,system-ui">Security · Registry · State</text>
+      <text x="400" y="148" text-anchor="middle" fill="#00d4ff" font-size="8" font-weight="600" font-family="Inter,system-ui" opacity="0.6">by Arm</text>
+
+      <!-- Arrow: Device Connect → Devices -->
+      <line x1="500" y1="100" x2="590" y2="100" stroke="#333" stroke-width="1.5"/>
+      <polygon points="590,96 598,100 590,104" fill="#555"/>
+
+      <!-- Devices block -->
+      <rect x="600" y="60" width="160" height="80" rx="10" fill="#111119" stroke="#00cc88" stroke-width="1.5"/>
+      <text x="680" y="90" text-anchor="middle" fill="#00cc88" font-size="11" font-weight="700" font-family="Inter,system-ui">Physical Devices</text>
+      <text x="680" y="108" text-anchor="middle" fill="#555568" font-size="9" font-family="Inter,system-ui">Robots · Sensors</text>
+      <text x="680" y="122" text-anchor="middle" fill="#555568" font-size="9" font-family="Inter,system-ui">Cameras · Actuators</text>
+    </svg>
+
     <div class="card-grid cols-3">
       <div class="card">
         <svg width="48" height="48" viewBox="0 0 48 48" fill="none" style="margin-bottom:12px;">
@@ -709,6 +740,7 @@ footer{padding:3rem 0;text-align:center;font-size:0.72rem;color:var(--text-muted
           <p><strong style="color:var(--text-primary)">Strategic value:</strong> Fastest path to edge developer adoption. Proves the execution layer beneath cloud-to-edge agent workflows.</p>
         </div>
         <div class="partner-next"><strong>Next:</strong> Formalize core integration. Joint partner engagement. Target joint announcement by mid-year, conference demo by end of year.</div>
+        <svg viewBox="0 0 360 44" fill="none" style="width:100%;margin-top:0.7rem;"><defs><style>text{font-family:Inter,system-ui;}</style></defs><rect x="5" y="4" width="110" height="36" rx="6" fill="#00d4ff" fill-opacity="0.15" stroke="#00d4ff" stroke-width="1.5"/><text x="60" y="26" text-anchor="middle" fill="#00d4ff" font-size="10" font-weight="600">Agent</text><line x1="117" y1="22" x2="123" y2="22" stroke="#2a2a3a" stroke-width="1"/><rect x="125" y="4" width="110" height="36" rx="6" fill="#2a2a3a" fill-opacity="0" stroke="#2a2a3a" stroke-width="1.5"/><text x="180" y="26" text-anchor="middle" fill="#555568" font-size="10" font-weight="600">Device Connect</text><line x1="237" y1="22" x2="243" y2="22" stroke="#2a2a3a" stroke-width="1"/><rect x="245" y="4" width="110" height="36" rx="6" fill="#2a2a3a" fill-opacity="0" stroke="#2a2a3a" stroke-width="1.5"/><text x="300" y="26" text-anchor="middle" fill="#555568" font-size="10" font-weight="600">Devices</text></svg>
       </div>
       <div class="partner-card">
         <div class="partner-header">
@@ -720,6 +752,7 @@ footer{padding:3rem 0;text-align:center;font-size:0.72rem;color:var(--text-muted
           <p><strong style="color:var(--text-primary)">Strategic value:</strong> Shape the next agent-to-device protocol standard. Co-design how agents securely discover and govern physical devices.</p>
         </div>
         <div class="partner-next"><strong>Next:</strong> Share security research and align on MCP integration. Target native SDK integration by summer.</div>
+        <svg viewBox="0 0 360 44" fill="none" style="width:100%;margin-top:0.7rem;"><defs><style>text{font-family:Inter,system-ui;}</style></defs><rect x="5" y="4" width="110" height="36" rx="6" fill="#00d4ff" fill-opacity="0.15" stroke="#00d4ff" stroke-width="1.5"/><text x="60" y="26" text-anchor="middle" fill="#00d4ff" font-size="10" font-weight="600">Agent</text><line x1="117" y1="22" x2="123" y2="22" stroke="#2a2a3a" stroke-width="1"/><rect x="125" y="4" width="110" height="36" rx="6" fill="#2a2a3a" fill-opacity="0" stroke="#2a2a3a" stroke-width="1.5"/><text x="180" y="26" text-anchor="middle" fill="#555568" font-size="10" font-weight="600">Device Connect</text><line x1="237" y1="22" x2="243" y2="22" stroke="#2a2a3a" stroke-width="1"/><rect x="245" y="4" width="110" height="36" rx="6" fill="#2a2a3a" fill-opacity="0" stroke="#2a2a3a" stroke-width="1.5"/><text x="300" y="26" text-anchor="middle" fill="#555568" font-size="10" font-weight="600">Devices</text></svg>
       </div>
       <div class="partner-card">
         <div class="partner-header">
@@ -731,6 +764,7 @@ footer{padding:3rem 0;text-align:center;font-size:0.72rem;color:var(--text-muted
           <p><strong style="color:var(--text-primary)">Strategic value:</strong> Production-grade validation with real customers. Proves Device Connect eliminates linear scaling costs in multi-site robotics.</p>
         </div>
         <div class="partner-next"><strong>Next:</strong> Production beta this summer. Customer-facing deployment at Arm HQ with expanded capabilities.</div>
+        <svg viewBox="0 0 360 44" fill="none" style="width:100%;margin-top:0.7rem;"><defs><style>text{font-family:Inter,system-ui;}</style></defs><rect x="5" y="4" width="110" height="36" rx="6" fill="#00d4ff" fill-opacity="0.15" stroke="#00d4ff" stroke-width="1.5"/><text x="60" y="26" text-anchor="middle" fill="#00d4ff" font-size="10" font-weight="600">Agent</text><line x1="117" y1="22" x2="123" y2="22" stroke="#2a2a3a" stroke-width="1"/><rect x="125" y="4" width="110" height="36" rx="6" fill="#00d4ff" fill-opacity="0.15" stroke="#00d4ff" stroke-width="1.5"/><text x="180" y="26" text-anchor="middle" fill="#00d4ff" font-size="10" font-weight="600">Device Connect</text><line x1="237" y1="22" x2="243" y2="22" stroke="#2a2a3a" stroke-width="1"/><rect x="245" y="4" width="110" height="36" rx="6" fill="#00d4ff" fill-opacity="0.15" stroke="#00d4ff" stroke-width="1.5"/><text x="300" y="26" text-anchor="middle" fill="#00d4ff" font-size="10" font-weight="600">Devices</text></svg>
       </div>
       <div class="partner-card">
         <div class="partner-header">
@@ -742,6 +776,7 @@ footer{padding:3rem 0;text-align:center;font-size:0.72rem;color:var(--text-muted
           <p><strong style="color:var(--text-primary)">Strategic value:</strong> Validates policy-aware orchestration for safety-critical environments. Produces open-source implementations and academic publications.</p>
         </div>
         <div class="partner-next"><strong>Next:</strong> Simulation results by Q2. Reference implementation for joint announcement.</div>
+        <svg viewBox="0 0 360 44" fill="none" style="width:100%;margin-top:0.7rem;"><defs><style>text{font-family:Inter,system-ui;}</style></defs><rect x="5" y="4" width="110" height="36" rx="6" fill="#2a2a3a" fill-opacity="0" stroke="#2a2a3a" stroke-width="1.5"/><text x="60" y="26" text-anchor="middle" fill="#555568" font-size="10" font-weight="600">Agent</text><line x1="117" y1="22" x2="123" y2="22" stroke="#2a2a3a" stroke-width="1"/><rect x="125" y="4" width="110" height="36" rx="6" fill="#00d4ff" fill-opacity="0.15" stroke="#00d4ff" stroke-width="1.5"/><text x="180" y="26" text-anchor="middle" fill="#00d4ff" font-size="10" font-weight="600">Device Connect</text><line x1="237" y1="22" x2="243" y2="22" stroke="#2a2a3a" stroke-width="1"/><rect x="245" y="4" width="110" height="36" rx="6" fill="#00d4ff" fill-opacity="0.15" stroke="#00d4ff" stroke-width="1.5"/><text x="300" y="26" text-anchor="middle" fill="#00d4ff" font-size="10" font-weight="600">Devices</text></svg>
       </div>
     </div>
 
