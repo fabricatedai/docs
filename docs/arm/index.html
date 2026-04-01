@@ -1104,9 +1104,9 @@ const slides=[
 
   // 9: The Ask
   {steps:0,build:s=>{
-    let h=W+EYE('#ffc107','The Ask');
-    const ac=q('#ask .container');
-    if(ac)h+=ac.innerHTML;
+    let h=W+EYE('#ffc107','The Ask')+H2('What we need');
+    const grid=q('#ask .ask-grid');
+    if(grid)h+=grid.outerHTML;
     return h+'</div>';
   }},
 ];
