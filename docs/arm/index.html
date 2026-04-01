@@ -321,14 +321,10 @@ footer{padding:3rem 0;text-align:center;font-size:0.72rem;color:var(--text-muted
   .collapsible-trigger>div .eyebrow{margin:0}
 }
 /* PRESENTATION MODE */
-body.pres-mode{overflow:hidden}
-body.pres-mode nav{display:none}
-body.pres-mode section,body.pres-mode .hero{display:none;position:fixed;inset:0;z-index:9000;background:var(--bg-primary);overflow-y:auto;padding:0;border:none;margin:0;-webkit-overflow-scrolling:touch}
-body.pres-mode section.pres-active,body.pres-mode .hero.pres-active{display:block}
-body.pres-mode section.pres-active>.container,body.pres-mode .hero.pres-active>.container{max-width:860px;width:100%;margin:0 auto;padding:60px 40px 80px;transform:scale(0.92);transform-origin:top center}
-body.pres-mode .pres-controls{display:flex}
-body.pres-mode footer,body.pres-mode #authGate{display:none}
-.pres-controls{display:none;position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:9999;gap:12px;align-items:center;background:rgba(10,10,15,0.9);border:1px solid var(--border);border-radius:10px;padding:8px 16px;backdrop-filter:blur(12px)}
+#pres-overlay{font-family:'Inter',-apple-system,sans-serif;color:#e8e8ed;}
+#pres-overlay .section-header h2{font-size:1.5rem;font-weight:800;color:#e8e8ed;}
+#pres-overlay .section-header p{font-size:0.95rem;color:#8888a0;line-height:1.6;}
+.pres-controls{display:none;position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:10000;gap:12px;align-items:center;background:rgba(10,10,15,0.9);border:1px solid var(--border);border-radius:10px;padding:8px 16px;backdrop-filter:blur(12px)}
 .pres-controls button{background:none;border:1px solid var(--border);border-radius:6px;color:var(--text-secondary);width:36px;height:36px;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;font-family:system-ui}
 .pres-controls button:hover{border-color:var(--accent-cyan);color:var(--accent-cyan)}
 .pres-counter{font-size:0.75rem;color:var(--text-muted);font-family:'JetBrains Mono',monospace;min-width:50px;text-align:center}
@@ -891,41 +887,201 @@ function toggleRobotList(){const p=document.getElementById('robot-list');const s
 // Collapsible sections
 function toggleCollapsible(t){t.classList.toggle('open');t.nextElementSibling.classList.toggle('open')}
 
-// PRESENTATION MODE
-const presSections=document.querySelectorAll('section');
-let presIdx=0;
+// PRESENTATION MODE — Custom slide deck with progressive reveals
+let presStep=0;
 let presActive=false;
+const presOverlay=document.createElement('div');
+presOverlay.id='pres-overlay';
+presOverlay.style.cssText='display:none;position:fixed;inset:0;z-index:9000;background:var(--bg-primary);overflow-y:auto;-webkit-overflow-scrolling:touch;';
+document.body.appendChild(presOverlay);
+
+// Extract content from the page for slides
+function getEl(sel){const e=document.querySelector(sel);return e?e.innerHTML:'';}
+function getHTML(sel){const e=document.querySelector(sel);return e?e.outerHTML:'';}
+
+// Slide definitions — each has html content, some have sub-steps
+const presSlides=[
+  // 1: Title
+  {html:`<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;text-align:center;padding:40px;">
+    <h1 style="font-size:3rem;font-weight:800;letter-spacing:-0.04em;background:linear-gradient(135deg,#e8e8ed,#8888a0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Agent Fabric</h1>
+    <p style="font-size:1.1rem;color:#8888a0;max-width:600px;margin:1rem auto 0;line-height:1.7;">AI agents can reason and plan, but they have no standard way to discover, invoke, or govern physical devices. We built that layer.</p>
+    <div style="margin-top:2rem;font-size:0.8rem;color:#555568;">Device Connect — Open source by Arm</div>
+  </div>`},
+
+  // 2: Stats + robots expanded
+  {html:'stats', dynamic:true},
+
+  // 3: Problem — progressive (3 sub-steps)
+  {html:'problem', dynamic:true, steps:3},
+
+  // 4: Partner quotes
+  {html:'quotes', dynamic:true},
+
+  // 5: Solution diagram + 3 capabilities (progressive)
+  {html:'solution', dynamic:true, steps:4},
+
+  // 6: Shipped + Building Next
+  {html:'shipped', dynamic:true},
+
+  // 7: Validation partners
+  {html:'traction', dynamic:true},
+
+  // 8: Partner pipeline
+  {html:'pipeline', dynamic:true},
+
+  // 9: Roadmap
+  {html:'roadmap', dynamic:true},
+
+  // 10: The Ask
+  {html:'ask', dynamic:true},
+];
+
+function buildSlide(idx, subStep){
+  const slide=presSlides[idx];
+  if(!slide)return'';
+  if(!slide.dynamic)return slide.html;
+
+  const s=subStep||0;
+  switch(slide.html){
+    case 'stats': {
+      const statsEl=document.querySelector('#stats-row');
+      const robotList=document.querySelector('#robot-list');
+      let h='<div style="padding:60px 40px;max-width:860px;margin:0 auto;">';
+      h+='<div style="text-align:center;margin-bottom:2rem;"><span style="font-size:0.7rem;font-weight:600;text-transform:uppercase;letter-spacing:0.12em;color:#00d4ff;">Device Connect</span></div>';
+      if(statsEl)h+='<div style="margin-bottom:1rem;">'+statsEl.outerHTML+'</div>';
+      if(robotList)h+='<div style="display:block;background:var(--bg-card);border:1px solid var(--border);border-radius:0 0 12px 12px;padding:0.8rem 1.2rem;">'+robotList.innerHTML+'</div>';
+      h+='</div>';
+      return h;
+    }
+    case 'problem': {
+      const cards=document.querySelectorAll('#problem .card');
+      const header=document.querySelector('#problem .section-header');
+      let h='<div style="padding:60px 40px;max-width:860px;margin:0 auto;">';
+      if(header)h+=header.outerHTML;
+      h+='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:1.5rem;">';
+      cards.forEach((c,i)=>{
+        const vis=i<=s?'opacity:1;transform:translateY(0)':'opacity:0;transform:translateY(20px)';
+        h+='<div style="transition:all 0.5s;'+vis+'">'+c.outerHTML+'</div>';
+      });
+      h+='</div></div>';
+      return h;
+    }
+    case 'quotes': {
+      const grid=document.querySelector('#problem .quote-grid');
+      let h='<div style="padding:60px 40px;max-width:860px;margin:0 auto;"><div style="text-align:center;margin-bottom:2rem;"><span style="font-size:0.7rem;font-weight:600;text-transform:uppercase;letter-spacing:0.12em;color:#ff6b35;">What We Hear</span></div>';
+      if(grid)h+=grid.outerHTML;
+      h+='</div>';
+      return h;
+    }
+    case 'solution': {
+      const diagram=document.querySelector('#solution svg[viewBox="0 0 800 200"]');
+      const caps=document.querySelectorAll('#solution .card-grid.cols-3 .card');
+      let h='<div style="padding:40px;max-width:860px;margin:0 auto;">';
+      h+='<div style="text-align:center;margin-bottom:1.5rem;"><span style="font-size:0.7rem;font-weight:600;text-transform:uppercase;letter-spacing:0.12em;color:#00d4ff;">The Solution</span><h2 style="font-size:1.5rem;font-weight:800;color:#e8e8ed;margin-top:0.5rem;">The missing layer between agents and physical devices</h2></div>';
+      if(s>=0&&diagram)h+='<div style="transition:all 0.5s;opacity:1;">'+diagram.outerHTML+'</div>';
+      h+='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:1.5rem;">';
+      caps.forEach((c,i)=>{
+        const vis=(i+1)<=s?'opacity:1;transform:translateY(0)':'opacity:0;transform:translateY(20px)';
+        h+='<div style="transition:all 0.5s;'+vis+'">'+c.outerHTML+'</div>';
+      });
+      h+='</div></div>';
+      return h;
+    }
+    case 'shipped': {
+      const cards=document.querySelector('#solution .card-grid.cols-2');
+      const link=document.querySelector('#solution a[href*="deviceconnect.dev"]');
+      let h='<div style="padding:60px 40px;max-width:860px;margin:0 auto;">';
+      h+='<div style="text-align:center;margin-bottom:1.5rem;"><span style="font-size:0.7rem;font-weight:600;text-transform:uppercase;letter-spacing:0.12em;color:#00d4ff;">Progress</span></div>';
+      if(cards)h+=cards.outerHTML;
+      if(link)h+='<div style="margin-top:1.5rem;text-align:center;">'+link.outerHTML+'</div>';
+      h+='</div>';
+      return h;
+    }
+    case 'traction': {
+      const header=document.querySelector('#traction .section-header');
+      const grid=document.querySelector('#traction .partner-grid');
+      let h='<div style="padding:40px;max-width:860px;margin:0 auto;transform:scale(0.9);transform-origin:top center;">';
+      if(header)h+=header.outerHTML;
+      if(grid)h+=grid.outerHTML;
+      h+='</div>';
+      return h;
+    }
+    case 'pipeline': {
+      const pipe=document.querySelector('#traction .pipeline-section');
+      let h='<div style="padding:60px 40px;max-width:860px;margin:0 auto;">';
+      h+='<div style="text-align:center;margin-bottom:1.5rem;"><span style="font-size:0.7rem;font-weight:600;text-transform:uppercase;letter-spacing:0.12em;color:#00cc88;">Ecosystem</span></div>';
+      if(pipe)h+=pipe.outerHTML;
+      h+='</div>';
+      return h;
+    }
+    case 'roadmap': {
+      const sec=document.querySelector('#roadmap .container');
+      let h='<div style="padding:40px;max-width:860px;margin:0 auto;transform:scale(0.88);transform-origin:top center;">';
+      if(sec)h+=sec.innerHTML;
+      h+='</div>';
+      return h;
+    }
+    case 'ask': {
+      const sec=document.querySelector('#ask .container');
+      let h='<div style="padding:60px 40px;max-width:860px;margin:0 auto;">';
+      if(sec)h+=sec.innerHTML;
+      h+='</div>';
+      return h;
+    }
+  }
+  return '';
+}
+
+let presSubStep=0;
+function totalSteps(){return presSlides.length;}
+function maxSub(idx){return presSlides[idx]&&presSlides[idx].steps?presSlides[idx].steps:0;}
+
+function renderPres(){
+  presOverlay.innerHTML=buildSlide(presStep,presSubStep);
+  presOverlay.scrollTop=0;
+  const total=presSlides.reduce((a,s)=>a+1+(s.steps||0),0);
+  let current=0;for(let i=0;i<presStep;i++)current+=1+(presSlides[i].steps||0);
+  current+=presSubStep+1;
+  document.getElementById('pres-counter').textContent=presStep+1+' / '+presSlides.length;
+}
 
 function enterPres(){
-  presActive=true;
-  presIdx=0;
-  document.body.classList.add('pres-mode');
-  showSlide(0);
+  presActive=true;presStep=0;presSubStep=0;
+  presOverlay.style.display='block';
+  document.querySelector('.pres-controls').style.display='flex';
+  document.querySelector('.pres-btn').style.display='none';
+  document.body.style.overflow='hidden';
+  renderPres();
 }
 function exitPres(){
   presActive=false;
-  document.body.classList.remove('pres-mode');
-  presSections.forEach(s=>s.classList.remove('pres-active'));
+  presOverlay.style.display='none';
+  document.querySelector('.pres-controls').style.display='none';
+  document.querySelector('.pres-btn').style.display='block';
+  document.body.style.overflow='';
 }
-function showSlide(i){
-  presIdx=Math.max(0,Math.min(i,presSections.length-1));
-  presSections.forEach(s=>s.classList.remove('pres-active'));
-  presSections[presIdx].classList.add('pres-active');
-  document.getElementById('pres-counter').textContent=(presIdx+1)+' / '+presSections.length;
+function presNext(){
+  if(presSubStep<maxSub(presStep)){presSubStep++;renderPres();return;}
+  if(presStep<presSlides.length-1){presStep++;presSubStep=0;renderPres();}
 }
+function presPrev(){
+  if(presSubStep>0){presSubStep--;renderPres();return;}
+  if(presStep>0){presStep--;presSubStep=maxSub(presStep);renderPres();}
+}
+
 document.addEventListener('keydown',e=>{
   if(!presActive)return;
-  if(e.key==='ArrowRight'||e.key===' ')showSlide(presIdx+1);
-  if(e.key==='ArrowLeft')showSlide(presIdx-1);
+  if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();presNext();}
+  if(e.key==='ArrowLeft'){e.preventDefault();presPrev();}
   if(e.key==='Escape')exitPres();
 });
 </script>
 
 <button class="pres-btn" onclick="enterPres()">&#9655; Present</button>
 <div class="pres-controls">
-  <button onclick="showSlide(presIdx-1)">&#8592;</button>
-  <span class="pres-counter" id="pres-counter">1 / 8</span>
-  <button onclick="showSlide(presIdx+1)">&#8594;</button>
+  <button onclick="presPrev()">&#8592;</button>
+  <span class="pres-counter" id="pres-counter">1 / 10</span>
+  <button onclick="presNext()">&#8594;</button>
   <button class="pres-exit" onclick="exitPres()">ESC</button>
 </div>
 
