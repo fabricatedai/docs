@@ -178,7 +178,7 @@ footer{padding:3rem 0;text-align:center;font-size:0.72rem;color:var(--text-muted
 /* Layout classes (replaces inline styles for mobile compat) */
 .auth-inner{max-width:340px}
 .fw-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border-radius:10px;overflow:hidden}
-.robot-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 2rem}
+.robot-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0 1.5rem;font-size:0.82rem;line-height:1.6}
 .quote-grid-inner{margin-top:0;border:none;border-radius:0}
 
 /* TABLET */
@@ -329,7 +329,7 @@ footer{padding:3rem 0;text-align:center;font-size:0.72rem;color:var(--text-muted
 .pres-controls button:hover{border-color:var(--accent-cyan);color:var(--accent-cyan)}
 .pres-counter{font-size:0.75rem;color:var(--text-muted);font-family:'JetBrains Mono',monospace;min-width:50px;text-align:center}
 .pres-exit{font-size:0.7rem!important;width:auto!important;padding:0 12px!important;color:var(--text-muted)!important}
-.pres-btn{position:fixed;bottom:24px;right:24px;z-index:200;background:rgba(10,10,15,0.8);border:1px solid var(--border);border-radius:8px;padding:8px 14px;color:var(--text-muted);font-size:0.7rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all 0.2s;backdrop-filter:blur(8px)}
+.pres-btn{background:none;border:1px solid var(--border);border-radius:6px;padding:4px 10px;color:var(--text-muted);font-size:0.68rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all 0.2s;margin-left:8px}
 .pres-btn:hover{border-color:var(--accent-cyan);color:var(--accent-cyan)}
 body.pres-mode .pres-btn{display:none}
 </style>
@@ -377,6 +377,7 @@ body.pres-mode .pres-btn{display:none}
     <a href="#traction" data-section="traction">Validation</a>
     <a href="#roadmap" data-section="roadmap">Roadmap</a>
     <a href="#ask" data-section="ask">The Ask</a>
+    <button class="pres-btn" onclick="enterPres()">&#9655; Present</button>
   </div>
 </nav>
 
@@ -1094,7 +1095,6 @@ document.addEventListener('keydown',e=>{
 });
 </script>
 
-<button class="pres-btn" onclick="enterPres()">&#9655; Present</button>
 <div class="pres-controls">
   <button onclick="presPrev()">&#8592;</button>
   <span class="pres-counter" id="pres-counter">1 / 10</span>
