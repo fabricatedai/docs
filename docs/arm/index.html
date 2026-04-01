@@ -982,15 +982,19 @@ const slides=[
       </svg>`
     ];
 
-    h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:0.8rem;align-items:start;">';
-    cards.forEach((c,i)=>{
-      if(i<s){
-        h+='<div style="'+VIS(true)+'display:flex;flex-direction:column;">'+c.outerHTML+'</div>';
-        h+='<div style="'+VIS(true)+'">'+visuals[i]+'</div>';
-      }
-    });
-    if(s===0){h+='<div style="grid-column:1/-1;text-align:center;padding:40px 0;color:#555568;font-size:0.9rem;">Three problems compound &#8594;</div>';}
-    return h+'</div></div>';
+    if(s===0){
+      h+='<div style="text-align:center;padding:40px 0;color:#555568;font-size:0.9rem;">Three problems compound &#8594;</div>';
+    } else {
+      const i=s-1;
+      h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:0.8rem;align-items:start;">';
+      h+='<div>'+cards[i].outerHTML+'</div>';
+      h+='<div>'+visuals[i]+'</div>';
+      h+='</div>';
+      h+='<div style="display:flex;gap:8px;justify-content:center;margin-top:1.2rem;">';
+      for(let j=0;j<3;j++){h+='<div style="width:8px;height:8px;border-radius:50%;background:'+(j===i?'#ff6b35':'#2a2a3a')+';"></div>';}
+      h+='</div>';
+    }
+    return h+'</div>';
   }},
 
   // 3: Quotes
