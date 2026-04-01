@@ -866,7 +866,7 @@ footer{padding:3rem 0;text-align:center;font-size:0.72rem;color:var(--text-muted
 // Nav scroll tracking
 const sections=document.querySelectorAll('section[id]');
 const navLinks=document.querySelectorAll('.nav-links a[data-section]');
-function updateActiveNav(){let c='';const y=window.scrollY+100;sections.forEach(s=>{if(y>=s.offsetTop)c=s.id});navLinks.forEach(a=>{a.classList.toggle('active',a.dataset.section===c)})}
+function updateActiveNav(){let c='';const y=window.scrollY+window.innerHeight*0.4;sections.forEach(s=>{if(y>=s.offsetTop)c=s.id});if(window.innerHeight+window.scrollY>=document.body.scrollHeight-100)c='ask';navLinks.forEach(a=>{a.classList.toggle('active',a.dataset.section===c)})}
 window.addEventListener('scroll',updateActiveNav,{passive:true});updateActiveNav();
 
 // Robot list expand
