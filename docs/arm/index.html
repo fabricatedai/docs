@@ -53,7 +53,7 @@ section{padding:3.5rem 0;border-bottom:1px solid var(--border)}
 section:last-of-type{border-bottom:none}
 
 /* HERO */
-.hero{padding:5.5rem 0 3rem;text-align:center;position:relative;overflow:hidden}
+.hero{padding:4.5rem 0 1.5rem;text-align:center;position:relative;overflow:hidden}
 .hero::before{content:'';position:absolute;top:-200px;left:50%;transform:translateX(-50%);width:800px;height:800px;background:radial-gradient(circle,rgba(0,212,255,0.05) 0%,transparent 70%);pointer-events:none}
 .hero .eyebrow{font-size:0.7rem;font-weight:600;text-transform:uppercase;letter-spacing:0.12em;color:var(--accent-cyan);margin-bottom:1.2rem;display:flex;align-items:center;justify-content:center;gap:0.5rem}
 .hero .eyebrow .dot{width:5px;height:5px;background:var(--accent-cyan);border-radius:50%}
@@ -64,7 +64,7 @@ section:last-of-type{border-bottom:none}
 .hero .meta-row .label{color:var(--text-secondary);font-weight:600}
 
 /* STATS */
-.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin:2rem 0}
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin:0}
 .stat{background:var(--bg-card);padding:1.5rem 2rem;text-align:center;cursor:default}
 .stat.expandable{cursor:pointer}.stat.expandable:hover{background:var(--bg-card-hover)}
 .stat .stat-value{font-size:1.7rem;font-weight:800;letter-spacing:-0.03em;color:var(--accent-cyan);line-height:1;margin-bottom:0.4rem}
@@ -379,7 +379,7 @@ footer{padding:3rem 0;text-align:center;font-size:0.72rem;color:var(--text-muted
 </section>
 
 <!-- STATS -->
-<section style="padding:2.5rem 0;border-bottom:1px solid var(--border)">
+<section style="padding:1.2rem 0;border-bottom:1px solid var(--border)">
   <div class="container">
     <div class="stats-row" id="stats-row">
       <div class="stat expandable" id="robot-stat" onclick="toggleRobotList()">
