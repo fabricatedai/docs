@@ -64,7 +64,7 @@ section:last-of-type{border-bottom:none}
 .hero .meta-row .label{color:var(--text-secondary);font-weight:600}
 
 /* STATS */
-.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin:0}
+.stats-row{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin:0}
 .stat{background:var(--bg-card);padding:1.5rem 2rem;text-align:center;cursor:default}
 .stat.expandable{cursor:pointer}.stat.expandable:hover{background:var(--bg-card-hover)}
 .stat .stat-value{font-size:1.7rem;font-weight:800;letter-spacing:-0.03em;color:var(--accent-cyan);line-height:1;margin-bottom:0.4rem}
@@ -549,7 +549,7 @@ body.pres-mode .pres-btn{display:none}
         </svg>
         <div class="card-label cyan">Capability 1</div>
         <h3>Discover</h3>
-        <p>Devices self-register with a ~40-line Python driver, announcing capabilities, state, and available functions. Agents adapt to the fleet in real time with no hardcoded knowledge of what is deployed at a site.</p>
+        <p>Devices self-register with a simple Python driver, announcing capabilities, state, and available functions. Agents adapt to the fleet in real time with no hardcoded knowledge of what is deployed at a site.</p>
       </div>
       <div class="card">
         <svg width="48" height="48" viewBox="0 0 48 48" fill="none" style="margin-bottom:12px;">
@@ -664,10 +664,6 @@ body.pres-mode .pres-btn{display:none}
       <div class="stat">
         <div class="stat-value">100+</div>
         <div class="stat-label">Robots planned next release</div>
-      </div>
-      <div class="stat">
-        <div class="stat-value">~40</div>
-        <div class="stat-label">Lines of Python per driver</div>
       </div>
     </div>
     <div class="robot-list-panel" id="robot-list">
