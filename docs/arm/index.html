@@ -921,13 +921,75 @@ const slides=[
     return h+'</div>';
   }},
 
-  // 2: Problem header only → then cards 1 by 1
+  // 2: Problem header → then each problem + visual 1 by 1
   {steps:3,build:s=>{
     const cards=qa('#problem .card');
     let h=W+EYE('#ff6b35','The Problem')+H2('Time-to-value for Physical AI is unacceptable');
     h+=SUB('Every partner conversation confirms the same wall: deployment timelines measured in months, custom integration code at every site, and safety unsolved at scale.');
-    h+='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:0.8rem;">';
-    cards.forEach((c,i)=>{h+='<div style="'+VIS(i<s)+'">'+c.outerHTML+'</div>';});
+
+    // Problem visuals (inline SVGs)
+    const visuals=[
+      // P1: Messy integration lines
+      `<svg viewBox="0 0 400 180" fill="none" style="width:100%;border-radius:8px;background:#08080d;margin-top:10px;">
+        <rect x="20" y="15" width="70" height="28" rx="5" fill="#111119" stroke="#a855f7" stroke-width="1"/><text x="55" y="33" text-anchor="middle" fill="#a855f7" font-size="8" font-family="system-ui">Agent A</text>
+        <rect x="165" y="15" width="70" height="28" rx="5" fill="#111119" stroke="#a855f7" stroke-width="1"/><text x="200" y="33" text-anchor="middle" fill="#a855f7" font-size="8" font-family="system-ui">Agent B</text>
+        <rect x="310" y="15" width="70" height="28" rx="5" fill="#111119" stroke="#a855f7" stroke-width="1"/><text x="345" y="33" text-anchor="middle" fill="#a855f7" font-size="8" font-family="system-ui">Agent C</text>
+        <line x1="40" y1="43" x2="40" y2="110" stroke="#ff4466" stroke-width="0.8" opacity="0.4"/><line x1="60" y1="43" x2="150" y2="110" stroke="#ff4466" stroke-width="0.8" opacity="0.3"/>
+        <line x1="75" y1="43" x2="260" y2="110" stroke="#ff4466" stroke-width="0.8" opacity="0.3"/><line x1="180" y1="43" x2="40" y2="110" stroke="#ff4466" stroke-width="0.8" opacity="0.3"/>
+        <line x1="200" y1="43" x2="150" y2="110" stroke="#ff4466" stroke-width="0.8" opacity="0.4"/><line x1="220" y1="43" x2="370" y2="110" stroke="#ff4466" stroke-width="0.8" opacity="0.3"/>
+        <line x1="330" y1="43" x2="150" y2="110" stroke="#ff4466" stroke-width="0.8" opacity="0.3"/><line x1="345" y1="43" x2="260" y2="110" stroke="#ff4466" stroke-width="0.8" opacity="0.4"/>
+        <line x1="360" y1="43" x2="370" y2="110" stroke="#ff4466" stroke-width="0.8" opacity="0.4"/>
+        <text x="120" y="80" fill="#ff4466" font-size="7" font-family="system-ui" opacity="0.5">ROS2</text><text x="220" y="75" fill="#ff4466" font-size="7" font-family="system-ui" opacity="0.5">MQTT</text>
+        <text x="300" y="85" fill="#ff4466" font-size="7" font-family="system-ui" opacity="0.5">gRPC</text><text x="60" y="90" fill="#ff4466" font-size="7" font-family="system-ui" opacity="0.5">REST</text>
+        <rect x="10" y="110" width="70" height="28" rx="5" fill="#111119" stroke="#00cc88" stroke-width="1"/><text x="45" y="128" text-anchor="middle" fill="#00cc88" font-size="8" font-family="system-ui">Robot</text>
+        <rect x="120" y="110" width="70" height="28" rx="5" fill="#111119" stroke="#00cc88" stroke-width="1"/><text x="155" y="128" text-anchor="middle" fill="#00cc88" font-size="8" font-family="system-ui">Camera</text>
+        <rect x="230" y="110" width="70" height="28" rx="5" fill="#111119" stroke="#00cc88" stroke-width="1"/><text x="265" y="128" text-anchor="middle" fill="#00cc88" font-size="8" font-family="system-ui">Sensor</text>
+        <rect x="340" y="110" width="50" height="28" rx="5" fill="#111119" stroke="#00cc88" stroke-width="1"/><text x="365" y="128" text-anchor="middle" fill="#00cc88" font-size="8" font-family="system-ui">Motor</text>
+        <text x="200" y="160" text-anchor="middle" fill="#ff4466" font-size="8" font-family="system-ui" opacity="0.6">N agents × M devices = N×M custom integrations</text>
+        <text x="200" y="174" text-anchor="middle" fill="#555568" font-size="7" font-family="system-ui">Cost scales linearly. Breaks when anything changes.</text>
+      </svg>`,
+
+      // P2: Gap — agents on left, devices on right, nothing in between
+      `<svg viewBox="0 0 400 180" fill="none" style="width:100%;border-radius:8px;background:#08080d;margin-top:10px;">
+        <rect x="20" y="30" width="100" height="30" rx="6" fill="#111119" stroke="#a855f7" stroke-width="1"/><text x="70" y="49" text-anchor="middle" fill="#a855f7" font-size="9" font-family="system-ui">AI Agents</text>
+        <text x="70" y="75" text-anchor="middle" fill="#555568" font-size="7" font-family="system-ui">Reason &amp; plan</text>
+        <rect x="280" y="30" width="100" height="30" rx="6" fill="#111119" stroke="#00cc88" stroke-width="1"/><text x="330" y="49" text-anchor="middle" fill="#00cc88" font-size="9" font-family="system-ui">Devices</text>
+        <text x="330" y="75" text-anchor="middle" fill="#555568" font-size="7" font-family="system-ui">Sense &amp; act</text>
+        <line x1="130" y1="45" x2="270" y2="45" stroke="#ff4466" stroke-width="1.5" stroke-dasharray="6,4" opacity="0.4"/>
+        <text x="200" y="42" text-anchor="middle" fill="#ff4466" font-size="10" font-family="system-ui" font-weight="700">?</text>
+        <rect x="140" y="95" width="120" height="45" rx="8" fill="none" stroke="#ff4466" stroke-width="1" stroke-dasharray="4,3" opacity="0.3"/>
+        <text x="200" y="114" text-anchor="middle" fill="#ff4466" font-size="8" font-family="system-ui" opacity="0.6">No standard layer</text>
+        <text x="200" y="128" text-anchor="middle" fill="#ff4466" font-size="8" font-family="system-ui" opacity="0.6">bridges the gap</text>
+        <text x="70" y="115" text-anchor="middle" fill="#555568" font-size="7" font-family="system-ui">IoT platforms =</text>
+        <text x="70" y="128" text-anchor="middle" fill="#555568" font-size="7" font-family="system-ui">telemetry only</text>
+        <text x="330" y="115" text-anchor="middle" fill="#555568" font-size="7" font-family="system-ui">Agent frameworks =</text>
+        <text x="330" y="128" text-anchor="middle" fill="#555568" font-size="7" font-family="system-ui">cloud only</text>
+      </svg>`,
+
+      // P3: Security — unprotected path with warning
+      `<svg viewBox="0 0 400 180" fill="none" style="width:100%;border-radius:8px;background:#08080d;margin-top:10px;">
+        <rect x="30" y="40" width="90" height="35" rx="6" fill="#111119" stroke="#a855f7" stroke-width="1"/><text x="75" y="62" text-anchor="middle" fill="#a855f7" font-size="9" font-family="system-ui">AI Agent</text>
+        <line x1="120" y1="57" x2="250" y2="57" stroke="#ff4466" stroke-width="1.5"/>
+        <polygon points="248,53 256,57 248,61" fill="#ff4466"/>
+        <rect x="260" y="40" width="110" height="35" rx="6" fill="#111119" stroke="#00cc88" stroke-width="1"/><text x="315" y="62" text-anchor="middle" fill="#00cc88" font-size="9" font-family="system-ui">Robot Arm</text>
+        <text x="188" y="50" text-anchor="middle" fill="#ff4466" font-size="8" font-family="system-ui">no policy check</text>
+        <circle cx="188" cy="90" r="14" fill="none" stroke="#ff4466" stroke-width="1.5"/>
+        <text x="188" y="94" text-anchor="middle" fill="#ff4466" font-size="14" font-family="system-ui" font-weight="700">!</text>
+        <text x="188" y="118" text-anchor="middle" fill="#ff4466" font-size="8" font-family="system-ui" opacity="0.7">Hallucination → actuation</text>
+        <text x="188" y="132" text-anchor="middle" fill="#ff4466" font-size="8" font-family="system-ui" opacity="0.7">Credential escalation</text>
+        <text x="188" y="146" text-anchor="middle" fill="#ff4466" font-size="8" font-family="system-ui" opacity="0.7">No audit trail</text>
+        <text x="188" y="168" text-anchor="middle" fill="#555568" font-size="7" font-family="system-ui">A robot that receives a bad command moves. It does not ask for confirmation.</text>
+      </svg>`
+    ];
+
+    h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:0.8rem;align-items:start;">';
+    cards.forEach((c,i)=>{
+      if(i<s){
+        h+='<div style="'+VIS(true)+'display:flex;flex-direction:column;">'+c.outerHTML+'</div>';
+        h+='<div style="'+VIS(true)+'">'+visuals[i]+'</div>';
+      }
+    });
+    if(s===0){h+='<div style="grid-column:1/-1;text-align:center;padding:40px 0;color:#555568;font-size:0.9rem;">Three problems compound &#8594;</div>';}
     return h+'</div></div>';
   }},
 
