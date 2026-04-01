@@ -26,9 +26,7 @@
 html{scroll-behavior:smooth}
 body{background:var(--bg-primary);color:var(--text-primary);font-family:'Inter',-apple-system,sans-serif;line-height:1.65;-webkit-font-smoothing:antialiased}
 
-/* EDIT MODE */
-body.edit-mode [data-editable]{outline:1px dashed rgba(0,212,255,0.3);outline-offset:2px;cursor:text;border-radius:3px}
-body.edit-mode [data-editable]:focus{outline:1px solid var(--accent-cyan);background:rgba(0,212,255,0.04)}
+
 .edit-toggle{position:fixed;bottom:1.5rem;right:1.5rem;z-index:200;display:flex;align-items:center;gap:0.5rem;background:var(--bg-card);border:1px solid var(--border-accent);padding:8px 14px;border-radius:8px;font-size:0.75rem;font-weight:600;color:var(--text-secondary);cursor:pointer;transition:all 0.2s;user-select:none}
 .edit-toggle:hover{border-color:var(--accent-cyan);color:var(--text-primary)}
 .edit-toggle.active{border-color:var(--accent-cyan);color:var(--accent-cyan)}
@@ -382,8 +380,8 @@ footer{padding:3rem 0;text-align:center;font-size:0.72rem;color:var(--text-muted
 <!-- HERO -->
 <section class="hero" id="hero" style="border-bottom:1px solid var(--border)">
   <div class="container">
-    <h1 data-editable="true">Agent Fabric</h1>
-    <p class="subtitle" data-editable="true">AI agents can reason and plan, but they have no standard way to discover, invoke, or govern physical devices. We built that layer. Device Connect is open-source, live on GitHub, and shipping inside AWS Strands Robots.</p>
+    <h1>Agent Fabric</h1>
+    <p class="subtitle">AI agents can reason and plan, but they have no standard way to discover, invoke, or govern physical devices. We built that layer. Device Connect is open-source, live on GitHub, and shipping inside AWS Strands Robots.</p>
     <div style="margin-top:1.2rem;display:flex;justify-content:center;">
       <a href="https://github.com/arm/device-connect" target="_blank" class="gh-link" style="font-size:0.8rem;padding:6px 14px;">
         <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
@@ -530,24 +528,24 @@ footer{padding:3rem 0;text-align:center;font-size:0.72rem;color:var(--text-muted
   <div class="container">
     <div class="section-header">
       <div class="eyebrow red">The Problem</div>
-      <h2 data-editable="true">Time-to-value for Physical AI is unacceptable</h2>
-      <p data-editable="true">Every partner conversation confirms the same wall: deployment timelines measured in months, custom integration code at every site, and safety unsolved at scale. Three problems compound.</p>
+      <h2>Time-to-value for Physical AI is unacceptable</h2>
+      <p>Every partner conversation confirms the same wall: deployment timelines measured in months, custom integration code at every site, and safety unsolved at scale. Three problems compound.</p>
     </div>
     <div class="card-grid cols-3">
       <div class="card">
         <div class="card-label red">Problem 1</div>
-        <h3 data-editable="true">Integration is bespoke</h3>
-        <p data-editable="true">Every device ships with its own SDK and protocol. A robotic arm speaks ROS 2, a camera uses RTSP, a sensor uses MQTT. Coordinating them means custom glue code for each pairing per site. Brittle, hard to maintain, breaks when anything changes. Each new location is a re-integration project and cost scales linearly with deployment count.</p>
+        <h3>Integration is bespoke</h3>
+        <p>Every device ships with its own SDK and protocol. A robotic arm speaks ROS 2, a camera uses RTSP, a sensor uses MQTT. Coordinating them means custom glue code for each pairing per site. Brittle, hard to maintain, breaks when anything changes. Each new location is a re-integration project and cost scales linearly with deployment count.</p>
       </div>
       <div class="card">
         <div class="card-label red">Problem 2</div>
-        <h3 data-editable="true">Agents lack device awareness</h3>
-        <p data-editable="true">Agentic frameworks (Strands, LangChain, Google ADK, Anthropic) were built for cloud reasoning, not physical device coordination. IoT platforms (AWS IoT Core, Azure IoT Hub) were built for telemetry and provisioning. Neither lets an AI agent dynamically discover a device, call a function, and enforce safety before execution. No standard layer bridges the gap.</p>
+        <h3>Agents lack device awareness</h3>
+        <p>Agentic frameworks (Strands, LangChain, Google ADK, Anthropic) were built for cloud reasoning, not physical device coordination. IoT platforms (AWS IoT Core, Azure IoT Hub) were built for telemetry and provisioning. Neither lets an AI agent dynamically discover a device, call a function, and enforce safety before execution. No standard layer bridges the gap.</p>
       </div>
       <div class="card">
         <div class="card-label red">Problem 3</div>
-        <h3 data-editable="true">Agents introduce new security risks</h3>
-        <p data-editable="true">Traditional IoT security protects the wire. AI agents introduce new attack vectors: hallucination-to-actuation, agent credential escalation, multi-tenant authority conflicts, and trust in agent-generated code. A robot arm that receives a bad command moves. It does not ask for confirmation.</p>
+        <h3>Agents introduce new security risks</h3>
+        <p>Traditional IoT security protects the wire. AI agents introduce new attack vectors: hallucination-to-actuation, agent credential escalation, multi-tenant authority conflicts, and trust in agent-generated code. A robot arm that receives a bad command moves. It does not ask for confirmation.</p>
       </div>
     </div>
     <div class="collapsible-trigger open" onclick="toggleCollapsible(this)" style="margin-top:2rem">
@@ -558,23 +556,23 @@ footer{padding:3rem 0;text-align:center;font-size:0.72rem;color:var(--text-muted
       <div class="quote-grid quote-grid-inner">
         <div class="quote-card">
           <div class="quote-logo"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAALVBMVEVHcEz56iL36CL46SL46SLp2x/v4SHy5CH25yLy5CHr3B7z5SH56iNsYg366yPgZOpEAAAADnRSTlMAfdW+7ypHkqpsFVn5D6HFyscAAAFgSURBVFiF7ZbbloMgDEXDTUCQ///cUaQOlwhR3rp6XmqbZhtCEgD46RvEUFk6IOBSswB+WtWyKAXLC0Bg0bryVRsltxeAsEazAL3rFUBEMwOrjHsFCN2VUwB+GmAmAZ88TgD4LCBQKroLCL39IwEIeewDCE01AMhZQNCzgOEihgAxCwhuFhAmAVJYI7j0+xMX2jZN3nXmLKZQlkSz0AD86gTV2LIhd+du8u3TrV33AaxaqLz/D+beVp9Dg7wBGGwQCYzAUcDNMEZXKlrD7RSzKMHVgDp5gzweVVp87XVeWwyHLFD9AQyehf/n4fDxCEBmgJE/XgwXwBOOId76+wtAOcbWTg5oZzlrAAw+nzQ1xbBBCoSopfI3qZCo/k1TbSeAeJmJKvzd+QPtJpKUN5VIxCf+eR55CunBvfjQWvoD4fytpLP4D8CTDJ6KTXXNTdJFqpQrNu55APtLX7z1p+/WH3dSSkdHSX6PAAAAAElFTkSuQmCC" style="width:22px;height:22px;border-radius:5px;object-fit:cover"><span class="co-name">Artly</span></div>
-          <p class="quote-text" data-editable="true">"The cost of writing and maintaining custom integration code for each system has become their biggest engineering bottleneck."</p>
-          <div class="attribution" data-editable="true">Yushan Chen, COO & Co-Founder (40+ installations)</div>
+          <p class="quote-text">"The cost of writing and maintaining custom integration code for each system has become their biggest engineering bottleneck."</p>
+          <div class="attribution">Yushan Chen, COO & Co-Founder (40+ installations)</div>
         </div>
         <div class="quote-card">
           <div class="quote-logo"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAAZlBMVEX6+fUUFBMAAAD////9/Pj29fH///3///ttbWvY19QRERDe3dkNDQy9vLnv7urp6OQ6OjmJiIZOTUxEREO0tLEyMTCtrKmlpKEqKinR0Mx2dnSPjoyBgX5UVFJjYmHDw7+Yl5QdHRzi9ahqAAABsklEQVRYhe2V25aCMAxFtYFWsSBeEe/+/09Om6RQRoQ4j7M4LzYU0pPdps5mkyZN+t9KSD2B8Pv1ElVgUON4/U0GKBVqoV2gKSjhCwMrNUep1Ec5Rmolt2A2IUFlfKgyP95ouQP8wsmeoMmXKbEDk7MBt2ydNBWpvREmgK1tEpy9b9j5B3YrxJiscUFKotDSniwId9Jc/Ou2jDASFHWR1cDQqyvmOXjfmjGKEoRtL5b0u4ww5pIa4OZfVjeAk20xljiWYGSEbjFTqb9gNM9QblLE209jAUZt6dy6N+FO24EYr0KMyaPtnM6YMT7GaiCEtOpM04ZeEePBEtsRA1z3Ea3SkaIuMkcRRkI4VxpQPRifwxQgtAAL29ruEOMZi5sP1sDYnG0W9yRirAUYaePeRJcRY7wPWGCEb2KMfDKLzxYYoVWRMjrYHl06ihFeePMcFpFOWXMZjWIMmHLQjaBqtz/M159q0Iue855GXcQN/hEjv7vpJND3NusIxjDd/QcKHYWX0TBGMkjHLn5M/Y1dREXaV28NbinU8Vd611EobnBU/2lMSe9zPIGrRONJkyZN6uoHDOIUEM1IBJkAAAAASUVORK5CYII=" style="width:22px;height:22px;border-radius:5px;object-fit:cover"><span class="co-name">Anthropic</span></div>
-          <p class="quote-text" data-editable="true">"There are critical security gaps in MCP that prevent it from bringing agents to the physical world."</p>
-          <div class="attribution" data-editable="true">Alek Kemeny, Applied AI</div>
+          <p class="quote-text">"There are critical security gaps in MCP that prevent it from bringing agents to the physical world."</p>
+          <div class="attribution">Alek Kemeny, Applied AI</div>
         </div>
         <div class="quote-card">
           <div class="quote-logo"><img src="data:image/jpeg;base64,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cD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyIgeG1sbnM6ZGM9Imh0dHA6Ly9wdXJsLm9yZy9kYy9lbGVtZW50cy8xLjEvIiB4bWxuczpwaG90b3Nob3A9Imh0dHA6Ly9ucy5hZG9iZS5jb20vcGhvdG9zaG9wLzEuMC8iIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIiB4bWxuczpzdEV2dD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlRXZlbnQjIiB4bWxuczpzdFJlZj0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlUmVmIyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgMjQuMCAoTWFjaW50b3NoKSIgeG1wOkNyZWF0ZURhdGU9IjIwMjItMTEtMTVUMTk6Mzk6NTQtMDU6MDAiIHhtcDpNb2RpZnlEYXRlPSIyMDIzLTA2LTI2VDE0OjAyOjI5LTA0OjAwIiB4bXA6TWV0YWRhdGFEYXRlPSIyMDIzLTA2LTI2VDE0OjAyOjI5LTA0OjAwIiBkYzpmb3JtYXQ9ImltYWdlL2pwZWciIHBob3Rvc2hvcDpDb2xvck1vZGU9IjMiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6ZWFlNDI1NDAtMzU3YS00ZDI5LTlhYWMtZTA4MWMyMDVhYWIyIiB4bXBNTTpEb2N1bWVudElEPSJhZG9iZTpkb2NpZDpwaG90b3Nob3A6ODJlMDM2MDktMTU1YS0wZDRmLWJmN2QtMjEzYTNmNmFjMWVlIiB4bXBNTTpPcmlnaW5hbERvY3VtZW50SUQ9InhtcC5kaWQ6MjVmMzdlMzctZTE2My00NmZlLWFjM2UtZTQwZGIxNjk1ZGUzIj4gPHhtcE1NOkhpc3Rvcnk+IDxyZGY6U2VxPiA8cmRmOmxpIHN0RXZ0OmFjdGlvbj0iY3JlYXRlZCIgc3RFdnQ6aW5zdGFuY2VJRD0ieG1wLmlpZDoyNWYzN2UzNy1lMTYzLTQ2ZmUtYWMzZS1lNDBkYjE2OTVkZTMiIHN0RXZ0OndoZW49IjIwMjItMTEtMTVUMTk6Mzk6NTQtMDU6MDAiIHN0RXZ0OnNvZnR3YXJlQWdlbnQ9IkFkb2JlIFBob3Rvc2hvcCAyNC4wIChNYWNpbnRvc2gpIi8+IDxyZGY6bGkgc3RFdnQ6YWN0aW9uPSJjb252ZXJ0ZWQiIHN0RXZ0OnBhcmFtZXRlcnM9ImZyb20gaW1hZ2UvcG5nIHRvIGFwcGxpY2F0aW9uL3ZuZC5hZG9iZS5waG90b3Nob3AiLz4gPHJkZjpsaSBzdEV2dDphY3Rpb249InNhdmVkIiBzdEV2dDppbnN0YW5jZUlEPSJ4bXAuaWlkOjhlMjA5ZThiLTE0YTgtNDJhOC1hMTc2LTMyMDBkMmJlMTdlYSIgc3RFdnQ6d2hlbj0iMjAyMi0xMS0yMVQxMDoyNzowNi0wNTowMCIgc3RFdnQ6c29mdHdhcmVBZ2VudD0iQWRvYmUgUGhvdG9zaG9wIDI0LjAgKE1hY2ludG9zaCkiIHN0RXZ0OmNoYW5nZWQ9Ii8iLz4gPHJkZjpsaSBzdEV2dDphY3Rpb249InNhdmVkIiBzdEV2dDppbnN0YW5jZUlEPSJ4bXAuaWlkOjY5MDE4YjFkLWYzNzEtNGY4My04NzExLWQ2YmNkMDc5YzM3ZSIgc3RFdnQ6d2hlbj0iMjAyMy0wNi0yNlQxNDowMjoyOS0wNDowMCIgc3RFdnQ6c29mdHdhcmVBZ2VudD0iQWRvYmUgUGhvdG9zaG9wIDI0LjUgKE1hY2ludG9zaCkiIHN0RXZ0OmNoYW5nZWQ9Ii8iLz4gPHJkZjpsaSBzdEV2dDphY3Rpb249ImNvbnZlcnRlZCIgc3RFdnQ6cGFyYW1ldGVycz0iZnJvbSBhcHBsaWNhdGlvbi92bmQuYWRvYmUucGhvdG9zaG9wIHRvIGltYWdlL2pwZWciLz4gPHJkZjpsaSBzdEV2dDphY3Rpb249ImRlcml2ZWQiIHN0RXZ0OnBhcmFtZXRlcnM9ImNvbnZlcnRlZCBmcm9tIGFwcGxpY2F0aW9uL3ZuZC5hZG9iZS5waG90b3Nob3AgdG8gaW1hZ2UvanBlZyIvPiA8cmRmOmxpIHN0RXZ0OmFjdGlvbj0ic2F2ZWQiIHN0RXZ0Omluc3RhbmNlSUQ9InhtcC5paWQ6ZWFlNDI1NDAtMzU3YS00ZDI5LTlhYWMtZTA4MWMyMDVhYWIyIiBzdEV2dDp3aGVuPSIyMDIzLTA2LTI2VDE0OjAyOjI5LTA0OjAwIiBzdEV2dDpzb2Z0d2FyZUFnZW50PSJBZG9iZSBQaG90b3Nob3AgMjQuNSAoTWFjaW50b3NoKSIgc3RFdnQ6Y2hhbmdlZD0iLyIvPiA8L3JkZjpTZXE+IDwveG1wTU06SGlzdG9yeT4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6NjkwMThiMWQtZjM3MS00ZjgzLTg3MTEtZDZiY2QwNzljMzdlIiBzdFJlZjpkb2N1bWVudElEPSJhZG9iZTpkb2NpZDpwaG90b3Nob3A6MzIyYzQwMTktMTFjNC0yMzRhLWIxZjAtYTAwZmRiYTY0MzliIiBzdFJlZjpvcmlnaW5hbERvY3VtZW50SUQ9InhtcC5kaWQ6MjVmMzdlMzctZTE2My00NmZlLWFjM2UtZTQwZGIxNjk1ZGUzIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDw/eHBhY2tldCBlbmQ9InciPz7/2wBDAAYEBAUEBAYFBQUGBgYHCQ4JCQgICRINDQoOFRIWFhUSFBQXGiEcFxgfGRQUHScdHyIjJSUlFhwpLCgkKyEkJST/2wBDAQYGBgkICREJCREkGBQYJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCT/wAARCADAAMADAREAAhEBAxEB/8QAHAABAAIDAQEBAAAAAAAAAAAAAAcIAgUGAwQB/8QARRAAAQMDAQMJBAcFBQkAAAAAAQACAwQFBhEHITEIEhMi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" style="width:22px;height:22px;border-radius:5px;object-fit:cover"><span class="co-name">Boston Dynamics</span></div>
-          <p class="quote-text" data-editable="true">"Customer time-to-ROI for Spot is 12-18 months, driven by integration and onboarding."</p>
-          <div class="attribution" data-editable="true">Caleb Sylvester, Sr. Dir Growth</div>
+          <p class="quote-text">"Customer time-to-ROI for Spot is 12-18 months, driven by integration and onboarding."</p>
+          <div class="attribution">Caleb Sylvester, Sr. Dir Growth</div>
         </div>
         <div class="quote-card">
           <div class="quote-logo"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAAAYFBMVEWfAAD////n2dn07u7l1dX59vbHnp7Yv7/s4eG5f3/WurvOrK2lOjvUtreqUlOjKy2kNDbeysrFmprBkJCxaGmgFBefAAWvYmOsWlrw5+ezbW6pS0ygAwmnQ0SmPj+iIyawMi+mAAABCklEQVRIicWW63KDIBCFOaKIF5JYNalJ2r7/W9aITqeyWM9MOtlfupwPF1x2Ueo1dnBWZzoxx13qk9FA81a0pUbaTa6+3dAbAPnZP18AW/RKlYjKazvqq5/3CsjSBDamfx/lGNYfBNItPepfPvdwJZF4xNmGOJBNwFWYRgbKSY/z2u8iwM3rww25R4DBAyYccSJw8Hp04dCHCNgZ+BTGoENfPeszKdpGSA2D2JpHawVAz4CYBF9F4OpnPRoJEKxbgHwnUC2A2wnkC1D9rZ0sYQH97wAdEr1oelvpH0enBp18fHrTB4g+onwRoMsMX8joUskXY77c0w2Fb1l8U1R021V8Y38Yd3V4sn0DqkEJ7bnezC4AAAAASUVORK5CYII=" style="width:22px;height:22px;border-radius:5px;object-fit:cover"><span class="co-name">Carnegie Mellon</span></div>
-          <p class="quote-text" data-editable="true">"Managing policy and safety at scale remains unsolved."</p>
-          <div class="attribution" data-editable="true">Carl Kingsford, Professor of Computer Science (600+ instruments)</div>
+          <p class="quote-text">"Managing policy and safety at scale remains unsolved."</p>
+          <div class="attribution">Carl Kingsford, Professor of Computer Science (600+ instruments)</div>
         </div>
       </div>
     </div>
@@ -586,8 +584,8 @@ footer{padding:3rem 0;text-align:center;font-size:0.72rem;color:var(--text-muted
   <div class="container">
     <div class="section-header">
       <div class="eyebrow cyan">The Solution</div>
-      <h2 data-editable="true">The missing layer between agents and physical devices</h2>
-      <p data-editable="true">Device Connect is an open-source Python framework from Arm that lets any AI agent discover and invoke functions on any physical device. Framework-agnostic, works device-to-device with zero infrastructure, and scales to thousands.</p>
+      <h2>The missing layer between agents and physical devices</h2>
+      <p>Device Connect is an open-source Python framework from Arm that lets any AI agent discover and invoke functions on any physical device. Framework-agnostic, works device-to-device with zero infrastructure, and scales to thousands.</p>
     </div>
     <div class="card-grid cols-3">
       <div class="card">
@@ -604,8 +602,8 @@ footer{padding:3rem 0;text-align:center;font-size:0.72rem;color:var(--text-muted
           <circle cx="24" cy="34" r="1.5" fill="#00d4ff" opacity="0.6"/>
         </svg>
         <div class="card-label cyan">Capability 1</div>
-        <h3 data-editable="true">Discover</h3>
-        <p data-editable="true">Devices self-register with a ~40-line Python driver, announcing capabilities, state, and available functions. Agents adapt to the fleet in real time with no hardcoded knowledge of what is deployed at a site.</p>
+        <h3>Discover</h3>
+        <p>Devices self-register with a ~40-line Python driver, announcing capabilities, state, and available functions. Agents adapt to the fleet in real time with no hardcoded knowledge of what is deployed at a site.</p>
       </div>
       <div class="card">
         <svg width="48" height="48" viewBox="0 0 48 48" fill="none" style="margin-bottom:12px;">
@@ -621,8 +619,8 @@ footer{padding:3rem 0;text-align:center;font-size:0.72rem;color:var(--text-muted
           </circle>
         </svg>
         <div class="card-label cyan">Capability 2</div>
-        <h3 data-editable="true">Invoke</h3>
-        <p data-editable="true">Any AI agent can call any function on any device using four core tools: <code>discover_devices()</code>, <code>invoke_device()</code>, <code>get_device_status()</code>, and <code>subscribe()</code>. Works across Strands, LangGraph, Claude MCP, or plain Python.</p>
+        <h3>Invoke</h3>
+        <p>Any AI agent can call any function on any device using four core tools: <code>discover_devices()</code>, <code>invoke_device()</code>, <code>get_device_status()</code>, and <code>subscribe()</code>. Works across Strands, LangGraph, Claude MCP, or plain Python.</p>
       </div>
       <div class="card">
         <svg width="48" height="48" viewBox="0 0 48 48" fill="none" style="margin-bottom:12px;">
@@ -632,8 +630,8 @@ footer{padding:3rem 0;text-align:center;font-size:0.72rem;color:var(--text-muted
           <circle cx="24" cy="24" r="12" stroke="#00d4ff" stroke-width="0.5" fill="none" opacity="0.2"/>
         </svg>
         <div class="card-label cyan">Capability 3</div>
-        <h3 data-editable="true">Govern</h3>
-        <p data-editable="true">Every action passes through policy checks before execution on the device itself, sub-millisecond, no cloud round-trip. Capabilities-based authorization where permissions travel with the requestor. Full audit logging.</p>
+        <h3>Govern</h3>
+        <p>Every action passes through policy checks before execution on the device itself, sub-millisecond, no cloud round-trip. Capabilities-based authorization where permissions travel with the requestor. Full audit logging.</p>
         <span class="status-bubble dev">Under active development</span>
       </div>
     </div>
@@ -645,8 +643,8 @@ footer{padding:3rem 0;text-align:center;font-size:0.72rem;color:var(--text-muted
             <div class="card-label cyan" style="margin:0">Shipped</div>
             <span class="status-bubble live" style="margin:0">Live at GTC March 18</span>
           </div>
-          <h3 data-editable="true">Device Connect - Now Available</h3>
-          <p data-editable="true">The foundation layer: discovery and invocation. Released as the device control layer inside AWS Strands Robots alongside NVIDIA and HuggingFace. Install: <code>pip install strands-robots[device_connect]</code>. Supports 32 robots with plans to expand beyond 100.</p>
+          <h3>Device Connect - Now Available</h3>
+          <p>The foundation layer: discovery and invocation. Released as the device control layer inside AWS Strands Robots alongside NVIDIA and HuggingFace. Install: <code>pip install strands-robots[device_connect]</code>. Supports 32 robots with plans to expand beyond 100.</p>
           <div class="collapsible-trigger" onclick="toggleCollapsible(this)">
             <h4>Ecosystem Position - Validated at GTC</h4>
             <span class="arrow">&#9662;</span>
@@ -661,8 +659,8 @@ footer{padding:3rem 0;text-align:center;font-size:0.72rem;color:var(--text-muted
             <div class="card-label cyan" style="margin:0">Building Next</div>
             
           </div>
-          <h3 data-editable="true">Agent Fabric - What's next?</h3>
-          <p data-editable="true">Device Connect is the first wedge. Agent Fabric adds: hosted cloud infrastructure (zero-infra for partners), edge governance and policy enforcement, native orchestration (Arm's own agent layer), framework expansion (Anthropic, LangChain, OpenAI), and silicon pull-through to Arm edge and cloud silicon.</p>
+          <h3>Agent Fabric - What's next?</h3>
+          <p>Device Connect is the first wedge. Agent Fabric adds: hosted cloud infrastructure (zero-infra for partners), edge governance and policy enforcement, native orchestration (Arm's own agent layer), framework expansion (Anthropic, LangChain, OpenAI), and silicon pull-through to Arm edge and cloud silicon.</p>
         </div>
       </div>
     </div>
@@ -704,8 +702,8 @@ footer{padding:3rem 0;text-align:center;font-size:0.72rem;color:var(--text-muted
   <div class="container">
     <div class="section-header">
       <div class="eyebrow green">Partner Traction & Validation</div>
-      <h2 data-editable="true">Validation Partners</h2>
-      <p data-editable="true">AWS and Anthropic shape the interfaces the rest of the ecosystem adopts. Partners across robotics, lab automation, and research validate against real hardware.</p>
+      <h2>Validation Partners</h2>
+      <p>Strategic partnerships across AI frameworks, robotics, and research validate Device Connect against real hardware and production workloads.</p>
     </div>
     <div class="partner-grid">
       <div class="partner-card">
@@ -714,10 +712,10 @@ footer{padding:3rem 0;text-align:center;font-size:0.72rem;color:var(--text-muted
           <div><span class="partner-name">AWS Strands</span><br><span class="partner-status">&#9679; Active</span></div>
         </div>
         <div class="partner-body">
-          <p data-editable="true">Device Connect launched at GTC as the device control layer inside Strands Robots. Ozgur Tohumcu (GM, Auto/Manufacturing) personally aligned and offering partner introductions. Meeting with Swami Sivasubramanian (VP, Agentic AI) planned for early April.</p>
-          <p data-editable="true"><strong style="color:var(--text-primary)">Strategic value:</strong> Fastest path to edge developer adoption. Proves the execution layer beneath cloud-to-edge workflows. Target: joint announcement June 2026, re:Invent demo November 2026.</p>
+          <p>Device Connect launched at GTC as the device control layer inside Strands Robots. Executive alignment at VP level across Agentic AI and Manufacturing.</p>
+          <p><strong style="color:var(--text-primary)">Strategic value:</strong> Fastest path to edge developer adoption. Proves the execution layer beneath cloud-to-edge agent workflows.</p>
         </div>
-        <div class="partner-next"><strong>Next:</strong> VP-to-VP with Swami. Formalize Strands core integration, AWS-hosted Device Connect infra, joint partner engagement across Strands' 32 listed partners.</div>
+        <div class="partner-next"><strong>Next:</strong> Formalize core integration. Joint partner engagement. Target joint announcement by mid-year, conference demo by end of year.</div>
       </div>
       <div class="partner-card">
         <div class="partner-header">
@@ -725,10 +723,10 @@ footer{padding:3rem 0;text-align:center;font-size:0.72rem;color:var(--text-muted
           <div><span class="partner-name">Anthropic</span><br><span class="partner-status">&#9679; Active</span></div>
         </div>
         <div class="partner-body">
-          <p data-editable="true">Anthropic indicated they are working internally on aligned concepts, have partners in academia, and see tremendous value in partnering with Arm given the fabric work. Internal team reviewed our materials and is aligned to share details on their confidential work.</p>
-          <p data-editable="true"><strong style="color:var(--text-primary)">Strategic value:</strong> Shape the next agent-to-device standard. Arm helps define how agents securely interact with physical systems. Co-design Agent Device Protocol (working title) by CYQ3. Target: native Claude Agent SDK integration Summer 2026.</p>
+          <p>Working internally on aligned concepts for agent-to-device interaction. Strong interest in partnering with Arm to co-define how agents securely interact with physical systems.</p>
+          <p><strong style="color:var(--text-primary)">Strategic value:</strong> Shape the next agent-to-device protocol standard. Co-design how agents securely discover and govern physical devices.</p>
         </div>
-        <div class="partner-next"><strong>Next:</strong> Follow-up April 3. Share CDCP security research (Ferreira, Vincent, Miller). Solicit feedback on repo + MCP integration.</div>
+        <div class="partner-next"><strong>Next:</strong> Share security research and align on MCP integration. Target native SDK integration by summer.</div>
       </div>
       <div class="partner-card">
         <div class="partner-header">
@@ -736,10 +734,10 @@ footer{padding:3rem 0;text-align:center;font-size:0.72rem;color:var(--text-muted
           <div><span class="partner-name">Artly</span><br><span class="partner-status">&#9679; Active</span></div>
         </div>
         <div class="partner-body">
-          <p data-editable="true">40+ robotic barista installations across 20+ locations. 95% uptime. Clients include Tesla, NVIDIA, Salesforce, Royal Caribbean. Biggest bottleneck: custom integration code per device pairing per site.</p>
-          <p data-editable="true"><strong style="color:var(--text-primary)">Validation:</strong> June 1 production beta. Customer-facing robotic cafe at Arm SJC. Adding vision, voice, holographic barista, queue management. Each new location becomes a config change, not re-integration.</p>
+          <p>Robotic barista deployments across 20+ locations. Biggest bottleneck: custom integration code per device pairing per site. Device Connect turns each new location into a config change, not a re-integration project.</p>
+          <p><strong style="color:var(--text-primary)">Strategic value:</strong> Production-grade validation with real customers. Proves Device Connect eliminates linear scaling costs in multi-site robotics.</p>
         </div>
-        <div class="partner-next"><strong>Next:</strong> Hardware order deadline March 31. Scoping incremental HC. Planned for summer release.</div>
+        <div class="partner-next"><strong>Next:</strong> Production beta this summer. Customer-facing deployment at Arm HQ with expanded capabilities.</div>
       </div>
       <div class="partner-card">
         <div class="partner-header">
@@ -747,15 +745,15 @@ footer{padding:3rem 0;text-align:center;font-size:0.72rem;color:var(--text-muted
           <div><span class="partner-name">CMU Cloud Lab</span><br><span class="partner-status">&#9679; Active</span></div>
         </div>
         <div class="partner-body">
-          <p data-editable="true">600+ remotely controlled scientific instruments. Safety-critical: a single bad actuation can destroy an experiment or damage equipment. First external contributor to the codebase.</p>
-          <p data-editable="true"><strong style="color:var(--text-primary)">Validation:</strong> Repo shared. Simulation workflow underway. Policy-aware orchestration for safety-critical instruments. Planned outputs: open-source implementations, academic publications.</p>
+          <p>600+ remotely controlled scientific instruments where safety is critical — a single bad actuation can destroy an experiment. First external contributor to the Device Connect codebase.</p>
+          <p><strong style="color:var(--text-primary)">Strategic value:</strong> Validates policy-aware orchestration for safety-critical environments. Produces open-source implementations and academic publications.</p>
         </div>
-        <div class="partner-next"><strong>Next:</strong> Initial simulation results Q2 2026. Reference implementation for joint announcement.</div>
+        <div class="partner-next"><strong>Next:</strong> Simulation results by Q2. Reference implementation for joint announcement.</div>
       </div>
     </div>
 
     <div class="pipeline-section">
-      <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:1.2rem" data-editable="true">Partner Pipeline</h3>
+      <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:1.2rem">Partner Pipeline</h3>
       <div class="pipeline-legend">
         <div class="legend-item"><div class="legend-swatch priority"></div> Prioritized</div>
         <div class="legend-item"><div class="legend-swatch general"></div> Engaged / Prospect</div>
@@ -781,12 +779,12 @@ footer{padding:3rem 0;text-align:center;font-size:0.72rem;color:var(--text-muted
       <span class="arrow">&#9662;</span>
     </div>
     <div class="collapsible-body open">
-      <p style="color:var(--text-secondary);font-size:0.92rem;line-height:1.7;margin-bottom:1.5rem" data-editable="true">Device Connect is the agentic software layer on top of our silicon and SDK strategy. Hardware-agnostic to maximize adoption. Arm advantage through distribution and optimization.</p>
+      <p style="color:var(--text-secondary);font-size:0.92rem;line-height:1.7;margin-bottom:1.5rem">Device Connect is the agentic software layer on top of our silicon and SDK strategy. Hardware-agnostic to maximize adoption. Arm advantage through distribution and optimization.</p>
       <div class="card-grid cols-2" style="border-radius:10px">
-        <div class="card"><div class="card-label orange">Distribution</div><h3 data-editable="true">Edge SDK Integration</h3><p data-editable="true">Device Connect ships as part of the Edge SDK for Arm high-value solutions. No cross-device orchestration exists in the SDK today. Developers on Arm silicon get device orchestration out of the box.</p></div>
-        <div class="card"><div class="card-label orange">Optimization</div><h3 data-editable="true">Model Fallback + Hardware Security</h3><p data-editable="true">Native agent supports model fallback: cloud models handle complex reasoning, Arm-optimized local models handle time-critical or offline decisions, pulling inference onto Arm IP. Future: hardware-isolated governance binary using pKVM/RME.</p></div>
-        <div class="card"><div class="card-label orange">Edge Compute</div><h3 data-editable="true">Hardware-isolated governance</h3><p data-editable="true">Hardware-isolated governance, encrypted VLA model weights (core IP protection for partners like Artly deploying on customer hardware), measured boot, attested execution. Target: 2027+.</p></div>
-        <div class="card"><div class="card-label orange">Cloud Compute</div><h3 data-editable="true">Agent reasoning on Arm cloud compute</h3><p data-editable="true">Arm cloud compute provides the reasoning layer. Cloud planning in the cloud, local execution on Arm edge silicon, connected by Device Connect. Full-stack Arm story.</p></div>
+        <div class="card"><div class="card-label orange">Distribution</div><h3>Edge SDK Integration</h3><p>Device Connect ships as part of the Edge SDK for Arm high-value solutions. No cross-device orchestration exists in the SDK today. Developers on Arm silicon get device orchestration out of the box.</p></div>
+        <div class="card"><div class="card-label orange">Optimization</div><h3>Model Fallback + Hardware Security</h3><p>Native agent supports model fallback: cloud models handle complex reasoning, Arm-optimized local models handle time-critical or offline decisions, pulling inference onto Arm IP. Future: hardware-isolated governance binary using pKVM/RME.</p></div>
+        <div class="card"><div class="card-label orange">Edge Compute</div><h3>Hardware-isolated governance</h3><p>Hardware-isolated governance, encrypted VLA model weights (core IP protection for partners like Artly deploying on customer hardware), measured boot, attested execution. Target: 2027+.</p></div>
+        <div class="card"><div class="card-label orange">Cloud Compute</div><h3>Agent reasoning on Arm cloud compute</h3><p>Arm cloud compute provides the reasoning layer. Cloud planning in the cloud, local execution on Arm edge silicon, connected by Device Connect. Full-stack Arm story.</p></div>
       </div>
     </div>
   </div>
@@ -804,15 +802,15 @@ footer{padding:3rem 0;text-align:center;font-size:0.72rem;color:var(--text-muted
     </div>
     <div class="collapsible-body open">
       <div class="timeline">
-        <div class="timeline-item"><div class="timeline-date">March 18</div><div class="timeline-marker"><div class="timeline-dot done"></div><div class="timeline-line"></div></div><div class="timeline-content"><h4>GTC Launch <span class="tag done">Done</span></h4><p data-editable="true">Device Connect released as open-source inside AWS Strands Robots alongside NVIDIA and HuggingFace.</p></div></div>
-        <div class="timeline-item"><div class="timeline-date">March 31</div><div class="timeline-marker"><div class="timeline-dot active"></div><div class="timeline-line"></div></div><div class="timeline-content"><h4>Artly Hardware Order <span class="tag active">Today</span></h4><p data-editable="true">Order deadline for robotic arms for Arm SJC deployment.</p></div></div>
-        <div class="timeline-item"><div class="timeline-date">Early April</div><div class="timeline-marker"><div class="timeline-dot future"></div><div class="timeline-line"></div></div><div class="timeline-content"><h4>AWS VP-to-VP + Anthropic <span class="tag upcoming">Upcoming</span></h4><p data-editable="true">Executive alignment with AWS Agentic AI leadership. Anthropic deep-dive to share research and align on MCP integration.</p></div></div>
-        <div class="timeline-item"><div class="timeline-date">CYQ2 2026</div><div class="timeline-marker"><div class="timeline-dot future"></div><div class="timeline-line"></div></div><div class="timeline-content"><h4>Infrastructure + Expansion <span class="tag upcoming">Upcoming</span></h4><p data-editable="true">Arm-hosted infra validated. Anthropic MCP integration validated. CMU simulation results. Onboard 2-3 co-dev partners. PIC forum convenes.</p></div></div>
-        <div class="timeline-item"><div class="timeline-date">June 1</div><div class="timeline-marker"><div class="timeline-dot future"></div><div class="timeline-line"></div></div><div class="timeline-content"><h4>Artly Production Beta <span class="tag upcoming">Upcoming</span></h4><p data-editable="true">Customer-facing robotic cafe powered by Device Connect. Vision, voice, holographic barista, queue management. First production deployment.</p></div></div>
-        <div class="timeline-item"><div class="timeline-date">June 10</div><div class="timeline-marker"><div class="timeline-dot future"></div><div class="timeline-line"></div></div><div class="timeline-content"><h4>Super AI Conference - Singapore <span class="tag upcoming">Upcoming</span></h4><p data-editable="true">Opportunity to showcase Agent Fabric at Super AI Singapore. Coordinated with broader joint AWS announcement and summer release of edge governance.</p></div></div>
-        <div class="timeline-item"><div class="timeline-date">CYQ3</div><div class="timeline-marker"><div class="timeline-dot future"></div><div class="timeline-line"></div></div><div class="timeline-content"><h4>APM: Reference Deployments <span class="tag upcoming">Upcoming</span></h4><p data-editable="true">Device Connect deployed with Physical AI partner. Agent Device Protocol co-designed with Anthropic.</p></div></div>
-        <div class="timeline-item"><div class="timeline-date">CYQ4 2026</div><div class="timeline-marker"><div class="timeline-dot future"></div><div class="timeline-line"></div></div><div class="timeline-content"><h4>Joint AWS Announcement + re:Invent <span class="tag upcoming">Upcoming</span></h4><p data-editable="true">Full Agent Fabric launch. Joint AWS announcement at re:Invent. Edge governance and framework expansion live.</p></div></div>
-        <div class="timeline-item"><div class="timeline-date">2027+</div><div class="timeline-marker"><div class="timeline-dot future"></div><div class="timeline-line"></div></div><div class="timeline-content"><h4>Edge SDK for High Value Solutions <span class="tag upcoming">Planned</span></h4><p data-editable="true">Device Connect embedded in Edge SDK for high value solutions. Silicon pull-through: hardware-isolated governance, encrypted model weights, measured boot.</p></div></div>
+        <div class="timeline-item"><div class="timeline-date">March 18</div><div class="timeline-marker"><div class="timeline-dot done"></div><div class="timeline-line"></div></div><div class="timeline-content"><h4>GTC Launch <span class="tag done">Done</span></h4><p>Device Connect released as open-source inside AWS Strands Robots alongside NVIDIA and HuggingFace.</p></div></div>
+        <div class="timeline-item"><div class="timeline-date">March 31</div><div class="timeline-marker"><div class="timeline-dot active"></div><div class="timeline-line"></div></div><div class="timeline-content"><h4>Artly Hardware Order <span class="tag active">Today</span></h4><p>Order deadline for robotic arms for Arm SJC deployment.</p></div></div>
+        <div class="timeline-item"><div class="timeline-date">Early April</div><div class="timeline-marker"><div class="timeline-dot future"></div><div class="timeline-line"></div></div><div class="timeline-content"><h4>AWS VP-to-VP + Anthropic <span class="tag upcoming">Upcoming</span></h4><p>Executive alignment with AWS Agentic AI leadership. Anthropic deep-dive to share research and align on MCP integration.</p></div></div>
+        <div class="timeline-item"><div class="timeline-date">CYQ2 2026</div><div class="timeline-marker"><div class="timeline-dot future"></div><div class="timeline-line"></div></div><div class="timeline-content"><h4>Infrastructure + Expansion <span class="tag upcoming">Upcoming</span></h4><p>Arm-hosted infra validated. Anthropic MCP integration validated. CMU simulation results. Onboard 2-3 co-dev partners. PIC forum convenes.</p></div></div>
+        <div class="timeline-item"><div class="timeline-date">June 1</div><div class="timeline-marker"><div class="timeline-dot future"></div><div class="timeline-line"></div></div><div class="timeline-content"><h4>Artly Production Beta <span class="tag upcoming">Upcoming</span></h4><p>Customer-facing robotic cafe powered by Device Connect. Vision, voice, holographic barista, queue management. First production deployment.</p></div></div>
+        <div class="timeline-item"><div class="timeline-date">June 10</div><div class="timeline-marker"><div class="timeline-dot future"></div><div class="timeline-line"></div></div><div class="timeline-content"><h4>Super AI Conference - Singapore <span class="tag upcoming">Upcoming</span></h4><p>Opportunity to showcase Agent Fabric at Super AI Singapore. Coordinated with broader joint AWS announcement and summer release of edge governance.</p></div></div>
+        <div class="timeline-item"><div class="timeline-date">CYQ3</div><div class="timeline-marker"><div class="timeline-dot future"></div><div class="timeline-line"></div></div><div class="timeline-content"><h4>APM: Reference Deployments <span class="tag upcoming">Upcoming</span></h4><p>Device Connect deployed with Physical AI partner. Agent Device Protocol co-designed with Anthropic.</p></div></div>
+        <div class="timeline-item"><div class="timeline-date">CYQ4 2026</div><div class="timeline-marker"><div class="timeline-dot future"></div><div class="timeline-line"></div></div><div class="timeline-content"><h4>Joint AWS Announcement + re:Invent <span class="tag upcoming">Upcoming</span></h4><p>Full Agent Fabric launch. Joint AWS announcement at re:Invent. Edge governance and framework expansion live.</p></div></div>
+        <div class="timeline-item"><div class="timeline-date">2027+</div><div class="timeline-marker"><div class="timeline-dot future"></div><div class="timeline-line"></div></div><div class="timeline-content"><h4>Edge SDK for High Value Solutions <span class="tag upcoming">Planned</span></h4><p>Device Connect embedded in Edge SDK for high value solutions. Silicon pull-through: hardware-isolated governance, encrypted model weights, measured boot.</p></div></div>
       </div>
     </div>
   </div>
@@ -830,9 +828,9 @@ footer{padding:3rem 0;text-align:center;font-size:0.72rem;color:var(--text-muted
     </div>
     <div class="collapsible-body open">
       <div class="ask-grid" style="margin-top:0;border-radius:0 0 10px 10px">
-        <div class="ask-card"><div class="ask-number">01</div><h3 data-editable="true">Partner Introductions</h3><p data-editable="true">Intros to robotics companies (e.g. SoftBank Robotics) and their enterprise customers facing time-to-value challenges. AWS is a force multiplier with 32 listed Strands partners. The model: we bring Device Connect, AWS brings the agent layer, the partner brings the use case.</p></div>
-        <div class="ask-card"><div class="ask-number">02</div><h3 data-editable="true">Silicon Alignment</h3><p data-editable="true">Endorsement for Device Connect in Edge SDK for high-value solutions, and alignment for cloud compute. No cross-device orchestration exists in the SDK today. Primary mechanism for silicon pull-through. Target: 2027+.</p></div>
-        <div class="ask-card"><div class="ask-number">03</div><h3 data-editable="true">Executive Support</h3><p data-editable="true">If we hit blockers with framework providers or partner engagements. Currently pulling resources from Marketing and STE Partner Org for reference work. May need more formal support as we ramp in Q2-Q3.</p></div>
+        <div class="ask-card"><div class="ask-number">01</div><h3>Partner Introductions</h3><p>Intros to robotics companies (e.g. SoftBank Robotics) and their enterprise customers facing time-to-value challenges. AWS is a force multiplier with 32 listed Strands partners. The model: we bring Device Connect, AWS brings the agent layer, the partner brings the use case.</p></div>
+        <div class="ask-card"><div class="ask-number">02</div><h3>Silicon Alignment</h3><p>Endorsement for Device Connect in Edge SDK for high-value solutions, and alignment for cloud compute. No cross-device orchestration exists in the SDK today. Primary mechanism for silicon pull-through. Target: 2027+.</p></div>
+        <div class="ask-card"><div class="ask-number">03</div><h3>Executive Support</h3><p>If we hit blockers with framework providers or partner engagements. Currently pulling resources from Marketing and STE Partner Org for reference work. May need more formal support as we ramp in Q2-Q3.</p></div>
       </div>
     </div>
   </div>
@@ -886,32 +884,12 @@ function toggleCollapsible(t){t.classList.toggle('open');t.nextElementSibling.cl
 const STORAGE_KEY = 'agent-fabric-edits-v2';
 
 // Assign stable IDs to all editable elements on first load
-function initEditableIds() {let c=0;
-  document.querySelectorAll('[data-editable]').forEach((el, i) => {
-    if (!el.id) el.id = 'e-' + el.closest('section')?.id + '-' + (c++);
-  });
-}
 
 // Save all current editable content
-function saveEdits() {
-  const edits = {};
-  document.querySelectorAll('[data-editable]').forEach(el => {
-    edits[el.id] = el.innerHTML;
-  });
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(edits)); } catch(e) {}
   showSaveToast();
 }
 
 // Restore saved edits
-function restoreEdits() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return;
-    const edits = JSON.parse(raw);
-    document.querySelectorAll('[data-editable]').forEach(el => {
-      if (edits[el.id] && edits[el.id] !== el.innerHTML) {
-        el.innerHTML = edits[el.id];
-      }
     });
   } catch(e) {}
 }
@@ -933,21 +911,6 @@ function debouncedSave() {
 }
 
 // Toggle edit mode
-function toggleEditMode() {
-  const b = document.body;
-  const t = document.getElementById('editToggle');
-  const l = document.getElementById('editLabel');
-  const isEdit = b.classList.toggle('edit-mode');
-  t.classList.toggle('active', isEdit);
-  l.textContent = isEdit ? 'Editing (auto-saves)' : 'Edit mode';
-
-  document.querySelectorAll('[data-editable]').forEach(el => {
-    el.contentEditable = isEdit ? 'true' : 'false';
-    if (isEdit) {
-      el.addEventListener('input', debouncedSave);
-    } else {
-      el.removeEventListener('input', debouncedSave);
-    }
   });
 
   // Save immediately when exiting edit mode
