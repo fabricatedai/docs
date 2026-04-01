@@ -840,30 +840,6 @@ footer{padding:3rem 0;text-align:center;font-size:0.72rem;color:var(--text-muted
   <div style="font-size:14px;color:#4a5568;"><strong style="color:#7a8299;font-weight:600;">Agent Fabric</strong> by <span style="color:#00c1de;font-weight:800;">Arm</span></div>
 </div>
 
-<div class="edit-controls">
-<div class="edit-toggle" id="editToggle" onclick="toggleEditMode()">
-    <span class="toggle-dot"></span>
-    <span id="editLabel">Edit mode</span>
-  </div>
-
-  <div class="save-toast" id="saveToast">Saved</div>
-</div>
-
-<style>
-.edit-controls .save-toast {
-  position:fixed;bottom:1.5rem;right:12rem;z-index:200;
-  background:rgba(0,204,136,0.15);border:1px solid rgba(0,204,136,0.3);
-  color:var(--accent-green);font-size:0.7rem;font-weight:600;
-  padding:5px 12px;border-radius:6px;
-  opacity:0;transform:translateY(4px);
-  transition:opacity 0.25s,transform 0.25s;
-  pointer-events:none;
-}
-.edit-controls .save-toast.show {
-  opacity:1;transform:translateY(0);
-}
-</style>
-
 <script>
 // Nav scroll tracking
 const sections=document.querySelectorAll('section[id]');
@@ -876,47 +852,6 @@ function toggleRobotList(){const p=document.getElementById('robot-list');const s
 
 // Collapsible sections
 function toggleCollapsible(t){t.classList.toggle('open');t.nextElementSibling.classList.toggle('open')}
-
-// === EDIT MODE WITH AUTO-SAVE ===
-const STORAGE_KEY = 'agent-fabric-edits-v2';
-
-// Assign stable IDs to all editable elements on first load
-
-// Save all current editable content
-  showSaveToast();
-}
-
-// Restore saved edits
-    });
-  } catch(e) {}
-}
-
-// Save toast
-let toastTimer;
-function showSaveToast() {
-  const t = document.getElementById('saveToast');
-  t.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove('show'), 1200);
-}
-
-// Debounced save
-let saveTimer;
-function debouncedSave() {
-  clearTimeout(saveTimer);
-  saveTimer = setTimeout(saveEdits, 600);
-}
-
-// Toggle edit mode
-  });
-
-  // Save immediately when exiting edit mode
-  if (!isEdit) saveEdits();
-}
-
-// Init
-initEditableIds();
-restoreEdits();
 </script>
 </body>
 </html>
