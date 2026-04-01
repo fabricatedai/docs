@@ -591,16 +591,46 @@ footer{padding:3rem 0;text-align:center;font-size:0.72rem;color:var(--text-muted
     </div>
     <div class="card-grid cols-3">
       <div class="card">
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" style="margin-bottom:12px;">
+          <circle cx="24" cy="24" r="20" stroke="#00d4ff" stroke-width="1" fill="none" opacity="0.15"/>
+          <circle cx="16" cy="20" r="4" stroke="#00d4ff" stroke-width="1.5" fill="none"/>
+          <circle cx="32" cy="20" r="4" stroke="#00d4ff" stroke-width="1.5" fill="none"/>
+          <circle cx="24" cy="34" r="4" stroke="#00d4ff" stroke-width="1.5" fill="none"/>
+          <line x1="19" y1="22" x2="21" y2="32" stroke="#00d4ff" stroke-width="1" opacity="0.5" stroke-dasharray="2,2"/>
+          <line x1="29" y1="22" x2="27" y2="32" stroke="#00d4ff" stroke-width="1" opacity="0.5" stroke-dasharray="2,2"/>
+          <line x1="20" y1="20" x2="28" y2="20" stroke="#00d4ff" stroke-width="1" opacity="0.5" stroke-dasharray="2,2"/>
+          <circle cx="16" cy="20" r="1.5" fill="#00d4ff" opacity="0.6"/>
+          <circle cx="32" cy="20" r="1.5" fill="#00d4ff" opacity="0.6"/>
+          <circle cx="24" cy="34" r="1.5" fill="#00d4ff" opacity="0.6"/>
+        </svg>
         <div class="card-label cyan">Capability 1</div>
         <h3 data-editable="true">Discover</h3>
         <p data-editable="true">Devices self-register with a ~40-line Python driver, announcing capabilities, state, and available functions. Agents adapt to the fleet in real time with no hardcoded knowledge of what is deployed at a site.</p>
       </div>
       <div class="card">
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" style="margin-bottom:12px;">
+          <rect x="6" y="16" width="14" height="16" rx="3" stroke="#00d4ff" stroke-width="1.5" fill="none"/>
+          <circle cx="13" cy="24" r="2" fill="#00d4ff" opacity="0.6"/>
+          <rect x="28" y="16" width="14" height="16" rx="3" stroke="#00d4ff" stroke-width="1.5" fill="none"/>
+          <path d="M32 22l2.5 2L32 26" stroke="#00d4ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <line x1="20" y1="22" x2="28" y2="22" stroke="#00d4ff" stroke-width="1.5" stroke-dasharray="3,2"/>
+          <line x1="28" y1="26" x2="20" y2="26" stroke="#00d4ff" stroke-width="1" opacity="0.4" stroke-dasharray="2,2"/>
+          <circle cx="22" cy="22" r="1.5" fill="#00d4ff" opacity="0.8">
+            <animate attributeName="cx" values="20;28;20" dur="2s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.8;0.3;0.8" dur="2s" repeatCount="indefinite"/>
+          </circle>
+        </svg>
         <div class="card-label cyan">Capability 2</div>
         <h3 data-editable="true">Invoke</h3>
         <p data-editable="true">Any AI agent can call any function on any device using four core tools: <code>discover_devices()</code>, <code>invoke_device()</code>, <code>get_device_status()</code>, and <code>subscribe()</code>. Works across Strands, LangGraph, Claude MCP, or plain Python.</p>
       </div>
       <div class="card">
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" style="margin-bottom:12px;">
+          <rect x="10" y="10" width="28" height="28" rx="6" stroke="#00d4ff" stroke-width="1.5" fill="none"/>
+          <path d="M20 24l3 3 6-7" stroke="#00cc88" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M24 10v3M24 35v3M10 24h3M35 24h3" stroke="#00d4ff" stroke-width="1" stroke-linecap="round" opacity="0.3"/>
+          <circle cx="24" cy="24" r="12" stroke="#00d4ff" stroke-width="0.5" fill="none" opacity="0.2"/>
+        </svg>
         <div class="card-label cyan">Capability 3</div>
         <h3 data-editable="true">Govern</h3>
         <p data-editable="true">Every action passes through policy checks before execution on the device itself, sub-millisecond, no cloud round-trip. Capabilities-based authorization where permissions travel with the requestor. Full audit logging.</p>
@@ -628,7 +658,7 @@ footer{padding:3rem 0;text-align:center;font-size:0.72rem;color:var(--text-muted
         </div>
         <div class="card">
           <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.8rem">
-            <div class="card-label orange" style="margin:0">Building Next</div>
+            <div class="card-label cyan" style="margin:0">Building Next</div>
             
           </div>
           <h3 data-editable="true">Agent Fabric - What's next?</h3>
