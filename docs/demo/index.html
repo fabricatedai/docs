@@ -638,7 +638,7 @@ body.pres-mode .pres-btn{display:none}
       </div>
     </div>
     <div class="robot-list-panel" id="robot-list">
-      <h4>Supported Robots* (via Strands Robots + Device Connect)</h4>
+      <h4 style="margin-bottom:1rem;">Supported Robots* (via Strands Robots + Device Connect)</h4>
       <div class="robot-grid">
         <div style="margin-bottom:1rem">
           <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem">
@@ -873,8 +873,8 @@ body.pres-mode .pres-btn{display:none}
         <h3>Key Events</h3>
         <p style="line-height:2;">
           <strong style="color:var(--text-primary);">Super AI Singapore</strong> — June 2026<br>
-          <strong style="color:var(--text-primary);">AWS re:Invent</strong> — November 2026<br>
-          <strong style="color:var(--text-primary);">Arm Partner Meeting</strong> — August 2026
+          <strong style="color:var(--text-primary);">Arm Partner Meeting</strong> — August 2026<br>
+          <strong style="color:var(--text-primary);">AWS re:Invent</strong> — November 2026
         </p>
       </div>
     </div>
@@ -998,11 +998,12 @@ const slides=[
     return h+'</div></div>';
   }},
 
-  // 3: Framework support
+  // 3: Framework support (keeps solution heading + diagram)
   {steps:0,build:s=>{
-    let h=W+EYE('#00d4ff','Framework Support');
+    let h=W+EYE('#00d4ff','The Solution')+H2('The missing layer between agents and physical devices');
+    h+='<div style="margin:0 -20px;">'+(oh('#solution svg[viewBox="0 0 800 200"]')||'')+'</div>';
     const fw=q('#solution .highlight-card');
-    if(fw)h+=fw.outerHTML;
+    if(fw)h+='<div style="margin-top:1.2rem;">'+fw.outerHTML+'</div>';
     return h+'</div>';
   }},
 
