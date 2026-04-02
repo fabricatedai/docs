@@ -120,12 +120,14 @@ section:last-of-type{border-bottom:none}
 
 /* PARTNER GRID */
 .partner-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:12px;overflow:hidden}
-.partner-card{background:var(--bg-card);padding:1.8rem;transition:background 0.25s}
+.partner-card{background:var(--bg-card);padding:1.8rem;transition:background 0.25s;display:flex;flex-direction:column}
 .partner-card:hover{background:var(--bg-card-hover)}
 .partner-card .partner-header{display:flex;align-items:center;gap:0.7rem;margin-bottom:0.9rem}
 .partner-card .partner-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.6rem;color:#fff}
 .partner-card .partner-name{font-size:0.95rem;font-weight:700}
 .partner-card .partner-status{font-size:0.65rem;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:var(--accent-green)}
+
+.partner-card .partner-body{flex:1;display:flex;flex-direction:column;justify-content:flex-end}
 .partner-card .partner-body p{font-size:0.83rem;color:var(--text-secondary);line-height:1.6;margin-bottom:0.7rem}
 .partner-card .partner-next{font-size:0.76rem;color:var(--text-muted);border-top:1px solid var(--border);padding-top:0.7rem;margin-top:0.4rem}
 .partner-card .partner-next strong{color:var(--text-secondary)}
@@ -250,7 +252,9 @@ footer{padding:3rem 0;text-align:center;font-size:0.72rem;color:var(--text-muted
   .partner-card{padding:1.5rem}
   .partner-card .partner-name{font-size:1.1rem}
   .partner-card .partner-status{font-size:0.72rem}
-  .partner-card .partner-body p{font-size:1rem;line-height:1.55}
+  
+.partner-card .partner-body{flex:1;display:flex;flex-direction:column;justify-content:flex-end}
+.partner-card .partner-body p{font-size:1rem;line-height:1.55}
   .partner-card .partner-next{font-size:0.9rem;padding-top:0.8rem}
 
   /* Pipeline: large readable chips */
