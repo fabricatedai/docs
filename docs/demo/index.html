@@ -1083,12 +1083,12 @@ const slides=[
     return h+'</div></div>';
   }},
 
-  // 3: Framework support (keeps solution heading + diagram)
+  // 3: How It Works — warehouse diagram
   {steps:0,build:s=>{
-    let h=W+EYE('#00d4ff','The Solution')+H2('The missing layer between agents and physical devices');
-    h+='<div style="margin:0 -20px;">'+(oh('#solution svg[viewBox="0 0 800 200"]')||'')+'</div>';
-    const fw=q('#solution .highlight-card');
-    if(fw)h+='<div style="margin-top:1.2rem;">'+fw.outerHTML+'</div>';
+    let h=W+EYE('#00d4ff','How It Works')+H2('The directory and phone system for physical devices');
+    h+=SUB('Imagine a warehouse with 200 robots, 50 cameras, and 30 temperature sensors. Every device registers itself — what it is, what it can do, and where it is. An agent can ask "show me all idle cameras in warehouse-A" and get back a list with exactly what each camera can do.');
+    const howit=q('#solution svg[viewBox="0 0 800 320"]');
+    if(howit)h+=howit.outerHTML;
     return h+'</div>';
   }},
 
