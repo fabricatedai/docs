@@ -376,7 +376,6 @@ body.pres-mode .pres-btn{display:none}
     <a href="#solution" data-section="solution">Solution</a>
     <a href="#traction" data-section="traction">Validation</a>
     <a href="#roadmap" data-section="roadmap">Roadmap</a>
-    <a href="#ask" data-section="ask">The Ask</a>
     <button class="pres-btn" onclick="enterPres()">&#9655; Present</button>
   </div>
 </nav>
@@ -845,7 +844,7 @@ body.pres-mode .pres-btn{display:none}
       <div class="card">
         <div class="card-label orange">Edge SDK</div>
         <h3>Built into Arm Silicon</h3>
-        <p>Device Connect ships as part of the Edge SDK. Developers on Arm silicon get device orchestration, discovery, and secure invocation out of the box.</p>
+        <p>Device Connect ships as part of Arm's Edge SDK. Developers on Arm silicon get device orchestration, discovery, and secure invocation out of the box.</p>
       </div>
       <div class="card">
         <div class="card-label orange">Security by Design</div>
@@ -875,7 +874,7 @@ body.pres-mode .pres-btn{display:none}
         <p style="line-height:2;">
           <strong style="color:var(--text-primary);">Super AI Singapore</strong> — June 2026<br>
           <strong style="color:var(--text-primary);">AWS re:Invent</strong> — November 2026<br>
-          <strong style="color:var(--text-primary);">Arm Partner Meeting</strong> — Annual showcase
+          <strong style="color:var(--text-primary);">Arm Partner Meeting</strong> — August 2026
         </p>
       </div>
     </div>
@@ -883,24 +882,7 @@ body.pres-mode .pres-btn{display:none}
 </section>
 
 <!-- ASK -->
-<section id="ask" style="padding:4.5rem 0">
-  <div class="container">
-    <div class="collapsible-trigger open" onclick="toggleCollapsible(this)">
-      <div style="display:flex;align-items:center;gap:0.8rem">
-        <div class="eyebrow orange" style="margin:0">The Ask</div>
-        <h4 style="font-size:1rem;font-weight:700;color:var(--text-primary)">What we need</h4>
-      </div>
-      <span class="arrow">&#9662;</span>
-    </div>
-    <div class="collapsible-body">
-      <div class="ask-grid" style="margin-top:0;border-radius:0 0 10px 10px">
-        <div class="ask-card"><div class="ask-number">01</div><h3>Partner Introductions</h3><p>Intros to robotics companies (e.g. SoftBank Robotics) and their enterprise customers facing time-to-value challenges. The model: we bring Device Connect and the agent integration, the partner brings the use case.</p></div>
-        <div class="ask-card"><div class="ask-number">02</div><h3>Silicon Alignment</h3><p>Endorsement for Device Connect in Edge SDK for high-value solutions, and alignment for cloud compute. No cross-device orchestration exists in the SDK today. Primary mechanism for silicon pull-through. Target: 2027+.</p></div>
-        <div class="ask-card"><div class="ask-number">03</div><h3>Executive Support</h3><p>If we hit blockers with framework providers or partner engagements. . May need more formal support as we ramp in Q2-Q3.</p></div>
-      </div>
-    </div>
-  </div>
-</section>
+
 
 <div style="text-align:center;padding:32px 20px 28px;border-top:1px solid #1a2030;margin-top:40px;">
   <div style="font-size:14px;color:#4a5568;"><strong style="color:#7a8299;font-weight:600;">Agent Fabric</strong> by <span style="color:#00c1de;font-weight:800;">Arm</span></div>
@@ -1072,13 +1054,6 @@ const slides=[
     return h+'</div>';
   }},
 
-  // 9: The Ask
-  {steps:0,build:s=>{
-    let h=W+EYE('#ffc107','The Ask')+H2('What we need');
-    const grid=q('#ask .ask-grid');
-    if(grid)h+=grid.outerHTML;
-    return h+'</div>';
-  }},
 ];
 
 function render(){
