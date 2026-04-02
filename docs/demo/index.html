@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agent Fabric</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-primary: #0a0a0f;
+  --bg-card: #111119;
+  --bg-card-hover: #16161f;
+  --border: #1e1e2a;
+  --border-accent: #2a2a3a;
+  --text-primary: #e8e8ed;
+  --text-secondary: #8888a0;
+  --text-muted: #555568;
+  --accent-cyan: #00d4ff;
+  --accent-orange: #ff6b35;
+  --accent-green: #00cc88;
+  --accent-purple: #a855f7;
+  --accent-red: #ff4466;
+  --accent-yellow: #ffc107;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg-primary);color:var(--text-primary);font-family:'Inter',-apple-system,sans-serif;line-height:1.65;-webkit-font-smoothing:antialiased}
+
+
+.edit-toggle{position:fixed;bottom:1.5rem;right:1.5rem;z-index:200;display:flex;align-items:center;gap:0.5rem;background:var(--bg-card);border:1px solid var(--border-accent);padding:8px 14px;border-radius:8px;font-size:0.75rem;font-weight:600;color:var(--text-secondary);cursor:pointer;transition:all 0.2s;user-select:none}
+.edit-toggle:hover{border-color:var(--accent-cyan);color:var(--text-primary)}
+.edit-toggle.active{border-color:var(--accent-cyan);color:var(--accent-cyan)}
+.edit-toggle .toggle-dot{width:8px;height:8px;border-radius:50%;background:var(--text-muted);transition:background 0.2s}
+.edit-toggle.active .toggle-dot{background:var(--accent-cyan);box-shadow:0 0 6px var(--accent-cyan)}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,10,15,0.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 2rem;height:52px;display:flex;align-items:center;justify-content:space-between}
+.nav-left{display:flex;align-items:center;gap:1rem}
+.logo{font-weight:700;font-size:0.92rem;letter-spacing:-0.02em;color:var(--text-primary);display:flex;align-items:center;gap:0.5rem}
+.logo .arm-badge{background:var(--accent-cyan);color:var(--bg-primary);font-size:0.6rem;font-weight:800;padding:2px 6px;border-radius:3px;letter-spacing:0.06em;text-transform:uppercase}
+.gh-link{display:flex;align-items:center;gap:0.35rem;color:var(--text-muted);text-decoration:none;font-size:0.72rem;font-weight:500;font-family:'JetBrains Mono',monospace;padding:3px 8px;border-radius:5px;border:1px solid var(--border);transition:all 0.2s}
+.gh-link:hover{color:var(--text-primary);border-color:var(--border-accent)}
+.gh-link svg{width:14px;height:14px;fill:currentColor}
+.nav-links{display:flex;gap:0}
+.nav-links a{color:var(--text-muted);text-decoration:none;font-size:0.75rem;font-weight:500;padding:15px 12px;position:relative;transition:color 0.2s}
+.nav-links a:hover{color:var(--text-secondary)}
+.nav-links a.active{color:var(--text-primary)}
+.nav-links a::after{content:'';position:absolute;bottom:0;left:12px;right:12px;height:2px;background:var(--accent-cyan);transform:scaleX(0);transition:transform 0.25s}
+.nav-links a.active::after{transform:scaleX(1)}
+
+.container{max-width:1100px;margin:0 auto;padding:0 2rem}
+section{padding:3.5rem 0;border-bottom:1px solid var(--border)}
+section:last-of-type{border-bottom:none}
+
+/* HERO */
+.hero{padding:4.5rem 0 1.5rem;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-200px;left:50%;transform:translateX(-50%);width:800px;height:800px;background:radial-gradient(circle,rgba(0,212,255,0.05) 0%,transparent 70%);pointer-events:none}
+.hero .eyebrow{font-size:0.7rem;font-weight:600;text-transform:uppercase;letter-spacing:0.12em;color:var(--accent-cyan);margin-bottom:1.2rem;display:flex;align-items:center;justify-content:center;gap:0.5rem}
+.hero .eyebrow .dot{width:5px;height:5px;background:var(--accent-cyan);border-radius:50%}
+.hero h1{font-size:3rem;font-weight:800;letter-spacing:-0.04em;line-height:1.1;margin-bottom:1.4rem;background:linear-gradient(135deg,var(--text-primary) 0%,var(--text-secondary) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero .subtitle{font-size:1.1rem;color:var(--text-secondary);max-width:700px;margin:0 auto 2rem;line-height:1.7}
+.hero .meta-row{display:flex;gap:2rem;justify-content:center;flex-wrap:wrap;font-size:0.76rem;color:var(--text-muted)}
+.hero .meta-row span{display:flex;align-items:center;gap:0.4rem}
+.hero .meta-row .label{color:var(--text-secondary);font-weight:600}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin:0}
+.stat{background:var(--bg-card);padding:1.5rem 2rem;text-align:center;cursor:default}
+.stat.expandable{cursor:pointer}.stat.expandable:hover{background:var(--bg-card-hover)}
+.stat .stat-value{font-size:1.7rem;font-weight:800;letter-spacing:-0.03em;color:var(--accent-cyan);line-height:1;margin-bottom:0.4rem}
+.stat .stat-label{font-size:0.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;font-weight:600}
+.stat .expand-hint{font-size:0.62rem;color:#e8e8ed;margin-top:0.3rem;opacity:0.8}
+.robot-list-panel{display:none;background:var(--bg-card);border:1px solid var(--border);border-top:none;border-radius:0 0 12px 12px;padding:0.8rem 1.2rem;margin-top:-1px}
+.robot-list-panel.open{display:block}
+.robot-list-panel h4{font-size:0.78rem;font-weight:700;color:var(--text-secondary);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.06em}
+.robot-chips{display:flex;flex-wrap:wrap;gap:0.4rem}
+.robot-chip{font-size:0.72rem;font-weight:500;font-family:'JetBrains Mono',monospace;padding:4px 10px;border-radius:5px;background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--text-secondary)}
+
+/* SECTION HEADERS */
+.section-header{margin-bottom:2.5rem}
+.section-header .eyebrow{font-size:0.66rem;font-weight:700;text-transform:uppercase;letter-spacing:0.14em;margin-bottom:0.7rem}
+.eyebrow.cyan{color:var(--accent-cyan)}.eyebrow.orange{color:var(--accent-orange)}.eyebrow.green{color:var(--accent-green)}.eyebrow.purple{color:var(--accent-purple)}.eyebrow.red{color:var(--accent-red)}
+.section-header h2{font-size:1.9rem;font-weight:800;letter-spacing:-0.03em;line-height:1.2;margin-bottom:0.7rem}
+.section-header p{color:var(--text-secondary);font-size:0.95rem;max-width:680px;line-height:1.7}
+
+/* CARDS */
+.card-grid{display:grid;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.card-grid.cols-2{grid-template-columns:1fr 1fr}.card-grid.cols-3{grid-template-columns:1fr 1fr 1fr}
+.card{background:var(--bg-card);padding:2rem;transition:background 0.25s}
+.card:hover{background:var(--bg-card-hover)}
+.card .card-label{font-size:0.63rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.7rem}
+.card .card-label.cyan{color:var(--accent-cyan)}.card .card-label.orange{color:var(--accent-orange)}.card .card-label.red{color:var(--accent-red)}.card .card-label.purple{color:var(--accent-purple)}.card .card-label.green{color:var(--accent-green)}
+.card h3{font-size:1rem;font-weight:700;letter-spacing:-0.01em;margin-bottom:0.5rem;line-height:1.3}
+.card p{color:var(--text-secondary);font-size:0.85rem;line-height:1.65}
+
+/* STATUS BUBBLE */
+.status-bubble{display:inline-flex;align-items:center;gap:0.3rem;font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;padding:3px 9px;border-radius:20px;margin-top:0.6rem}
+.status-bubble.dev{background:rgba(255,255,255,0.03);color:var(--text-muted);border:1px solid var(--border);font-size:0.6rem}
+.status-bubble.live{background:rgba(0,204,136,0.12);color:var(--accent-green);border:1px solid rgba(0,204,136,0.2)}
+
+/* COLLAPSIBLE */
+.collapsible-trigger{display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;padding:1rem 1.3rem;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:8px;margin-top:1.2rem;transition:all 0.2s}
+.collapsible-trigger:hover{background:var(--bg-card-hover);border-color:var(--border-accent)}
+.collapsible-trigger h4{font-size:0.82rem;font-weight:600;color:var(--text-muted)}
+.collapsible-trigger .arrow{font-size:0.7rem;color:var(--text-muted);transition:transform 0.25s}
+.collapsible-trigger.open .arrow{transform:rotate(180deg)}
+.collapsible-body{display:none;padding:1.3rem;background:var(--bg-card);border:1px solid var(--border);border-top:none;border-radius:0 0 8px 8px;margin-top:-1px}
+.collapsible-body.open{display:block}
+
+/* QUOTES */
+.quote-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-top:2rem}
+.quote-card{background:var(--bg-card);padding:1.5rem 1.6rem}
+.quote-card .quote-logo{display:flex;align-items:center;gap:0.5rem;margin-bottom:0.7rem}
+.quote-card .quote-logo .co-icon{width:22px;height:22px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.5rem;color:#fff}
+.quote-card .quote-logo .co-name{font-size:0.7rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.04em}
+.quote-card p.quote-text{font-size:0.86rem;color:var(--text-secondary);font-style:italic;line-height:1.6;margin-bottom:0.4rem}
+.quote-card .attribution{font-size:0.7rem;color:var(--text-muted);font-style:normal}
+
+.highlight-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:2rem;margin-top:2rem}
+
+/* PARTNER GRID */
+.partner-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.partner-card{background:var(--bg-card);padding:1.8rem;transition:background 0.25s}
+.partner-card:hover{background:var(--bg-card-hover)}
+.partner-card .partner-header{display:flex;align-items:center;gap:0.7rem;margin-bottom:0.9rem}
+.partner-card .partner-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.6rem;color:#fff}
+.partner-card .partner-name{font-size:0.95rem;font-weight:700}
+.partner-card .partner-status{font-size:0.65rem;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:var(--accent-green)}
+.partner-card .partner-body p{font-size:0.83rem;color:var(--text-secondary);line-height:1.6;margin-bottom:0.7rem}
+.partner-card .partner-next{font-size:0.76rem;color:var(--text-muted);border-top:1px solid var(--border);padding-top:0.7rem;margin-top:0.4rem}
+.partner-card .partner-next strong{color:var(--text-secondary)}
+
+/* PIPELINE */
+.pipeline-section{margin-top:2.5rem}
+.pipeline-cat{margin-bottom:1.5rem}
+.pipeline-cat-header{font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-muted);margin-bottom:0.6rem;padding-left:0.2rem}
+.pipeline-names{display:flex;flex-wrap:wrap;gap:0.4rem}
+.pipeline-chip{font-size:0.76rem;font-weight:500;padding:5px 12px;border-radius:6px;background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--text-secondary);transition:all 0.15s}
+.pipeline-chip.priority{border-color:rgba(0,212,255,0.3);color:var(--accent-cyan);background:rgba(0,212,255,0.06)}
+.pipeline-legend{display:flex;align-items:center;gap:1.2rem;margin-bottom:1.5rem;font-size:0.7rem;color:var(--text-muted)}
+.pipeline-legend .legend-item{display:flex;align-items:center;gap:0.4rem}
+.legend-swatch{width:10px;height:10px;border-radius:3px}
+.legend-swatch.priority{background:rgba(0,212,255,0.3);border:1px solid var(--accent-cyan)}
+.legend-swatch.general{background:rgba(255,255,255,0.04);border:1px solid var(--border)}
+
+/* TIMELINE */
+.timeline{margin-top:2rem}
+.timeline-item{display:grid;grid-template-columns:140px 24px 1fr;gap:1rem;align-items:start;min-height:72px}
+.timeline-date{font-family:'JetBrains Mono',monospace;font-size:0.74rem;color:var(--text-muted);text-align:right;padding-top:2px;font-weight:500}
+.timeline-marker{display:flex;flex-direction:column;align-items:center}
+.timeline-dot{width:10px;height:10px;border-radius:50%;border:2px solid var(--accent-cyan);background:var(--bg-primary);flex-shrink:0;margin-top:4px}
+.timeline-dot.done{background:var(--accent-cyan)}.timeline-dot.active{background:var(--accent-orange);border-color:var(--accent-orange);box-shadow:0 0 8px rgba(255,107,53,0.4)}.timeline-dot.future{border-color:var(--text-muted)}
+.timeline-line{width:1px;flex:1;background:var(--border);margin-top:4px}
+.timeline-content h4{font-size:0.88rem;font-weight:700;margin-bottom:0.25rem}
+.timeline-content p{font-size:0.8rem;color:var(--text-secondary);line-height:1.6}
+.tag{display:inline-block;font-size:0.58rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;padding:2px 6px;border-radius:3px;margin-left:0.35rem;position:relative;top:-1px}
+.tag.done{background:rgba(0,204,136,0.15);color:var(--accent-green)}.tag.active{background:rgba(255,107,53,0.15);color:var(--accent-orange)}.tag.upcoming{background:rgba(136,136,160,0.12);color:var(--text-muted)}
+
+/* ASK */
+.ask-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border-accent);border-radius:12px;overflow:hidden}
+.ask-card{background:var(--bg-card);padding:2rem}
+.ask-card .ask-number{font-family:'JetBrains Mono',monospace;font-size:0.68rem;font-weight:700;color:var(--accent-orange);margin-bottom:0.7rem}
+.ask-card h3{font-size:0.95rem;font-weight:700;margin-bottom:0.5rem}
+.ask-card p{font-size:0.83rem;color:var(--text-secondary);line-height:1.6}
+
+code{font-family:'JetBrains Mono',monospace;font-size:0.82em;background:rgba(255,255,255,0.06);padding:2px 6px;border-radius:4px;color:var(--accent-cyan)}
+footer{padding:3rem 0;text-align:center;font-size:0.72rem;color:var(--text-muted)}
+
+/* FW CHIPS */
+.fw-row{display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:1rem}
+.fw-chip{font-size:0.78rem;font-weight:600;padding:6px 14px;border-radius:6px;background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--text-secondary);display:flex;align-items:center;gap:0.4rem}
+.fw-chip .fw-sub{font-size:0.63rem;opacity:0.5}
+.fw-chip.soon{border-color:rgba(255,107,53,0.3);color:var(--accent-orange);background:rgba(255,107,53,0.06)}
+.fw-chip.soon .fw-soon{font-size:0.55rem;opacity:0.6;margin-left:0.15rem}
+.fw-chip.active-fw{border-color:rgba(0,212,255,0.3);color:var(--accent-cyan);background:rgba(0,212,255,0.06)}
+
+
+/* Layout classes (replaces inline styles for mobile compat) */
+.auth-inner{max-width:340px}
+.fw-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border-radius:10px;overflow:hidden}
+.robot-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0 1.5rem;font-size:0.82rem;line-height:1.6}
+.quote-grid-inner{margin-top:0;border:none;border-radius:0}
+
+/* TABLET */
+@media(max-width:1024px){
+  .container{padding:0 1.5rem}
+  .hero h1{font-size:2.4rem}
+  .section-header h2{font-size:1.6rem}
+}
+
+/* MOBILE: prioritize readability over density */
+@media(max-width:768px){
+  /* Nav */
+  nav{padding:0 0.5rem;height:44px}
+  .nav-left{gap:0.5rem}
+  .logo{font-size:0.8rem}
+  .logo .arm-badge{display:none}
+  nav .gh-link{display:none}
+  .nav-links{flex-wrap:nowrap;justify-content:flex-end}
+  .nav-links a{font-size:0.65rem;padding:14px 6px;white-space:nowrap}
+
+  /* Layout */
+  .container{padding:0 1.25rem}
+  section{padding:2rem 0}
+
+  /* Hero: large, clear */
+  .hero{padding:4.5rem 0 2.5rem}
+  .hero .eyebrow{font-size:0.7rem}
+  .hero h1{font-size:2rem}
+  .hero .subtitle{font-size:1.05rem;line-height:1.65}
+  .hero .meta-row{flex-direction:column;gap:0.5rem;align-items:center;font-size:0.8rem}
+
+  /* Section headers */
+  .section-header{margin-bottom:1.5rem}
+  .section-header h2{font-size:1.5rem}
+  .section-header p{font-size:1rem;line-height:1.6}
+  .section-header .eyebrow{font-size:0.7rem}
+
+  /* Cards: full width, BIG readable text */
+  .card-grid.cols-2,.card-grid.cols-3{grid-template-columns:1fr}
+  .card{padding:1.5rem 1.25rem}
+  .card .card-label{font-size:0.72rem}
+  .card h3{font-size:1.1rem}
+  .card p{font-size:1rem;line-height:1.6}
+  code{font-size:0.88em;padding:3px 7px}
+
+  /* Stats: horizontal layout, big numbers */
+  .stats-row{grid-template-columns:1fr;border-radius:10px}
+  .stat{padding:1.25rem 1.5rem;display:flex;align-items:center;gap:1rem;text-align:left}
+  .stat .stat-value{font-size:1.8rem;margin-bottom:0;min-width:60px}
+  .stat .stat-label{font-size:0.85rem}
+  .stat .expand-hint{font-size:0.75rem}
+  .stat.expandable{flex-wrap:wrap}
+
+  /* Robot panel */
+  .robot-list-panel{padding:1.25rem}
+  .robot-list-panel h4{font-size:0.85rem}
+  .robot-grid{grid-template-columns:1fr!important}
+  .robot-chip{font-size:0.82rem;padding:5px 11px}
+
+  /* Quotes: big italic text */
+  .quote-grid{grid-template-columns:1fr}
+  .quote-card{padding:1.5rem}
+  .quote-card .quote-logo .co-name{font-size:0.82rem}
+  .quote-card p.quote-text{font-size:1.05rem;line-height:1.55}
+  .quote-card .attribution{font-size:0.85rem}
+
+  /* Partners: readable cards */
+  .partner-grid{grid-template-columns:1fr}
+  .partner-card{padding:1.5rem}
+  .partner-card .partner-name{font-size:1.1rem}
+  .partner-card .partner-status{font-size:0.72rem}
+  .partner-card .partner-body p{font-size:1rem;line-height:1.55}
+  .partner-card .partner-next{font-size:0.9rem;padding-top:0.8rem}
+
+  /* Pipeline: large readable chips */
+  .pipeline-section{margin-top:1.5rem}
+  .pipeline-cat{margin-bottom:1.25rem}
+  .pipeline-cat-header{font-size:0.78rem}
+  .pipeline-names{gap:0.4rem}
+  .pipeline-chip{font-size:0.88rem;padding:7px 13px}
+  .pipeline-legend{font-size:0.82rem;gap:1rem;margin-bottom:1rem}
+
+  /* Collapsibles: big touch targets */
+  .collapsible-trigger{padding:1rem 1.25rem;border-radius:10px}
+  .collapsible-trigger h4{font-size:0.95rem}
+  .collapsible-trigger>div{gap:0.5rem}
+  .collapsible-body{padding:1.25rem}
+  .collapsible-body p{font-size:0.95rem!important;line-height:1.6!important}
+
+  /* Timeline: vertical stack, no side columns */
+  .timeline-item{grid-template-columns:1fr;gap:0;min-height:auto;margin-bottom:1.5rem;padding-left:1.5rem;position:relative}
+  .timeline-marker{position:absolute;left:0;top:0;flex-direction:column;align-items:center;height:100%}
+  .timeline-dot{margin-top:5px}
+  .timeline-line{margin-top:4px}
+  .timeline-date{text-align:left;font-size:0.82rem;color:var(--accent-cyan);font-weight:600;margin-bottom:0.1rem}
+  .timeline-content h4{font-size:1.05rem}
+  .timeline-content p{font-size:0.95rem;line-height:1.5}
+  .tag{font-size:0.65rem;padding:3px 7px}
+
+  /* Ask */
+  .ask-grid{grid-template-columns:1fr}
+  .ask-card{padding:1.5rem}
+  .ask-card .ask-number{font-size:0.75rem}
+  .ask-card h3{font-size:1.1rem}
+  .ask-card p{font-size:1rem;line-height:1.55}
+
+  /* Highlight cards */
+  .highlight-card{padding:1.25rem}
+  .highlight-card p{font-size:1rem!important;line-height:1.6!important}
+
+  /* Framework grid */
+  .fw-grid{grid-template-columns:repeat(2,1fr)}
+  .robot-grid{grid-template-columns:1fr}
+
+  /* Status bubbles */
+  .status-bubble{font-size:0.7rem;padding:4px 10px}
+
+  /* Edit toggle */
+  .edit-toggle{bottom:0.75rem;right:0.75rem;padding:7px 12px;font-size:0.75rem}
+  .save-toast{right:auto;left:0.75rem;bottom:0.75rem;font-size:0.75rem}
+
+  /* Auth gate */
+  #authGate>div{padding:0 1.5rem}
+  .auth-inner{max-width:100%;width:100%;padding:0 1rem}
+  #authGate input{font-size:16px;padding:12px 14px}
+  #authGate button{padding:12px 20px;font-size:0.88rem}
+  #authGate p{font-size:0.9rem!important}
+
+  /* Footer */
+  footer{font-size:0.82rem;padding:2rem 0}
+}
+
+/* SMALL PHONE */
+@media(max-width:400px){
+  .container{padding:0 0.9rem}
+  .hero h1{font-size:1.7rem}
+  .nav-links a{padding:14px 5px;font-size:0.6rem}
+  .fw-grid{grid-template-columns:1fr}
+  .collapsible-trigger>div{flex-direction:column;align-items:flex-start;gap:0.3rem}
+  .collapsible-trigger>div .eyebrow{margin:0}
+}
+/* PRESENTATION MODE */
+#pres-overlay{font-family:'Inter',-apple-system,sans-serif;color:#e8e8ed;}
+#pres-overlay .section-header h2{font-size:1.5rem;font-weight:800;color:#e8e8ed;}
+#pres-overlay .section-header p{font-size:0.95rem;color:#8888a0;line-height:1.6;}
+.pres-controls{display:none;position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:10000;gap:12px;align-items:center;background:rgba(10,10,15,0.9);border:1px solid var(--border);border-radius:10px;padding:8px 16px;backdrop-filter:blur(12px)}
+.pres-controls button{background:none;border:1px solid var(--border);border-radius:6px;color:var(--text-secondary);width:36px;height:36px;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;font-family:system-ui}
+.pres-controls button:hover{border-color:var(--accent-cyan);color:var(--accent-cyan)}
+.pres-counter{font-size:0.75rem;color:var(--text-muted);font-family:'JetBrains Mono',monospace;min-width:50px;text-align:center}
+.pres-exit{font-size:0.7rem!important;width:auto!important;padding:0 12px!important;color:var(--text-muted)!important}
+.pres-btn{background:none;border:none;padding:4px 10px;color:var(--text-muted);font-size:0.68rem;font-weight:600;cursor:pointer;font-family:inherit;transition:all 0.2s;margin-left:8px}
+.pres-btn:hover{border-color:transparent;color:var(--accent-cyan);background:none}
+body.pres-mode .pres-btn{display:none}
+</style>
+</head>
+<body>
+
+<!-- PASSWORD GATE -->
+<div id="authGate" style="position:fixed;inset:0;z-index:9999;background:var(--bg-primary);display:flex;align-items:center;justify-content:center;flex-direction:column">
+  <div class="auth-inner" style="text-align:center;max-width:340px;width:100%;padding:0 20px">
+    <div style="display:flex;gap:0.5rem">
+      <input id="authInput" type="password" placeholder="Access code" autocomplete="off"
+        style="flex:1;background:var(--bg-card);border:1px solid var(--border-accent);border-radius:8px;padding:10px 14px;color:var(--text-primary);font-family:inherit;font-size:0.88rem;outline:none;transition:border-color 0.2s"
+        onfocus="this.style.borderColor='var(--accent-cyan)'" onblur="this.style.borderColor='var(--border-accent)'"
+        onkeydown="if(event.key==='Enter')checkAuth()">
+      <button onclick="checkAuth()"
+        style="background:var(--accent-cyan);color:var(--bg-primary);border:none;border-radius:8px;padding:10px 18px;font-weight:700;font-size:0.82rem;cursor:pointer;font-family:inherit">Enter</button>
+    </div>
+    <p id="authError" style="color:var(--accent-red);font-size:0.75rem;margin-top:0.7rem;opacity:0;transition:opacity 0.2s">Incorrect code. Try again.</p>
+  </div>
+</div>
+
+<script>
+(function(){
+  const PASS_HASH = 'b3937ca5';
+  function simpleHash(s){let h=0;for(let i=0;i<s.length;i++){h=((h<<5)-h)+s.charCodeAt(i);h|=0}return(h>>>0).toString(16).slice(0,8)}
+  if(sessionStorage.getItem('af_auth')===PASS_HASH){document.getElementById('authGate').style.display='none'}
+  window.checkAuth=function(){
+    const v=document.getElementById('authInput').value;
+    if(simpleHash(v)===PASS_HASH){
+      sessionStorage.setItem('af_auth',PASS_HASH);
+      document.getElementById('authGate').style.display='none';
+    } else {
+      document.getElementById('authError').style.opacity='1';
+      document.getElementById('authInput').style.borderColor='var(--accent-red)';
+      setTimeout(()=>{document.getElementById('authError').style.opacity='0';document.getElementById('authInput').style.borderColor='var(--border-accent)'},2000);
+    }
+  };
+})();
+</script>
+
+<nav style="justify-content:center;">
+  <div class="nav-links">
+    <a href="#problem" data-section="problem">Problem</a>
+    <a href="#solution" data-section="solution">Solution</a>
+    <a href="#traction" data-section="traction">Validation</a>
+    <a href="#roadmap" data-section="roadmap">Roadmap</a>
+    <a href="#ask" data-section="ask">The Ask</a>
+    <button class="pres-btn" onclick="enterPres()">&#9655; Present</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero" style="border-bottom:1px solid var(--border)">
+  <div class="container">
+    <h1>Agent Fabric</h1>
+    <p class="subtitle">AI agents can reason and plan, but they have no standard way to discover, invoke, or govern physical devices. We built that layer.</p>
+  </div>
+</section>
+
+<div style="max-width:820px;margin:0 auto;padding:1.5rem 20px 1rem;">
+<div style="position:relative;width:100%;height:160px;overflow:hidden;border-radius:12px;background:radial-gradient(ellipse at 50% 80%,#0a1a2a 0%,#0a0a0f 70%);border:1px solid #1e1e2a;">
+  <svg viewBox="0 0 960 200" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;">
+    <pattern id="dots2" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse"><circle cx="20" cy="20" r="0.5" fill="#1a2540"/></pattern>
+    <rect width="960" height="200" fill="url(#dots2)"/>
+    <line x1="140" y1="70" x2="340" y2="55" stroke="#1a3020" stroke-width="1" stroke-dasharray="3,5"/>
+    <line x1="140" y1="70" x2="240" y2="135" stroke="#1a3020" stroke-width="1" stroke-dasharray="3,5"/>
+    <line x1="340" y1="55" x2="240" y2="135" stroke="#1a3020" stroke-width="1" stroke-dasharray="3,5"/>
+    <line x1="140" y1="70" x2="460" y2="88" stroke="#1a3a50" stroke-width="1"/>
+    <line x1="340" y1="55" x2="460" y2="85" stroke="#1a4a3a" stroke-width="1"/>
+    <line x1="240" y1="135" x2="460" y2="95" stroke="#1a4a3a" stroke-width="1"/>
+    <line x1="500" y1="85" x2="680" y2="55" stroke="#2a2850" stroke-width="1"/>
+    <line x1="500" y1="92" x2="720" y2="130" stroke="#2a2850" stroke-width="1"/>
+    <line x1="500" y1="88" x2="840" y2="80" stroke="#2a2850" stroke-width="1"/>
+    <circle r="2.5" fill="#4ade80" opacity="0.8"><animateMotion dur="3s" repeatCount="indefinite" path="M140,70 L460,88"/><animate attributeName="opacity" values="0;1;1;0" dur="3s" repeatCount="indefinite"/></circle>
+    <circle r="2.5" fill="#22d3ee" opacity="0.8"><animateMotion dur="2.5s" repeatCount="indefinite" begin="0.5s" path="M340,55 L460,85"/><animate attributeName="opacity" values="0;1;1;0" dur="2.5s" repeatCount="indefinite" begin="0.5s"/></circle>
+    <circle r="2.5" fill="#4ade80" opacity="0.8"><animateMotion dur="3.5s" repeatCount="indefinite" begin="1.2s" path="M240,135 L460,95"/><animate attributeName="opacity" values="0;1;1;0" dur="3.5s" repeatCount="indefinite" begin="1.2s"/></circle>
+    <circle r="2.5" fill="#a78bfa" opacity="0.8"><animateMotion dur="2.8s" repeatCount="indefinite" begin="1s" path="M500,85 L680,55"/><animate attributeName="opacity" values="0;1;1;0" dur="2.8s" repeatCount="indefinite" begin="1s"/></circle>
+    <circle r="2.5" fill="#a78bfa" opacity="0.8"><animateMotion dur="3.2s" repeatCount="indefinite" begin="1.8s" path="M500,92 L720,130"/><animate attributeName="opacity" values="0;1;1;0" dur="3.2s" repeatCount="indefinite" begin="1.8s"/></circle>
+    <circle r="2.5" fill="#a78bfa" opacity="0.8"><animateMotion dur="3s" repeatCount="indefinite" begin="0.3s" path="M500,88 L840,80"/><animate attributeName="opacity" values="0;1;1;0" dur="3s" repeatCount="indefinite" begin="0.3s"/></circle>
+    <circle cx="140" cy="70" r="20" fill="#4ade80" opacity="0.1"/><circle cx="340" cy="55" r="18" fill="#22d3ee" opacity="0.1"/>
+    <circle cx="240" cy="135" r="16" fill="#4ade80" opacity="0.1"/><circle cx="680" cy="55" r="18" fill="#a78bfa" opacity="0.1"/>
+    <circle cx="720" cy="130" r="16" fill="#a78bfa" opacity="0.1"/><circle cx="840" cy="80" r="18" fill="#a78bfa" opacity="0.1"/>
+    <circle cx="140" cy="70" r="6" fill="#0a0a0f" stroke="#4ade80" stroke-width="1.5"/>
+    <circle cx="340" cy="55" r="6" fill="#0a0a0f" stroke="#22d3ee" stroke-width="1.5"/>
+    <circle cx="240" cy="135" r="6" fill="#0a0a0f" stroke="#4ade80" stroke-width="1.5"/>
+    <circle cx="480" cy="90" r="8" fill="#0a0a0f" stroke="#fbbf24" stroke-width="2"/>
+    <circle cx="680" cy="55" r="6" fill="#0a0a0f" stroke="#a78bfa" stroke-width="1.5"/>
+    <circle cx="720" cy="130" r="6" fill="#0a0a0f" stroke="#a78bfa" stroke-width="1.5"/>
+    <circle cx="840" cy="80" r="6" fill="#0a0a0f" stroke="#a78bfa" stroke-width="1.5"/>
+    <text x="140" y="54" text-anchor="middle" fill="#4ade80" font-size="9" font-family="system-ui" font-weight="600">Sensor</text>
+    <text x="340" y="40" text-anchor="middle" fill="#22d3ee" font-size="9" font-family="system-ui" font-weight="600">Robot</text>
+    <text x="240" y="155" text-anchor="middle" fill="#4ade80" font-size="9" font-family="system-ui" font-weight="600">Camera</text>
+    <rect x="440" y="30" width="82" height="30" rx="6" fill="#0a0a0f" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+    <text x="481" y="43" text-anchor="middle" fill="#ffffff" font-size="9" font-family="system-ui" font-weight="700">Device</text>
+    <text x="481" y="54" text-anchor="middle" fill="#ffffff" font-size="9" font-family="system-ui" font-weight="700">Connect</text>
+    <line x1="481" y1="60" x2="481" y2="82" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+    <text x="680" y="40" text-anchor="middle" fill="#a78bfa" font-size="9" font-family="system-ui" font-weight="600">Claude Agent</text>
+    <text x="720" y="150" text-anchor="middle" fill="#a78bfa" font-size="9" font-family="system-ui" font-weight="600">Strands Agent</text>
+    <text x="840" y="65" text-anchor="middle" fill="#a78bfa" font-size="9" font-family="system-ui" font-weight="600">LangGraph Agent</text>
+    <circle cx="480" cy="90" r="14" fill="none" stroke="#fbbf24" stroke-width="0.5"><animate attributeName="r" values="14;22;14" dur="3s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.3;0;0.3" dur="3s" repeatCount="indefinite"/></circle>
+  </svg>
+  <div style="position:absolute;bottom:12px;left:0;right:0;text-align:center;font-size:11px;color:#64748b;"><strong style="color:#7a8299;">Agent Fabric</strong> by <span style="color:#00c1de;font-weight:800;">Arm</span></div>
+</div>
+</div>
+
+<!-- PROBLEM -->
+<section id="problem">
+  <div class="container">
+    <div class="section-header">
+      <div class="eyebrow red">The Problem</div>
+      <h2>Time-to-value for Physical AI is unacceptable</h2>
+      <p>Partner conversations reveal 3 key problems impacting time to value: integration is bespoke for every device, agents have no way to discover or control physical systems, and security for agent-to-device interaction is unsolved. Three problems compound.</p>
+    </div>
+    <div class="card-grid cols-3">
+      <div class="card">
+        <div class="card-label red">Problem 1</div>
+        <h3>Integration is bespoke</h3>
+        <p>Every device ships with its own SDK and protocol. A robotic arm speaks ROS 2, a camera uses RTSP, a sensor uses MQTT. Coordinating them means custom glue code for each pairing per site. Brittle, hard to maintain, breaks when anything changes. Each new location is a re-integration project and cost scales linearly with deployment count.</p>
+      </div>
+      <div class="card">
+        <div class="card-label red">Problem 2</div>
+        <h3>Agents lack device awareness</h3>
+        <p>Agentic frameworks were built for cloud reasoning, not physical device coordination. IoT platforms were built for telemetry and provisioning. Neither lets an AI agent dynamically discover a device, call a function, and enforce safety before execution. No standard layer bridges the gap.</p>
+      </div>
+      <div class="card">
+        <div class="card-label red">Problem 3</div>
+        <h3>Agents introduce new security risks</h3>
+        <p>Traditional IoT security protects the wire. AI agents introduce new attack vectors: hallucination-to-actuation, agent credential escalation, multi-tenant authority conflicts, and trust in agent-generated code. A robot arm that receives a bad command moves. It might not ask for confirmation.</p>
+      </div>
+    </div>
+    
+  </div>
+</section>
+
+<!-- SOLUTION -->
+<section id="solution">
+  <div class="container">
+    <div class="section-header">
+      <div class="eyebrow cyan">The Solution</div>
+      <h2>The missing layer between agents and physical devices</h2>
+      <p>Device Connect is an open-source Python framework from Arm that lets any AI agent discover and invoke functions on any physical device. Framework-agnostic, works device-to-device with zero infrastructure, and scales to thousands.</p>
+    </div>
+
+    <!-- Architecture Overview -->
+    <svg viewBox="0 0 800 200" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;margin-bottom:2rem;border-radius:12px;background:#08080d;border:1px solid var(--border);padding:20px 0;">
+      <!-- AI Agent block -->
+      <rect x="40" y="60" width="160" height="80" rx="10" fill="#111119" stroke="#a855f7" stroke-width="1.5"/>
+      <text x="120" y="90" text-anchor="middle" fill="#a855f7" font-size="11" font-weight="700" font-family="Inter,system-ui">AI Agent</text>
+      <text x="120" y="108" text-anchor="middle" fill="#555568" font-size="9" font-family="Inter,system-ui">Strands · LangGraph</text>
+      <text x="120" y="122" text-anchor="middle" fill="#555568" font-size="9" font-family="Inter,system-ui">Claude · Native Python</text>
+
+      <!-- Arrow: Agent → Device Connect -->
+      <line x1="200" y1="100" x2="290" y2="100" stroke="#333" stroke-width="1.5"/>
+      <polygon points="290,96 298,100 290,104" fill="#555"/>
+
+      <!-- Device Connect block (highlighted) -->
+      <rect x="300" y="40" width="200" height="120" rx="10" fill="rgba(0,212,255,0.06)" stroke="#00d4ff" stroke-width="2"/>
+      <text x="400" y="68" text-anchor="middle" fill="#00d4ff" font-size="12" font-weight="700" font-family="Inter,system-ui">Device Connect</text>
+      <text x="400" y="88" text-anchor="middle" fill="#8888a0" font-size="9" font-family="Inter,system-ui">Discover · Invoke · Govern</text>
+      <line x1="330" y1="98" x2="470" y2="98" stroke="#1e1e2a" stroke-width="1"/>
+      <text x="400" y="116" text-anchor="middle" fill="#555568" font-size="9" font-family="Inter,system-ui">Pub/Sub Mesh</text>
+      <text x="400" y="132" text-anchor="middle" fill="#555568" font-size="9" font-family="Inter,system-ui">Security · Registry · State</text>
+      <text x="400" y="148" text-anchor="middle" fill="#00d4ff" font-size="8" font-weight="600" font-family="Inter,system-ui" opacity="0.6">by Arm</text>
+
+      <!-- Arrow: Device Connect → Devices -->
+      <line x1="500" y1="100" x2="590" y2="100" stroke="#333" stroke-width="1.5"/>
+      <polygon points="590,96 598,100 590,104" fill="#555"/>
+
+      <!-- Devices block -->
+      <rect x="600" y="60" width="160" height="80" rx="10" fill="#111119" stroke="#00cc88" stroke-width="1.5"/>
+      <text x="680" y="90" text-anchor="middle" fill="#00cc88" font-size="11" font-weight="700" font-family="Inter,system-ui">Physical Devices</text>
+      <text x="680" y="108" text-anchor="middle" fill="#555568" font-size="9" font-family="Inter,system-ui">Robots · Sensors</text>
+      <text x="680" y="122" text-anchor="middle" fill="#555568" font-size="9" font-family="Inter,system-ui">Cameras · Actuators</text>
+    </svg>
+
+    <div class="card-grid cols-3">
+      <div class="card">
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" style="margin-bottom:12px;">
+          <circle cx="24" cy="24" r="20" stroke="#00d4ff" stroke-width="1" fill="none" opacity="0.15"/>
+          <circle cx="16" cy="20" r="4" stroke="#00d4ff" stroke-width="1.5" fill="none"/>
+          <circle cx="32" cy="20" r="4" stroke="#00d4ff" stroke-width="1.5" fill="none"/>
+          <circle cx="24" cy="34" r="4" stroke="#00d4ff" stroke-width="1.5" fill="none"/>
+          <line x1="19" y1="22" x2="21" y2="32" stroke="#00d4ff" stroke-width="1" opacity="0.5" stroke-dasharray="2,2"/>
+          <line x1="29" y1="22" x2="27" y2="32" stroke="#00d4ff" stroke-width="1" opacity="0.5" stroke-dasharray="2,2"/>
+          <line x1="20" y1="20" x2="28" y2="20" stroke="#00d4ff" stroke-width="1" opacity="0.5" stroke-dasharray="2,2"/>
+          <circle cx="16" cy="20" r="1.5" fill="#00d4ff" opacity="0.6"/>
+          <circle cx="32" cy="20" r="1.5" fill="#00d4ff" opacity="0.6"/>
+          <circle cx="24" cy="34" r="1.5" fill="#00d4ff" opacity="0.6"/>
+        </svg>
+        <div class="card-label cyan">Capability 1</div>
+        <h3>Discover</h3>
+        <p>Devices self-register with a simple Python driver, announcing capabilities, state, and available functions. Agents adapt to the fleet in real time with no hardcoded knowledge of what is deployed at a site.</p>
+      </div>
+      <div class="card">
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" style="margin-bottom:12px;">
+          <rect x="6" y="16" width="14" height="16" rx="3" stroke="#00d4ff" stroke-width="1.5" fill="none"/>
+          <circle cx="13" cy="24" r="2" fill="#00d4ff" opacity="0.6"/>
+          <rect x="28" y="16" width="14" height="16" rx="3" stroke="#00d4ff" stroke-width="1.5" fill="none"/>
+          <path d="M32 22l2.5 2L32 26" stroke="#00d4ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <line x1="20" y1="22" x2="28" y2="22" stroke="#00d4ff" stroke-width="1.5" stroke-dasharray="3,2"/>
+          <line x1="28" y1="26" x2="20" y2="26" stroke="#00d4ff" stroke-width="1" opacity="0.4" stroke-dasharray="2,2"/>
+          <circle cx="22" cy="22" r="1.5" fill="#00d4ff" opacity="0.8">
+            <animate attributeName="cx" values="20;28;20" dur="2s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.8;0.3;0.8" dur="2s" repeatCount="indefinite"/>
+          </circle>
+        </svg>
+        <div class="card-label cyan">Capability 2</div>
+        <h3>Invoke</h3>
+        <p>Any AI agent can call any function on any device using four core tools: <code>discover_devices()</code>, <code>invoke_device()</code>, <code>get_device_status()</code>, and <code>subscribe()</code>. Works across Strands, LangGraph, Claude MCP, or plain Python.</p>
+      </div>
+      <div class="card">
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" style="margin-bottom:12px;">
+          <rect x="10" y="10" width="28" height="28" rx="6" stroke="#00d4ff" stroke-width="1.5" fill="none"/>
+          <path d="M20 24l3 3 6-7" stroke="#00cc88" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M24 10v3M24 35v3M10 24h3M35 24h3" stroke="#00d4ff" stroke-width="1" stroke-linecap="round" opacity="0.3"/>
+          <circle cx="24" cy="24" r="12" stroke="#00d4ff" stroke-width="0.5" fill="none" opacity="0.2"/>
+        </svg>
+        <div class="card-label cyan">Capability 3</div>
+        <h3>Govern</h3>
+        <p>Every action passes through policy checks before execution on the device itself, sub-millisecond, no cloud round-trip. Capabilities-based authorization where permissions travel with the requestor. Full audit logging.</p>
+        <span class="status-bubble dev">Under active development</span>
+      </div>
+    </div>
+
+    <a href="https://deviceconnect.dev" target="_blank" style="display:block;text-align:center;margin-top:1.5rem;padding:14px 20px;border-radius:10px;border:1px solid var(--border);background:var(--bg-card);color:var(--accent-cyan);font-size:0.85rem;font-weight:600;text-decoration:none;transition:all 0.2s;" onmouseover="this.style.borderColor='var(--accent-cyan)';this.style.background='var(--bg-card-hover)'" onmouseout="this.style.borderColor='var(--border)';this.style.background='var(--bg-card)'">Learn more at deviceconnect.dev &rarr;</a>
+
+    <div style="margin-top:2.5rem">
+      <div class="card-grid cols-2">
+        <div class="card">
+          <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.8rem">
+            <div class="card-label cyan" style="margin:0">Shipped</div>
+            <span class="status-bubble live" style="margin:0">Live at GTC March 18</span>
+          </div>
+          <h3>Device Connect - Now Available</h3>
+          <p>The foundation layer: discovery and invocation. Released as the device control layer inside AWS Strands Robots alongside NVIDIA and HuggingFace. Install: <code>pip install strands-robots[device_connect]</code>. Supports 32 robots with plans to expand beyond 100.</p>
+          <div style="margin-top:0.8rem;">
+            <a href="https://github.com/arm/device-connect" target="_blank" class="gh-link" style="font-size:0.8rem;padding:6px 14px;">
+              <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+              arm/device-connect
+            </a>
+          </div>
+          <div class="collapsible-trigger" onclick="toggleCollapsible(this)">
+            <h4>Ecosystem Position - Validated at GTC</h4>
+            <span class="arrow">&#9662;</span>
+          </div>
+          <div class="collapsible-body">
+            <p style="color:var(--text-secondary);font-size:0.85rem;line-height:1.7">Device Connect is the <strong style="color:var(--text-primary)">Arm hardware and edge pillar</strong> in a three-way Physical AI ecosystem: <strong style="color:var(--accent-green)">NVIDIA</strong> provides simulation and policy (GR00T, Isaac Sim, Cosmos). <strong style="color:var(--accent-yellow)">HuggingFace</strong> provides training and models (LeRobot, Model Hub). <strong style="color:var(--accent-cyan)">Arm</strong> provides hardware and edge (Device Connect, Zenoh mesh, on-device execution).</p>
+
+          </div>
+        </div>
+        <div class="card">
+          <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.8rem">
+            <div class="card-label cyan" style="margin:0">Building Next</div>
+            
+          </div>
+          <h3>Agent Fabric - What's next?</h3>
+          <p>Device Connect is the first wedge. Agent Fabric adds: hosted cloud infrastructure (zero-infra for partners), edge governance and policy enforcement, native orchestration framework expansion (Anthropic, LangChain, OpenAI), and silicon pull-through to Arm silicon.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="highlight-card" style="margin-top:2rem">
+      <div class="card-label cyan" style="margin-bottom:1rem">Framework Support</div>
+      <div class="fw-grid">
+        <div style="background:var(--bg-primary);padding:1.2rem;display:flex;align-items:center;gap:0.8rem">
+          <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAAdVBMVEUjLz7///8cKTkhLT0WJTYTIzQOIDIZJzcAFywAEyoAByQAECj19vcAGS7v8PHW2Nvm5+hTW2cIHDDf4eOipqySl51tdHxdZG6xtLkxO0gAAB56gIgpNUSBho2rrrNmbXa6vcFLU16JjpXOz9I8RlPDxckAAAMqqCy5AAACfUlEQVRYhe1V2Y7bMAwUdfuIJcvytb6P9P8/sZQTFCg29r4WhechAkhxRI7GCiE3bty48b+CCp0kkaSECKlCgEt+xKXAH4c5py7rl3KztvALF6WvcCvt/BDitV8Fz0fMNdMFA9tTOJAtiYEsIaxNIV0oiQwUX9U72bPzBnKYh7weAZ7xCrAzDABMKvD4OIOiyuvSXBAQqp2g6muGNMlTWIUsAUslrwCWBak0pcJd1AcKIYTuABJewCzdBh6Mlh6s3gEa5tR1OeP5WpZdCRA5LOKtBQZZj4J499gA7Fj34orAzfBGpGqAtgbzy0ItASpO2y0kisGd12Or8Kzq4YkErC2gG2D8aqCcwBJGaJSPBVJ0/HQAYmGLuYpQgyh0M8/Q6QHmEebHIZAUdQbbqREYyaDRjOk5EPAJigxavqTZBhPHasoYw4YMPZ/BgmlZj4NAjrtxsRFTFo2Flpj80jOWW5jPZRRYmpkUthSegkgUrXFEoyKbZArnsiZosF90EI0Zblvj0uAu3hUFGl9Nx0LUoWC6LacaHj20+94Lpmg4hRL2WshxpiD7vrfq4vwARul3r70jDJNcSHFKwS+bC5CkHvxan9hZ+C6+fC1IP75s6uXHtKqgmJw4/1rY3gzT1BVnBEQs6IOu1R9UeIHGj7qKPQxns6oePWibvJf8Owc6cV8LsMkTXXbaZFLZ8MXNHYuclByvkx7KO61zbzA1txq2K7H5o8xez+LW+G7KA6rVz8URNLmWHeTXUst+NfAJ6VYrRagpL5+UMAfetrfp39WZGZbwT8H6+qf6QKGczAf/fPWdmqas9uhtQPaDlf+AcqmT+ADq+eFWbty4ceOfw2/KDSaCQgTeSAAAAABJRU5ErkJggg==" style="width:28px;height:28px;border-radius:6px">
+          <div><div style="font-weight:700;font-size:0.88rem">Strands</div><div style="font-size:0.68rem;color:var(--text-muted)">AWS</div></div>
+        </div>
+        <div style="background:var(--bg-primary);padding:1.2rem;display:flex;align-items:center;gap:0.8rem">
+          <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAARVBMVEVHcEwDBxADBxACBhADBxADBxADBxADBxADBxADBxB/yP8AAAGCzf+F0v9pp9VWiK8fMkN1uew5W3ZKdZcXJTMOGCMsRlylUjtaAAAACnRSTlMA/ZX/y69j8+E/BwVQxAAAAjxJREFUWIWtl9uWgyAMRUVUkIA3bP//UwfEIpfQljp56Kx2zdmm9CQkTRPGOLR9xzljjNAkiPmQ865vh7EpxNC5/8y0AcX96QZEPrKyLgexLI2+Qn5EH+t5rZ5SHupr0vdBbj0/yqH6+7/iPIfxVz2l4+8H4IId/vldT6l1VHdDTzoDyD6FGgRyhKBrCGN2BKDVVEEYmjbRL0rICkKbuggmKWoIffIjwEMJUUPoGh71D9BSVBF4UkgwO8DXBJ4Y+TiCGgLLAEIgBCjCcoC8CDM4McBjt684IO7B/gxsqKfRANGrMiGmDUOQpBTgqS6AmMxjZ/VCqvWJENJagkAv1PJYg4ykmnNCBtChQm9hQkKunzOgED5zgpAgV+QUcsAeAQICqs8Bph4vwgrUE3A9AggIh5dOQkGPAS6Cs9JBKOlRgCfIzXlxU0U9DvCEIwETW1FfADiC1Fb83LbtUaiEMsASbNrbpKQJtc6lbl8CWMK+r74QpCx0e8QHPhIf4x0mrcZJ+ZgDR5UJaQZXPzAm+IaQNhQdAr4gkLSl7SoA0M+EtCeGbdn6+CMhB/iedhbCewJh2YR2XS1nU35PSG8mw3x9iROQEaLbn/BswiHWCyHAEESIUJElO2xIBG2cewGMN6eXpWXa2/t0wDgVeop6OOxz4XZpC1PecZ3F72FZkKoeynNqZjq0J4zImFcVNwdN2t0cdcnwH8P2/XH/9sJxf+X58RjYf6599xfPytWX5qtv45fvLwJdvl0a9ev/H+B1StZkRwNOAAAAAElFTkSuQmCC" style="width:28px;height:28px;border-radius:6px">
+          <div><div style="font-weight:700;font-size:0.88rem">LangGraph</div><div style="font-size:0.68rem;color:var(--text-muted)">LangChain</div></div>
+        </div>
+        <div style="background:var(--bg-primary);padding:1.2rem;display:flex;align-items:center;gap:0.8rem">
+          <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAAb1BMVEVHcEw0bJo5cJzlxkrvy0T332rv01pKQywqTmw0a5jFqDuskzb500YybJsoTXYxY4xGg7TevkLz0k87eKlAfq//6HH/2kk3cqL/4V3/1T3/5Gb/3VREg7Uxa5pJibv///788tXl6+/645uEpb/J1eALvbe1AAAAE3RSTlMAl3R1qt6VDRiwOR7Y3CxG1ljDISLXXgAAA0xJREFUWIWtV9mWqyAQDLhrRuMSjWu2+f9vvECDNKgJc86teU1VV68yp9MxohUffnRAjfOioCQBEEqLIv+DSpRTclkkJoamaeoLKVwlYnpBZEFnAnX9Q2NH/oYt+AzESaHg7GapJ3AvJGpQ6KhDFhHhAr/P57vRfKB33U/uIJAsS/17v9+fjUpfKnRMgn4XiHkFn0zgziwgA5zedcn3HLjAJBwsRgEFf3YVePMa1CJ+jeK7O2iWN2tDgxvQ/cEBtA/zO3AwOzuYJjO8pM9ODqbNCKoCzE4pnGIDBSrA/NFBFO+iqHV4nkKcSVhKcZEcrZBIYAYDzEFwBVQlllD0RW7QdgLmuTMFrldPKxQ7BwA6gOo32wJXT/Hzixl/0g20+EhgGIYgleWj+HyZJ8TirwIDFxg804D0b1yA2uQrAeAPFVigKIHGmEBpQPNXAY7bcBMCMTEbsFkg1QElMAyKfxM5xBc7AWMDcPx5prGyf+MIM14CHb/Zj4+Ql4g+3iouUKz21wrgATIESF6t9rnCmKoaHvk3+UnureEZexQCYgpQeDN/K74XrOEFfyxBwPyECfxsQArJ1/R29MR3APPhgpA8jjZIK20fFNqWC5AJLWADn8Ao9UILPqq+ZLcgQLUBWEAal2jlVqDuSf8gcKKWf5KFu2TpHsdv25LPgTkArFUHfLN8gt+nIIAXuEht/8NgNV+F73shkF+MBkS2gR2+DN/2YpTjBF3AOol85/B9H0biIEF4OIEkCnb4evZaiN/zv74v4aSK+PIbaAh8cs8hLxLLQW8AEoDF3y0+8Ht12Ck6YFhgM3uSrvjnVH2WiN7A9W4PmH/bCa8NsE4m6wYTdDWN7GX1Nb33M/1py4m6YeBgL33cPtFCxBfPY3hb0/XsSrq/C89LNx96+ajXAhDd/hn+7S6ywCz+2UD4/YUSBYo/qs0fdfb+dwHu4Gj0nQSYg83d4bMzugpkwV741+PxcnawxtebNzzY4/nl6OBszR5P/8Vf7w9HB/7O6K8CnsNDszSjQ/1ZCo9R3sCvOfh7mze82s38HyGtRk3Xy2Pt30eF8GyvrrgfbvE5otI/m2ROL//yL3SUlmGlyVVYbtf3G7IsTUuPoUxT+23+P/EP3wXjgUnlFPcAAAAASUVORK5CYII=" style="width:28px;height:28px;border-radius:6px">
+          <div><div style="font-weight:700;font-size:0.88rem">Native Agent</div><div style="font-size:0.68rem;color:var(--text-muted)">Plain Python</div></div>
+        </div>
+        <div style="background:var(--bg-primary);padding:1.2rem;display:flex;align-items:center;gap:0.8rem">
+          <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAAZlBMVEX6+fUUFBMAAAD////9/Pj29fH///3///ttbWvY19QRERDe3dkNDQy9vLnv7urp6OQ6OjmJiIZOTUxEREO0tLEyMTCtrKmlpKEqKinR0Mx2dnSPjoyBgX5UVFJjYmHDw7+Yl5QdHRzi9ahqAAABsklEQVRYhe2V25aCMAxFtYFWsSBeEe/+/09Om6RQRoQ4j7M4LzYU0pPdps5mkyZN+t9KSD2B8Pv1ElVgUON4/U0GKBVqoV2gKSjhCwMrNUep1Ec5Rmolt2A2IUFlfKgyP95ouQP8wsmeoMmXKbEDk7MBt2ydNBWpvREmgK1tEpy9b9j5B3YrxJiscUFKotDSniwId9Jc/Ou2jDASFHWR1cDQqyvmOXjfmjGKEoRtL5b0u4ww5pIa4OZfVjeAk20xljiWYGSEbjFTqb9gNM9QblLE209jAUZt6dy6N+FO24EYr0KMyaPtnM6YMT7GaiCEtOpM04ZeEePBEtsRA1z3Ea3SkaIuMkcRRkI4VxpQPRifwxQgtAAL29ruEOMZi5sP1sDYnG0W9yRirAUYaePeRJcRY7wPWGCEb2KMfDKLzxYYoVWRMjrYHl06ihFeePMcFpFOWXMZjWIMmHLQjaBqtz/M159q0Iue855GXcQN/hEjv7vpJND3NusIxjDd/QcKHYWX0TBGMkjHLn5M/Y1dREXaV28NbinU8Vd611EobnBU/2lMSe9zPIGrRONJkyZN6uoHDOIUEM1IBJkAAAAASUVORK5CYII=" style="width:28px;height:28px;border-radius:6px">
+          <div><div style="font-weight:700;font-size:0.88rem">Claude <span style="font-size:0.6rem;color:var(--accent-orange);font-weight:600;margin-left:0.3rem">SOON</span></div><div style="font-size:0.68rem;color:var(--text-muted)">Anthropic</div></div>
+        </div>
+        <div style="background:var(--bg-primary);padding:1.2rem;display:flex;align-items:center;gap:0.8rem">
+          <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAAY1BMVEX///8AAACYmJj5+fnz8/P29vaOjo4YGBjQ0NDDw8Pl5eXX19dQUFDLy8t1dXWfn5+tra0uLi47Ozu2trZfX19oaGhLS0s0NDQmJiaHh4dubm4gICBGRkbt7e0KCgoSEhJ+fn57FpRlAAACjUlEQVRYhe1WW4OyIBB1Ak0EL3kpM63+/6/8mAGR6kPdfdqHzsPGKnPmdhiMoi+++OPgaZ7L35tXJyB0v+MQN3Ao2M/tS213SoTMK4Wrqhjrc1tNu+0rgEdj19nZi4Xvs8+009gFc0fTizI55bsIdNizvXhoK5XSOh/1ugmbOUiAyoZCFVi86tQg2yY4ANAve2LQlf+qAai3zKfkCK3dDPC0ucxi0Jxi3f6KZom1bzPn+GbsOBj2EHgNM8HB+ZIjPVTE1gGs6Ir1AGfZzwT0LC4oFfxzZSSxFT0NWitRdPQJKiugSb+DexPlAGnQPqcEmUeQYkqXbMlE6QjCp0uLlvsEbDAKdrUkUUJQz5NONfIJEGVJ2dst9DBYA2HS8wlQBrGvJ95qaYbaUJnoFoLOhp7p3kFta5cADHsJlleUzWBib4N9aEx6/yegqXDA9RQUY260xx5wzD8ISoaCOuM/Q0iMzGaHZ1hN5SuBdp6dTI4iOFdae9qpc/UHAQbFTQ6BsaIniaIFp86FCPjbkPBQuBZJLJqyopXqnSA42PTO0TafpiGOYV7MDbAE+cpsjedT60phpPxCUCwz9wOT2T3r1pQCBuYTZGtDCQeyWnQr8X4c5WsRx7UDnaJM6V7spojTaaZ6OQKGvS6C9hheE9mTOHj1mAmO4mLlGEBs6Xn3OklcBLBuT2I0FdbDrLfNkrXNJHEHKgyxTB/rnWTQ04Tv4HbYvOLHN5mVnletii1zKqO3TfTLIMGBs+NmxSSgbqgQKUriMjd961ZzkFTru7rgT+/y4f3qneSDXZePmnr2L+6b97KHuHm2Z3UVNd1FjRTJ6f1L4eex3PZ9Hr0jsxSnX7h3HPqDN3j+v/jir+AfWRkZ4tp3YAUAAAAASUVORK5CYII=" style="width:28px;height:28px;border-radius:6px">
+          <div><div style="font-weight:700;font-size:0.88rem">Agents SDK <span style="font-size:0.6rem;color:var(--accent-orange);font-weight:600;margin-left:0.3rem">SOON</span></div><div style="font-size:0.68rem;color:var(--text-muted)">OpenAI</div></div>
+        </div>
+        <div style="background:var(--bg-primary);padding:1.2rem;display:flex;align-items:center;gap:0.8rem">
+          <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAAnFBMVEVHcEz7/Pz7/Pz09fX8/f39/v77+/zy8/Py8vP7+/v+/v7////v7/D6+vr09fXv8PHw8vL///9JivQ5qlfsUEP8wBDrSz49rForp01BhfXqPy/4+Pg2gfTU4f3va2CMsff4w7/96ePi8eeLypqf06z61tT0nZe/4chvvoL+7cNPsW7vZ0XV69r90mL+3I4+nZ2NtUmpxPr2oCXFvkFRVdGkAAAAEXRSTlMAfMttPu3cMRi3m0qUUl6msZyb5rsAAAMHSURBVFiF5VfbdqIwFEVBBVu13AOxVBSVaq/T//+3SUIgJxcQu9Y8zW6fTPbOPhfCwbL+HRbOZLn0vOVy4izuJru2N/MBZp7t3kFfTX0DpquR9PXMRGc+1iPozryPTjF3bvGXQ3SK5SDdHTyemxjIpnObTtEbxmoc3/cfzPwHbSMujwQlHqewUDaVpyJKcoIkKk6lsmhoTVfesbvmSRIxJAnRue7kdT2TUvPtirxl0z+KvDjCHVOVP4Grpzxq6Y0C08hPcM+kP4Cy4KdHXQgJN9EfhAf4keDTo0EUUh68ngpg7fTWQq7kcWE2APyT5EdFEZFCmvjQAshAlz9CL3as/CWtic6HWRAlKLvz8wI0z7Ew8EEhxA3SBSDXzMdHlU0w0yMo4yvnGw7U0cZgd798xPE10c/vg63VICb4Q/JXDLAAPDUFr3GjMC4AkQQYAcMVbHrWIRbVNnznAu9AYJtl2VbCi1hsmlHchJwfv0KBQEaWBWLR+YUAgSqw0gTKXoGM/ovF5m580AQGQwg0gfEhZKoDp6cKH1Ag68ANAIGF8ii0ffADBF4EmIEgA2V0jZ0Yf6E334BvRg+2390vbSd2Nzpm/DQMa5MAT8FWdGJ7t4v7hCThJyVAZ53/vG1SGIg3XXujiCy+xl8hFUjDvcrHDT3LtE6GTxPmfBKFqsD5wVZ7liw4lpxRyhVQBen7gJcAdoEYVsBroeYWSB4uZx4tfjugT+4AGgAvBjHZ4E6AmEjrQ1Ud6gtCYXhpAgAZmAs+nE26IFgmEKJkChQyBTBsSGPjHCqEKf8LQ6bCgT6z4NlsQB6vqAIkAgXAV0ct8Hb031Jmu/EQdkroAkvrWQrgJIVrpB+PDj7covKVGXFfIyTTa7mzDFOWNOQQieqCOlwqpTEnOt+yHn0F+3N1IKjO2oPxaOJb1kbd14eNmW/wYEbP+RS2PtVqwHY/nzxWN+f9+a0PsMdBE3jAfgv3qVcCe+M+3RZmCfw0/svPXXtYEsHYW9/z4ch82JvpDBPMphv7/k/X/wl/AdK1zOhq9FqQAAAAAElFTkSuQmCC" style="width:28px;height:28px;border-radius:6px">
+          <div><div style="font-weight:700;font-size:0.88rem">Agent Dev Kit <span style="font-size:0.6rem;color:var(--accent-orange);font-weight:600;margin-left:0.3rem">SOON</span></div><div style="font-size:0.68rem;color:var(--text-muted)">Google</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section style="padding:1.2rem 0;border-bottom:1px solid var(--border)">
+  <div class="container">
+    <div style="font-size:0.68rem;font-weight:600;text-transform:uppercase;letter-spacing:0.12em;color:#00d4ff;margin-bottom:0.8rem;">By the Numbers</div>
+    <div class="stats-row" id="stats-row">
+      <div class="stat expandable" id="robot-stat" onclick="toggleRobotList()">
+        <div class="stat-value">32</div>
+        <div class="stat-label">Robots supported today*</div>
+        <div class="expand-hint">&#9662; click to view full listing of robots</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">100+</div>
+        <div class="stat-label">Robots planned next release</div>
+      </div>
+    </div>
+    <div class="robot-list-panel" id="robot-list">
+      <h4>Supported Robots* (via Strands Robots + Device Connect)</h4>
+      <div class="robot-grid">
+        <div style="margin-bottom:1rem">
+          <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAAhFBMVEVHcEz/////////////////////////////////////////qwD/0h7/////1R//sgv/pwD+yxs6OkX/uhH/whb/2RogLEf/pQD/xGb/8Nj/0Yv/+ez/58TzTk6OfDj/tjP/3a3/1iD/1x/Kqiy2lzLhvCZpUkLvQFDreUHFSUvjTE3/owD8DpzSAAAAC3RSTlMAXXhrlxFJKL3kZ+3K/RIAAASzSURBVFiFzVdpd+I6DB1alrSJt9rZCATC1s7w///f05WzOIGh9H0andMFY11ruZbkX7/+bVmsSBb/T3f1Er2JVt6i19UPtedesyrLsqo8yMvzlixxdLkv4tyL3q03wIieM2NF6tU6znUciM4LYERPWEHGV8WVtHWsrINYGwMs3wHi/Rv1BR2/vkLbGillAsFfpzQgSjLisfnkOylrZVrlXmRiCeK6pmg+cGPpjyf15FYYQu/Ijb8ikH6Rx9reU2cIg3hWf0Ug+wsy8+7xnSiPcB/A6z/QhhGWECgO9/Qjsc+/0/cIFIf5rf67KCl+5juARKpYUy5uSSkEffO9Pglls7x1Yi7WRJ5H8etNMMRRIWZj/YUQFIBB/4ZHwQKFQe+nmWADXL8lOZ3MIdBPz6djGjoRT02AAao7RJ4zkuNwZlrT54/BBAcTRlFYin1owAck6yMqjxk+14MNGqkM+RiJ3UABMoABehMOtUfsASgK10q8TDywMgQIffAefHwMFhj4EFzsldgEHiTpJcvOx7qPgTzX51OW1UNYZRwXYR5mlAM9BFmayzGVQdTlQaZ1HS4o5GFg41wUIQkSmd4yKg302yAsgxiqIYlPiYvzMohiJJ6kcS8UxU1wJd/CJHg5jD/Kw+hjYjSl4RGArE9BHGR6rH8IYCjxJx9LmaYnosV5hD8BuI2BZC7VR5OYYw0WZcn4gHEMbrOQXjx7M8/BEQ0hkywwD5rEmP6Yw6nV62SgIbUp00x4MONqgJZEjsiEcTqA7JK1V1Mavp8KnYuZOFzHBe6CF9Wg/yg2Ifu9/ZNdtn/8VTZK48J0/Tq8C9RRUNBi54DgcSTdqN/b7RY/249LmrSaCp2PfqGodZeB9GmYoDWqe7zJcX1OT59bL59fKfcD6zw2t7hdUXYIb+iIEAOCkL6kikNJSXdfn5CvHTIA77gvSZQ0yLUta0uxQUfWwOZy55uHYQoZY1LQCToO2ePWAXPJjVxwIuZcDBo4hhwo7Q2Z3E5/tOXWTeo2aVzHpXlbTaTT+Npo1XQmDMS0bEDCVUNxByebcg/wKkrf1Ck2hOBPMeM+3VoE68hE5Y8DFd6Zx2uQwEkmCf1hGPJZhfowiDOg/ACCgUeXKKwLUXEMMReRqbkjbERTxUMYaK9j3/0G9haM4OawBAtNgwArWIZA8i32QQ3/wzrGL+KkchL3AWkggBz2Y4bSo/EmjnV784K7zqlgfwmX87jiwcDiG6PyMPTkuW0NCBNqc15F2gvmohDghbach1Hu2ihMio3BBEpndRdqJUpyoTE2V25SSFUH4MbriJdLGjIcFjCAbdiBycb7FoAJ7HHXnQQ6s4/BeEQynhyNms5uxgeMhy0mUqWZ3ZOxhgyIeVxX8bRpcCZ57I24HIlql+N+uRBDqvC5EISHtHl2vxbd2IyCtAEEYVhnMFAhTnhleMFzgdFp3TgLbX1FPelK0oKfOEX7RmGSYo+qujfTJu/XNQPHazykgsGfX0liQ68kzVtoIyLUC94w7Xqe79Ylv8KGqs4Qkd+52a8LEv/KWvG7kX2s2vV96SGjsbrvDpEYSTBQz8ffRLNb7bZAv879c/NtumfWrc9/+gb99+U/jr6tCetCipYAAAAASUVORK5CYII=" style="width:18px;height:18px;border-radius:4px;object-fit:cover">
+            <span style="font-size:0.72rem;font-weight:700;color:var(--text-secondary)">HuggingFace / Pollen Robotics</span>
+          </div>
+          <div class="robot-chips"><span class="robot-chip">SO-100</span><span class="robot-chip">SO-100 Follower</span></div>
+        </div>
+<div style="margin-bottom:1rem">
+          <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAA0lBMVEVHcEz8YXB8YoIuR4fwZnR5foc0S4f/wmEtR4guR4e2i4ssRocuR4eji3OCd3n/YXD/YXAuR4c93pk93pn/YXA93pk73pk83pnPW3aLUX6ZVHyriXn7iWqX0oE93pkuR4f/wmE7sNH/YXA92pz/wl//X281sdMqRoc7t8gkRIg335r7v2JYrMPvw2ijtZNGzZbXdYJgW4D/qWXawnTdXHRq1Y5IUoOZVX2d0YD/b27/i2oyeI2At5uci6V6o7PExXw4pJLcrmh4T4DHoWzBWXfrtmRFaa+eAAAAHnRSTlMA+SJL/Az85tfo/nqp9vtPk8er1Mg8ZInijrdQ2r7Tpx21AAADeklEQVRYhZWXaVejMBiFaaVY67RaZxzP0RkCNEBputJFu9hV//9fGpIQyAZ07he/eB/ue1/SQwxDq/pTzybqASrrR13/n1o1Xn7atggAoHnfuNb//GTbKgCA7s1ViGeWXgEkc9z8T3oVAMBdRRWN36JdASRVlM3BD18EAKBwDo1dCyhAqOntQaJeGEVhGMpzqCsV7Ng5sO3l8uPj4/39PFtZIJI4XRGRpSdG4jwc5qMRQuPPWs1cLL5STphh+JXWX4SHJk7kQCwHHvru1PeIfN+kHCuZCuex7uv58MvUSawOdKgg2gfBvpYSPPLXJHnOJA+p4u0vddJnMisVOriJWh4n36c4n871+ma0kWpkAUbDwHWDoel7qijI/2N0vnVe4odjl+hTB0j1x2hetE/HgDkOgCNMiwj+5tZodgoAEO0CmiD4LPL7cQJYFcwAD26qwC2MgBJA2Nb7R/sgI+y1PXrexsGAmTYCa7C0xxgDQKirka4wk36Va0QAka5GOOb9SY8agL9xaILVSSGg+dAVALpVrmMKAGFbAcCdEEC7ShwgBcyQEsCVFARqhDgDAKlGfoWFq/TXiAFA2BEjiCtkhJYUYQNzgFijtMKsRzECrpABABBqRGONH79N/ACkwgwg1Ajnfa3fFVbpxzwARPkM0CkIEPCrpBVygLzG/BSqBK7HGAoArsbRsAjAHwlaYQ7I30ZYMADNwCKkFWLAXQpgh3quW2EGYD2mFXIAEF30h0DSngLWjgogNULlEMgZaISNCiA1wlFFAHYkYhVAatQeAklJj1mFAiCaIf0hkCLgVcY6ALAupSvM9OmtkRYQtUtXmGk4zScQOohmu36V3D7uMYYaQGidF61J7xodOycEJUAYnr+SMz4eaD7UZB1BtOqcIOQAIZh91civxK6aMCHjrtrfkAHCCLwv0jMyXVYQBpMta+yCQySA0GJ2QphUELZc6RcEE8B5UeN/6lq9Uv+R/960Oqdb45WzY4JXWqTgT16dVdtoPPwSCeaupABLBNyRT8X6oykSCoucbAV7/rFafxTmKCxS9PM3IGmOlh5wVNMbPCJP4Y+r/LJdmiMpUs3AF9DVX1o4hKnU0NtW2YU5/JZEyP1NTXoeYeqLzAootfNz1IQi2Rt0xc3TMB4e5SLZEexee30mVXBHmxZQPrw0x0ONFJn6j6D43vwPY+jAzUypb+AAAAAASUVORK5CYII=" style="width:18px;height:18px;border-radius:4px;object-fit:cover">
+            <span style="font-size:0.72rem;font-weight:700;color:var(--text-secondary)">Pollen Robotics</span>
+          </div>
+          <div class="robot-chips"><span class="robot-chip">Reachy Mini</span><span class="robot-chip">Reachy Mini Lite</span></div>
+        </div>
+<div style="margin-bottom:1rem">
+          <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAAM1BMVEVHcEx4sttWoNNWoNNrq9jH3vCHut/g7PaQv+Hz+fz///////9WoNP///9PndJImtGny+dKVAzFAAAADHRSTlMAM7p9/v3k9/76YZeCz0niAAACFklEQVRYhb2X25KDIAxA1UKB3Rj4/69drELCTYHObB46HSrHEy4pLMuybgCwX6Es9Me2Lj5ex1ecAgC8/PvPb5MAWJcNvjGAbYHvDOACTBvAPxkgWovHh/8cN0AL2kllfCjpBNgaoG2AVqudh5HCloCmgRVmL0KyRB4MrCu7HxYCM0DDoNHfh8YUUDdA3eq/78Hh3qCSf/7gnQE2E2BJ3BlYJiC1bxB8Rq8n7wxEfNgI+3kf2jcRHg3YENKsWUmNTwY0BJI1vuuAqkEEOL6DZgzqAJgyYCkkg9htQI3pNHYbWJU1DhrYfBJGDUhAPu+FCqBYRp0GYfOz8uA66kEBYFNIjw0ZxP57fGjEgAaQCtqIAUuAba4BA4zlxfCt0W3A93EF8GzA1nBSd/vHIGRguv8bU0AskLIKeDSgIXBzBgRQcwasxieTMLAOaBnUpvHZgC3khNBtwBZSQuhfB0yhcsDoqgd7jTBQD5LjhskOGNGALVQqgJdBcuAJhAtARwH2R1y0pQRADlDUfjogq8AklZxZPoSQAv1i3FGx+WGEjUuZRRhEsbeD/zkXhABgwnkY4JETAuBGQeMNIRq0D5VZAckJEdAiyPyC4Am6CgAUquhudO0Cwhw44ECnQ6lccUHJCSnArx4UTkrlQzoNtt6dEzLACTmj8fJsHMx18RyPa8x/w9V3lrBel++ZOLL4Oa7v63QWb//+P2l8w3CYpBTQAAAAAElFTkSuQmCC" style="width:18px;height:18px;border-radius:4px;object-fit:cover">
+            <span style="font-size:0.72rem;font-weight:700;color:var(--text-secondary)">Universal Robots</span>
+          </div>
+          <div class="robot-chips"><span class="robot-chip">UR3</span><span class="robot-chip">UR3e</span><span class="robot-chip">UR5</span><span class="robot-chip">UR5e</span><span class="robot-chip">UR10</span><span class="robot-chip">UR10e</span><span class="robot-chip">UR16e</span><span class="robot-chip">UR20</span><span class="robot-chip">UR30</span></div>
+        </div>
+<div style="margin-bottom:1rem">
+          <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem">
+            <img src="data:image/png;base64,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cD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wLyIgeG1sbnM6ZGM9Imh0dHA6Ly9wdXJsLm9yZy9kYy9lbGVtZW50cy8xLjEvIiB4bWxuczpwaG90b3Nob3A9Imh0dHA6Ly9ucy5hZG9iZS5jb20vcGhvdG9zaG9wLzEuMC8iIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIiB4bWxuczpzdEV2dD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlRXZlbnQjIiB4bWxuczpzdFJlZj0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlUmVmIyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgMjQuMCAoTWFjaW50b3NoKSIgeG1wOkNyZWF0ZURhdGU9IjIwMjItMTEtMTVUMTk6Mzk6NTQtMDU6MDAiIHhtcDpNb2RpZnlEYXRlPSIyMDIzLTA2LTI2VDE0OjAyOjI5LTA0OjAwIiB4bXA6TWV0YWRhdGFEYXRlPSIyMDIzLTA2LTI2VDE0OjAyOjI5LTA0OjAwIiBkYzpmb3JtYXQ9ImltYWdlL2pwZWciIHBob3Rvc2hvcDpDb2xvck1vZGU9IjMiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6ZWFlNDI1NDAtMzU3YS00ZDI5LTlhYWMtZTA4MWMyMDVhYWIyIiB4bXBNTTpEb2N1bWVudElEPSJhZG9iZTpkb2NpZDpwaG90b3Nob3A6ODJlMDM2MDktMTU1YS0wZDRmLWJmN2QtMjEzYTNmNmFjMWVlIiB4bXBNTTpPcmlnaW5hbERvY3VtZW50SUQ9InhtcC5kaWQ6MjVmMzdlMzctZTE2My00NmZlLWFjM2UtZTQwZGIxNjk1ZGUzIj4gPHhtcE1NOkhpc3Rvcnk+IDxyZGY6U2VxPiA8cmRmOmxpIHN0RXZ0OmFjdGlvbj0iY3JlYXRlZCIgc3RFdnQ6aW5zdGFuY2VJRD0ieG1wLmlpZDoyNWYzN2UzNy1lMTYzLTQ2ZmUtYWMzZS1lNDBkYjE2OTVkZTMiIHN0RXZ0OndoZW49IjIwMjItMTEtMTVUMTk6Mzk6NTQtMDU6MDAiIHN0RXZ0OnNvZnR3YXJlQWdlbnQ9IkFkb2JlIFBob3Rvc2hvcCAyNC4wIChNYWNpbnRvc2gpIi8+IDxyZGY6bGkgc3RFdnQ6YWN0aW9uPSJjb252ZXJ0ZWQiIHN0RXZ0OnBhcmFtZXRlcnM9ImZyb20gaW1hZ2UvcG5nIHRvIGFwcGxpY2F0aW9uL3ZuZC5hZG9iZS5waG90b3Nob3AiLz4gPHJkZjpsaSBzdEV2dDphY3Rpb249InNhdmVkIiBzdEV2dDppbnN0YW5jZUlEPSJ4bXAuaWlkOjhlMjA5ZThiLTE0YTgtNDJhOC1hMTc2LTMyMDBkMmJlMTdlYSIgc3RFdnQ6d2hlbj0iMjAyMi0xMS0yMVQxMDoyNzowNi0wNTowMCIgc3RFdnQ6c29mdHdhcmVBZ2VudD0iQWRvYmUgUGhvdG9zaG9wIDI0LjAgKE1hY2ludG9zaCkiIHN0RXZ0OmNoYW5nZWQ9Ii8iLz4gPHJkZjpsaSBzdEV2dDphY3Rpb249InNhdmVkIiBzdEV2dDppbnN0YW5jZUlEPSJ4bXAuaWlkOjY5MDE4YjFkLWYzNzEtNGY4My04NzExLWQ2YmNkMDc5YzM3ZSIgc3RFdnQ6d2hlbj0iMjAyMy0wNi0yNlQxNDowMjoyOS0wNDowMCIgc3RFdnQ6c29mdHdhcmVBZ2VudD0iQWRvYmUgUGhvdG9zaG9wIDI0LjUgKE1hY2ludG9zaCkiIHN0RXZ0OmNoYW5nZWQ9Ii8iLz4gPHJkZjpsaSBzdEV2dDphY3Rpb249ImNvbnZlcnRlZCIgc3RFdnQ6cGFyYW1ldGVycz0iZnJvbSBhcHBsaWNhdGlvbi92bmQuYWRvYmUucGhvdG9zaG9wIHRvIGltYWdlL2pwZWciLz4gPHJkZjpsaSBzdEV2dDphY3Rpb249ImRlcml2ZWQiIHN0RXZ0OnBhcmFtZXRlcnM9ImNvbnZlcnRlZCBmcm9tIGFwcGxpY2F0aW9uL3ZuZC5hZG9iZS5waG90b3Nob3AgdG8gaW1hZ2UvanBlZyIvPiA8cmRmOmxpIHN0RXZ0OmFjdGlvbj0ic2F2ZWQiIHN0RXZ0Omluc3RhbmNlSUQ9InhtcC5paWQ6ZWFlNDI1NDAtMzU3YS00ZDI5LTlhYWMtZTA4MWMyMDVhYWIyIiBzdEV2dDp3aGVuPSIyMDIzLTA2LTI2VDE0OjAyOjI5LTA0OjAwIiBzdEV2dDpzb2Z0d2FyZUFnZW50PSJBZG9iZSBQaG90b3Nob3AgMjQuNSAoTWFjaW50b3NoKSIgc3RFdnQ6Y2hhbmdlZD0iLyIvPiA8L3JkZjpTZXE+IDwveG1wTU06SGlzdG9yeT4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6NjkwMThiMWQtZjM3MS00ZjgzLTg3MTEtZDZiY2QwNzljMzdlIiBzdFJlZjpkb2N1bWVudElEPSJhZG9iZTpkb2NpZDpwaG90b3Nob3A6MzIyYzQwMTktMTFjNC0yMzRhLWIxZjAtYTAwZmRiYTY0MzliIiBzdFJlZjpvcmlnaW5hbERvY3VtZW50SUQ9InhtcC5kaWQ6MjVmMzdlMzctZTE2My00NmZlLWFjM2UtZTQwZGIxNjk1ZGUzIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDw/eHBhY2tldCBlbmQ9InciPz7/2wBDAAYEBAUEBAYFBQUGBgYHCQ4JCQgICRINDQoOFRIWFhUSFBQXGiEcFxgfGRQUHScdHyIjJSUlFhwpLCgkKyEkJST/2wBDAQYGBgkICREJCREkGBQYJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCT/wAARCADAAMADAREAAhEBAxEB/8QAHAABAAIDAQEBAAAAAAAAAAAAAAcIAgUGAwQB/8QARRAAAQMDAQMJBAcFBQkAAAAAAQACAwQFBhEHITEIEhMi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" style="width:18px;height:18px;border-radius:4px;object-fit:cover">
+            <span style="font-size:0.72rem;font-weight:700;color:var(--text-secondary)">Boston Dynamics</span>
+          </div>
+          <div class="robot-chips"><span class="robot-chip">Spot</span><span class="robot-chip">Spot Arm</span><span class="robot-chip">Stretch</span></div>
+        </div>
+<div style="margin-bottom:1rem">
+          <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAALVBMVEVHcEwaJy0aJy0aJy0aJy0aJy0aJy0aJy0aJy0aJy0aJy0aJy0aJy0aJy0aJy1wRCz2AAAADnRSTlMAnakOH7t5Szj2X9jojgQJi/QAAAIGSURBVFiF1VdJgoQgDJRNFpX/P3dsEIGQBKZPM3WVCpWVuG1/G0rfUN9x3W7O+OCUu/4lW/gI4IVbptsDsjMOu3b7idOTLwsqDE3/wMyu5+kfsCL2OT/GneaLFX6MF8WX8KTQ9glJHxmB8y9ITyWo74q41NanBtUQULpJ9OFrGPm6P2HcQy9yQXWMpT2Wj5Ctv0DCOQtAhcJvAMlUJD/K54glDGcMGRxOBtifYlFAPjnQgQQ6AukkRu+LgeVT8JUP49Nis2R8al8yIUw5eG3IridqGFEXM8oUyzZu1aHaeIuJy0ETKGdyD+j3vpIHJgSy8pVIEnTjRZHHzCHb0W90A7uUMxNDQAcoUSSegdcDgl5HNG3AcvTbn8cA/ZKw9AUDgu3SaoB0gfYto8SAuYZ/aUoWmmb2MM+sD6UOmkoUm96P9jM7akqZNRM9dag641KV1ZlUu7FUdp25jIQ6Ud5bBKSzEmqnvY+Gy1H3sllmaAnNIcy8m0qYynz2MkpC+zBo4kzWQUjo3ldmtRIOl9CvW6SEDzw6dMEDz3Qt3qzDmkMbQD3wkE9viAZVh2yLVOcGLI/orkhkAguQxPjEZDJIKZELM6Yh/Sdca3yy5kT3+BF7akbALbRAdswWejKJj/nPEzuIJ9fPTDB/CgAByYdZu/2FFU00DrH2wwahnA3Bui9/Xf8NfgBy6H5i2btrYQAAAABJRU5ErkJggg==" style="width:18px;height:18px;border-radius:4px;object-fit:cover">
+            <span style="font-size:0.72rem;font-weight:700;color:var(--text-secondary)">Franka Robotics</span>
+          </div>
+          <div class="robot-chips"><span class="robot-chip">Franka Emika</span></div>
+        </div>
+<div style="margin-bottom:1rem">
+          <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAA51BMVEX///8AAADs59gAAAT+//1fXllnY19/d2iGn6q3qJJ6dGhqeHzDyLpPSDj8/Pzz8/NSZm65ubnOzs5gYGAWHiB3d3d/f3/p6emjo6OpqalXV1fb29siIiJKSkrHx8dra2s9PT0tLS02NjaKiooTExNQT0p6fIGGiZD7+PGOiILv7umWlpabkIYYGhxibHJ3dG+JgnXg39UYDwwACBoYIirSy8NFPjm6tKysoposNkDByNFziZBCMynIwLVCUWIdJzcRFh6ltbYzQ0uWn6e3ychyZFcvPE80LCFFTVNbTkUgGxbQ5OhMWmU6XMZ4AAACoklEQVRYhe2UXVubMBTHc2p0TjciQZpCAoRStVK1aqubdZuvm5vb9/88OyfQilpvdrMb/s9TSE9OfpyXJIy1atWqVav/qrTodsPQ/7fFHlOhAYCsaxPpLFwp5bkRDsQLd/76j8wHAHmKowx6ZOggTrupHYBd9OLPV3LuTLz+vuz7otcP3AcBIq8JWIWVvXmgnlcvaMTuFFPqMqGhwEh0DRj6vl/ux3FP+76Wvkb3MsUXK3HCE/gQzMM5oa3DG0p/hCujGnBwaI7Kcd4fHx+a2JpkxrpBbpLMPzk1E1GCmaqzIDEmSBJBwYAd9UKbRnYgHKA8BygwBVh7B05bn6q3lYRHl4k+ryyucCHEFgyidF8TYPLZwMWMakCAy/cI2ADY/PARtte/AMy+AnxTBq7SfQctDARMHlIjWJAS4HqF6j8HrDcBN2i4wXAuhwZuNQGw+5FNdAFuF2TSpYCMu+WAe/yzfowQAvho7VPHKDETYwqqr2qAFW8AMPyt7wApT9P95BEgpn56kKVpFEZRYEQNyGdvANJT+HEOU0w4S8gxofUiVxhH76mN8GYN7s8eYDKAn5r26Rr2CUa4NJnvRKg2EtYQYrUccPKL8Jui84hdOMB2WBMAOIDGzKqzcB3j+bhbDhiOCbDnOQB2YVdZyhh3pgpyvz5MK2c5wNFwKYC73o8YAi4kjo+YHmExBkVkIfCjKHI1UBjnVK81ABhsMn6A7d9ux0/uCHAd7hCADkWv6IZdulXCsDoL9BhhbKsbFeBWVaX9wxht6umMDWFhcX1YiA2l1oJJKTX98KE6Uis8gVkcavQt0Yhvr1PEBU6rF7fM88P+NPbmFs7nN8Tc4L0EOBfOOF+gFxdQfRc1phrIhuH5fOPZ9HYcZ39FaNWqVatWtf4CSK1A5/okS1UAAAAASUVORK5CYII=" style="width:18px;height:18px;border-radius:4px;object-fit:cover">
+            <span style="font-size:0.72rem;font-weight:700;color:var(--text-secondary)">Kinova</span>
+          </div>
+          <div class="robot-chips"><span class="robot-chip">Gen3</span><span class="robot-chip">Gen3 Lite</span></div>
+        </div>
+<div style="margin-bottom:1rem">
+          <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAEQElEQVR4nO2bwX2bMBTG/+2vA3gEcuTmbkBOXJMN3AkqT+BkgpAJ4g2aKyezQXLjWEZghB4kp1iWBAIJ3Ljfxf6BkB6f3pMe0ie4cnxZotFa5BmwAzJ1qQIe06Ks5rZlVgJqkSfAE3BnKbJHEtHMZNI8BNQiXwEC+AmsOrca9Zt0rrXAM1CkRdnGtu1r7AZqkW+AN6TLH1++BbZpUd6kRXkDbNU1VJkd8KaejYpoHmCI8yMKpJu3WvkVMjw2WvkKSdZ7DDuDEzD1RWqRr9XzmXZrr54PGhZBCahF/oA5zrdpUb561nWHJCLpXG6B57QoH6bY2UUQAsYYq2aETJWrTD3bM3h6k2rCJALGuKslRFrkuFBY2kmQ48lGu1UBP6ZMm6MIUC+xQ/aObpA1obGESBcN8oVsz2d4DKxD4E1ALXLB6ZQG0vDHtCj3lmdMIeJChaNn1fT4pNng9CIbBhOg2H/BI2lxhMhQWHu2Mz7stFvvyPCrhjTQS4AjfX1VDTUW40whMgbHpGkfyr4urASMZdgSIiHQ126GJGKt3XrEkVYbCVCue+A8xlw9kXEeIjHg7FlLB7TArSkJOyNA9fxvrQJXLCa4v/BioG/sMYVgC9zo5U0EbJA9CdLt7h1xbgqROdHgnn0S4Bd/w+JeT55MX4NJ579tkNsgvWTJlwdp60st8oMKwRMo27edS/r44Pc5XIt8VYv8gPSQ0IPcFGTAoRb5k++DvusBU+b0OSBMnuCCLwFnLnSByHwKf0YCvBB9SezScfUEfAtYV6V+V/SHyrHsmtOF0qHrfkPaGIRgBKRFeQsfKfFhYNk7ZKIC8H68PgS1yH8RIPtcOgSmLHA2IQwIGQLBoFaOZskyl/aAxXH1BFxkCCDju7LcSwi45nCRBKjP273tfi3y3wQi4V8NgSZURRfpAf9ngRkxtwe0OGJ7CQQnQC1bD91wWXxVKVgIqAVIX/wM1f5YhPSAQy3yxqN8wulUtlbrjRB/b+EDIQlImGb4igXWG69+FvAlIIpQaUl8RgIqn8K+BGy5bBIKX7mtFwFpUbZpUX7nVNh4CXhH7v5ue0tqMBHQdP4/meZ3JUO5Qe4aL4kWKaX5bur5zs71EaO3x60iA9XIC/NPYS6bTDvXw7bHVQV3nG+A9gkkfIVQY9EnkNhgFlDdm7ykTyITQwo3Fg39EjqTRMYpoRsqkjK5+B6Ltt+hFx6DqCLKzyCTM8lorZ6iY4xQ8sHSqFW7q+Jyh59Q0qost9QXVyipGWBz8QqL4Y4e66LBTaTNo/aMlNIvIZZOOI/ZFrey3JvwoYgtl3cNXmv+yuVfbb0X8gyCCcEOTIQalDr1ZXgOumMQ48hMwoRpacy0OwWxD00NTkzGJl5TEf3coCM1/UirHfpea+odCnMfnNR3exr1m2jXnQrvkLi0o7POD50YWPLwdHd8qFjo8PTiUOGxGP4A9yBFz5OJ/IYAAAAASUVORK5CYII=" style="width:18px;height:18px;border-radius:4px;object-fit:cover">
+            <span style="font-size:0.72rem;font-weight:700;color:var(--text-secondary)">UFACTORY</span>
+          </div>
+          <div class="robot-chips"><span class="robot-chip">xArm 6</span><span class="robot-chip">xArm 7</span></div>
+        </div>
+<div style="margin-bottom:1rem">
+          <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAFE0lEQVR4nO2bUU7jSBCGP6M9ALnAKFxgFTgAAg6AAk9+QsABRgMHmGHnAMOKAxDEk5/CaA6QRBxgEu0BNmgvEG7Q89Dl4AR3tZO4LXt3fykS2O1299/lquqqaviPI6riJSbmADgAPgBt+e3kNB0Dr8AE+AeYRAmjkGMLRoCJOQfOgMMNu5oBI+AH8D1KeN2wvwWEJMAE6roH3EUJkzI6C0KAidnGrlxIDIGvm34iW+WM5R06gfrN4hAYmph7IXwthCKgHajfPFwAf4vOWRm/lTuWOdrKvSFW0/+Vc28f2AZ2V3xfC+iZmH3gehVFuZIOMDHtKOGlQLsBb9p/DDwCo1UUl5jOY6BLvsl0YQycFhknrECAifkGXMkL7lBMkhDwDDwUHYjn3QdYk3pR8JEZcFSE8EIEmJgb4EvOrR7wGNpZyYyjDXymGBGFSPASIMql52k2BfbKdlJcEIm4x/9pzLDjenE1UK2AvMg3+RlwWdXkAUTi9vCPrQX0NTPplAARt5/SiQtjrJhVNvllFJTQpyjhNO+GJgH31HzyAFHCA36dcGJiPuU+n3dRGt8qHdZi8lkUkIRcffBOAjKa1oUpNZs8FJKEFvBt+WLeJ/AZXfRP6zb5FEKCJgUnotjnWCBAVl9j8Y+ytqEBcY2VUhcWpHtZAjTRH0cJN2sOqjKIdF4qTQ6zUjAnQGyltvrXG4+uIoif8KQ0OUv/yErAufLAsCp3t0RoC3aROkdZAs4cjcFufhoFMXeaFHRBCBA2XHvwaZTwvdTRVYdH5d4xvElAV2nY1MkjC+eKTR7AGwG/K/1oLDYBrgVsmZiDlABXEHPWALvvww/H9TEwSWOCruRF0ycP+XO4jRJrJbY8IeXnMGOqDmINUj0wAy7SyYONCmsx/Fr6/Gtggo1Uny5/0r68wL/hEwCrB/by9FmovECtECX86boXKjPUGPxPgOf+2knHOsHE9F25wy10TV9FlrcKtLG5w/chMY+n9yHYkKpFutG7MjGDrO+TfgKuEFLjJWA5Boj1en+a2M4tJcAlBbubFB/UBHmLuAMMTEwnJSAvV59C2yo3AceO660oYZISoO35XR3UHhLldm30xiCfgChCV+DgRDpqIs6VeyNY9AM0KdA6qjO0OOcjLBKgRX4+Nk0ZiuPjqh+YpuZ/ToCEvV3msIWeNKkVZLG08c6j3Muu8FfloavUdjYAn3Cv/gx4SP9ZIECSi1pe7X7DgQWHLFJePVOKu2xyN28zpEnBronrS4KIfl9pMoPF2MA7AkQKhkonF+tWZVaAAXrh1LsiStd22JcI7dWNBJFMrcJ0KIu7gFwCxERced5ZCxJMzLaJ6aNntmc4UubOgIjE0bTkIlgSbnyDDAXxUAfAiafppatW0BcRukR8ZgVfZI/d9rQrFSamiy3j8xVW32rJXZUAURhH6IcfprjTT6XDxLRF5J/Qa5kAetkkSB6K1gp3sKKWfaGzTtjEdMrOKYqEnQMf8U8c7OS1UhlgtWrxbawj5D28JNXibd6qyl+Kvienry52S160UhwKTh7CnRnqs6iYxtjt5zPw4pIOIbkjv31sDr/IamdxpSVClhGKgBt0dzTFFHhh86N1YPXU6aq1TKFSY0W//x1WOw3iwhNrVqyHIqCqrPIY696O1u2giQcnQY7t5Lm2qyJkdnhKOeKdYoYN25V6RCckAUfYkPq62hwy1iNUqV4lp8dh7si0sSZOiy9OgNeqKlN/AS6NhbW8QD3OAAAAAElFTkSuQmCC" style="width:18px;height:18px;border-radius:4px;object-fit:cover">
+            <span style="font-size:0.72rem;font-weight:700;color:var(--text-secondary)">KUKA</span>
+          </div>
+          <div class="robot-chips"><span class="robot-chip">iiwa</span></div>
+        </div>
+<div style="margin-bottom:1rem">
+          <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAFE0lEQVR4nO2bUU7jSBCGP6M9ALnAKFxgFTgAAg6AAk9+QsABRgMHmGHnAMOKAxDEk5/CaA6QRBxgEu0BNmgvEG7Q89Dl4AR3tZO4LXt3fykS2O1299/lquqqaviPI6riJSbmADgAPgBt+e3kNB0Dr8AE+AeYRAmjkGMLRoCJOQfOgMMNu5oBI+AH8D1KeN2wvwWEJMAE6roH3EUJkzI6C0KAidnGrlxIDIGvm34iW+WM5R06gfrN4hAYmph7IXwthCKgHajfPFwAf4vOWRm/lTuWOdrKvSFW0/+Vc28f2AZ2V3xfC+iZmH3gehVFuZIOMDHtKOGlQLsBb9p/DDwCo1UUl5jOY6BLvsl0YQycFhknrECAifkGXMkL7lBMkhDwDDwUHYjn3QdYk3pR8JEZcFSE8EIEmJgb4EvOrR7wGNpZyYyjDXymGBGFSPASIMql52k2BfbKdlJcEIm4x/9pzLDjenE1UK2AvMg3+RlwWdXkAUTi9vCPrQX0NTPplAARt5/SiQtjrJhVNvllFJTQpyjhNO+GJgH31HzyAFHCA36dcGJiPuU+n3dRGt8qHdZi8lkUkIRcffBOAjKa1oUpNZs8FJKEFvBt+WLeJ/AZXfRP6zb5FEKCJgUnotjnWCBAVl9j8Y+ytqEBcY2VUhcWpHtZAjTRH0cJN2sOqjKIdF4qTQ6zUjAnQGyltvrXG4+uIoif8KQ0OUv/yErAufLAsCp3t0RoC3aROkdZAs4cjcFufhoFMXeaFHRBCBA2XHvwaZTwvdTRVYdH5d4xvElAV2nY1MkjC+eKTR7AGwG/K/1oLDYBrgVsmZiDlABXEHPWALvvww/H9TEwSWOCruRF0ycP+XO4jRJrJbY8IeXnMGOqDmINUj0wAy7SyYONCmsx/Fr6/Gtggo1Uny5/0r68wL/hEwCrB/by9FmovECtECX86boXKjPUGPxPgOf+2knHOsHE9F25wy10TV9FlrcKtLG5w/chMY+n9yHYkKpFutG7MjGDrO+TfgKuEFLjJWA5Boj1en+a2M4tJcAlBbubFB/UBHmLuAMMTEwnJSAvV59C2yo3AceO660oYZISoO35XR3UHhLldm30xiCfgChCV+DgRDpqIs6VeyNY9AM0KdA6qjO0OOcjLBKgRX4+Nk0ZiuPjqh+YpuZ/ToCEvV3msIWeNKkVZLG08c6j3Muu8FfloavUdjYAn3Cv/gx4SP9ZIECSi1pe7X7DgQWHLFJePVOKu2xyN28zpEnBronrS4KIfl9pMoPF2MA7AkQKhkonF+tWZVaAAXrh1LsiStd22JcI7dWNBJFMrcJ0KIu7gFwCxERced5ZCxJMzLaJ6aNntmc4UubOgIjE0bTkIlgSbnyDDAXxUAfAiafppatW0BcRukR8ZgVfZI/d9rQrFSamiy3j8xVW32rJXZUAURhH6IcfprjTT6XDxLRF5J/Qa5kAetkkSB6K1gp3sKKWfaGzTtjEdMrOKYqEnQMf8U8c7OS1UhlgtWrxbawj5D28JNXibd6qyl+Kvienry52S160UhwKTh7CnRnqs6iYxtjt5zPw4pIOIbkjv31sDr/IamdxpSVClhGKgBt0dzTFFHhh86N1YPXU6aq1TKFSY0W//x1WOw3iwhNrVqyHIqCqrPIY696O1u2giQcnQY7t5Lm2qyJkdnhKOeKdYoYN25V6RCckAUfYkPq62hwy1iNUqV4lp8dh7si0sSZOiy9OgNeqKlN/AS6NhbW8QD3OAAAAAElFTkSuQmCC" style="width:18px;height:18px;border-radius:4px;object-fit:cover">
+            <span style="font-size:0.72rem;font-weight:700;color:var(--text-secondary)">Rethink Robotics</span>
+          </div>
+          <div class="robot-chips"><span class="robot-chip">Sawyer</span><span class="robot-chip">Baxter</span></div>
+        </div>
+<div style="margin-bottom:1rem">
+          <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAAYFBMVEX///8ADFVRXYG+ws4AClWnrLwAAE9zfJfKzdYAHFoAIV3S1d0AElcABFQAAEoAAEfu7/IkOGmbobNEUnkAF1kULWLm6OxfaoqwtcNud5RncY+hp7iNlKmAiKDd3+VWYoROOqlRAAAAvklEQVRYhe3S2xKCIBAGYE4iJB6QRAvN93/LKKeZPJHUdLffFcPyy7qKEAAAAPAvVJO0FqETok6Jpvt1g+VJnncPUOXL2IRuyBxRDUu2iwlrFHFZKP9gW8k2e6BMtvZT+qnDeOOgxbg7FPdErtebOg+Od47yy3LrygPDX3PFYpBJ4WLyCPXlbNpZ2cflERr42yAtH2Lz/gmqei0r/EXevwW/TYtbEd3/ROS9b6IaWMT3W+hGY8bDvw8AAADwuzuTagY7xCNF5AAAAABJRU5ErkJggg==" style="width:18px;height:18px;border-radius:4px;object-fit:cover">
+            <span style="font-size:0.72rem;font-weight:700;color:var(--text-secondary)">Niryo</span>
+          </div>
+          <div class="robot-chips"><span class="robot-chip">Ned2</span></div>
+        </div>
+<div style="margin-bottom:1rem">
+          <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAACg0lEQVRYhcWXwVXbQBCGvzG8Z3OKUgHqIPIhQTrFJdBBlAqwK7BcgUUFtjtIB5iTluRgUQGkA/mEfMCTAzZItoUWMGFOu/t25/+l2Zn5V1SVj7TD9UBE7E/5SQjSR3BRpqADTDC1PV78aFlPrAj4SWcF3Nn2ynhF5Hb/BPzEXQGHNb4zVGLMyWB/BPwkQuQMcGrACwjcItIjOfn1egLB1SmqQwTXGnibyJT7Ro8/31J7Al9/exwshzvj/HoiY/Jmj7SdVRNopw5Hiz7QtXQ6B00R+W5JI0O1hwnGRQKNx9HRIrICV+ZAD+M7mKDDXfMzcG5BwEFkRHB1WlxsFMZnFk7OyZsuiR8/rqTtjLtmhDJekav7grA4O6zYtXFGL4FwZ477SYgshoCD6gBlijAGOa7wVcqmegKqE0wQbq1XFSUTTPFmHq3FFOFLnftG3QbyVvle+ImLb0aIXFRmStrOEIlqfVP3B5TrdeoADykqywtsipIuMyzKe80f0Kw0PVxGVuAvsPoQFG3jAv1/Au9g+yZwu18CIp+sPSnX5K2d3e/1BMDDmz0fd2WO6gDje6WMkYbVfakPQWsxrAbXCXnTxQRRad2bOaB9GwL1lVAI8Y0L+rMAfMn9QXezzwOrCrkYgZ2OsOsFQgfkBsiAHiaIt/Y8yLZRrY4QKdWWYgjsWir0OTFPndObOQRmiMiNnYiRcWlWUkSBibFrywAZSmqtnB4ETHdTkFRIsvv4BUrHAlwn5K3u85JslyhlGVf2dTvgnZf15bIc6SLYFyX0LzS6b5PlRfNmDq08RuTH87jMQeOtuvBmAmvzkw4Q7bwfqhMgep+n2TaRECECOV7pxejNj9OPsn+YOj2zN1FmnwAAAABJRU5ErkJggg==" style="width:18px;height:18px;border-radius:4px;object-fit:cover">
+            <span style="font-size:0.72rem;font-weight:700;color:var(--text-secondary)">Dobot</span>
+          </div>
+          <div class="robot-chips"><span class="robot-chip">CR5</span><span class="robot-chip">MG400</span></div>
+        </div>
+<div style="margin-bottom:1rem">
+          <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsSAAALEgHS3X78AAACiElEQVQ4EaVTzU8TURCf2tJuS7tQtlRb6UKBIkQwkRRSEzkQgyEc6lkOKgcOph78Y+CgjXjDs2i44FXY9AMTlQRUELZapVlouy3d7kKtb0Zr0MSLTvL2zb75eL838xtTvV6H/xELBptMJojeXLCXyobnyog4YhzXYvmCFi6qVSfaeRdXdrfaU1areV5KykmX06rcvzumjY/1ggkR3Jh+bNf1mr8v1D5bLuvR3qDgFbvbBJYIrE1mCIoCrKxsHuzK+Rzvsi29+6DEbTZz9unijEYI8ObBgXOzlcrx9OAlXyDYKUCzwwrDQx1wVDGg089Dt+gR3mxmhcUnaWeoxwMbm/vzDFzmDEKMMNhquRqduT1KwXiGt0vre6iSeAUHNDE0d26NBtAXY9BACQyjFusKuL2Ry+IPb/Y9ZglwuVscdHaknUChqLF/O4jn3V5dP4mhgRJgwSYm+gV0Oi3XrvYB30yvhGa7BS70eGFHPoTJyQHhMK+F0ZesRVVznvXw5Ixv7/C10moEo6OZXbWvlFAF9FVZDOqEABUMRIkMd8GnLwVWg9/RkJF9sA4oDfYQAuzzjqzwvnaRUFxn/X2ZlmGLXAE7AL52B4xHgqAUqrC1nSNuoJkQtLkdqReszz/9aRvq90NOKdOS1nch8TpL555WDp49f3uAMXhACRjD5j4ykuCtf5PP7Fm1b0DIsl/VHGezzP1KwOiZQobFF9YyjSRYQETRENSlVzI8iK9mWlzckpSSCQHVALmN9Az1euDho9Xo8vKGd2rqooA8yBcrwHgCqYR0kMkWci08t/R+W4ljDCanWTg9TJGwGNaNk3vYZ7VUdeKsYJGFNkfSzjXNrSX20s4/h6kB81/271ghG17l+rPTAAAAAElFTkSuQmCC" style="width:18px;height:18px;border-radius:4px;object-fit:cover">
+            <span style="font-size:0.72rem;font-weight:700;color:var(--text-secondary)">AgileX</span>
+          </div>
+          <div class="robot-chips"><span class="robot-chip">Scout</span></div>
+        </div>
+<div style="margin-bottom:1rem">
+          <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAAYFBMVEX///8AAADHx8c6OjrNzc3V1dWSkpL7+/vr6+tAQEDKyspERESVlZXDw8N2dnaYmJhWVlaenp5NTU2wsLDx8fEhISF/f3+8vLwZGRkNDQ1wcHDe3t6MjIxiYmIyMjIqKirsBeEdAAABB0lEQVRYhe2WyRKCMBBEE0xkl01xAfX//1K9JdMYSA2lHNLXnh4yr5IphAgKWldxGdlSUJLQEm26mSQ6QIORllSmu6fuGRqktEQ73SMMSSuk0z3BAWDI2un20ACGbDwR5EwEwg/BBfKKi6DYNgJwFyBouQh8H0LrhyBhIrhyEeAuqFZHYC0suCPrI9C0JOciKJwIun8jkJB3I4A7gggaWrL3RFBvDkHqRHD7AYKMiyBmIthxEYymC8tyAYLIiWDgIoAG8GdjIQBA8k7yMKO9Czqw318w9JjwrTPCqpnXUzAblFaD0jtP74lvviZ5vIlujTQvxAAb97t6fGgfxYOK5qX0dDooiK8X1ZgOYtXHWBMAAAAASUVORK5CYII=" style="width:18px;height:18px;border-radius:4px;object-fit:cover">
+            <span style="font-size:0.72rem;font-weight:700;color:var(--text-secondary)">Unitree</span>
+          </div>
+          <div class="robot-chips"><span class="robot-chip">Go1</span><span class="robot-chip">Go2</span></div>
+        </div>
+<div style="margin-bottom:1rem">
+          <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAAXVBMVEVHcEwAAADs0i4AAAAAAAAAAAAAAAAAAAAAAAAAAADr0C754TH96jPy3TBJQw6iliFtZhYlIQvKvyre0S6HfhyzpySbnJ4vMDCMjpBQUVJvcHKvsbOlpqi4ury0trjUB98rAAAACnRSTlMAmP//TuB3BCi9snpJOQAAAttJREFUWIXtV8sCoyAMtNjWVkHBV9/9/89cHhFIROxhb7vTU1VinJmEUBT/sUaVxe7yS7mDy06Aw16Aaz793QTK8piNcN0PcMolcMTPKgC+es4EOKEn20ZYcIlT2JaCMDiw2oIxfP2wtZ4wODY1oOnwnS0pCYOC1e6nI2AaNqQkDE7CZF/bEGLC99JSEgZ5XfsMat7u83jGL+kdg5ACG/Sl53w3mO8pKavKvXeUctQ/WXaNW+rWC03j7XtzeD9SPDoJh8ZBp2xFXEIIfW9+QHLqm5DygpUTfSl5+IJGW+nx9p93f65TsBIqxhbptfv6IEOvb75ugaCPolI6CTtvHcOa4j6a1uB5jxh+zFRKK2Eb1mvvjGXHgRHtAvVCGhkeYymdhDbnEEGVU2cxaR/ecADDQsRjFawTwMfVEg8XLvAIRTChDAQ2lvpEf15WUc/jUoUqDkCaAGLRcGiw8OiLIBSwMQLF1+v4geI8xRJaDMEHLV0fnBTocCURPSMXHmn9Wszv2SISpCpIH+s5QNHVaRxWfax1+HG9kfKHrSSHI+mEE7hXrB+FSudInqu3oYOvBtqHtcQ8ZRBjxirqZaEaKIsqWGQIVw/ESDJUAzVSZPOoSFxBhh0x9BPqJFRoYsnOt1bgsYv7ARviAH0cuwGXhX3aSam2y1mSW61nELfk+DXmKQnAvUonZ7/hWvieVCU6ihZy5I398Q5/HQiJdqczpdr0E1FDRrq7RcmBQOcCRXBdFWnlwzHWxyw0lgG6PZK+rjWIP0jz4T0GJl1t0E7KwU01ZmvrQ9LMxhMAYJDCSSldI+/GUiJT6F1ihFuSSoh59BhiSRm2VXpMIiMaysDurjESA0ZFh8R4n6KllR4VKzxkRQW8mnCS61eDcudT+G3G0hHIoBkC4OvbAztJQUKDJNts7shApIQeTzapzLBNpUwiM2sXq2k1hfyBY//EkT/y/IVD196x74eD37+HP7RoRaKW9F11AAAAAElFTkSuQmCC" style="width:18px;height:18px;border-radius:4px;object-fit:cover">
+            <span style="font-size:0.72rem;font-weight:700;color:var(--text-secondary)">Clearpath / OSRF</span>
+          </div>
+          <div class="robot-chips"><span class="robot-chip">TurtleBot4</span></div>
+        </div>
+<div style="margin-bottom:0">
+          <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem">
+            <span style="width:18px;height:18px;border-radius:4px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-size:0.5rem;color:var(--text-muted)">S</span>
+            <span style="font-size:0.72rem;font-weight:700;color:var(--text-secondary)">Simulation</span>
+          </div>
+          <div class="robot-chips"><span class="robot-chip">Custom (MuJoCo Sim)</span></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- TRACTION -->
+<section id="traction">
+  <div class="container">
+    <div class="section-header">
+      <div class="eyebrow green">Partner Traction & Validation</div>
+      <h2>Validation Partners</h2>
+      <p>Strategic partnerships across AI frameworks, robotics, and research validate Device Connect against real hardware and production workloads.</p>
+    </div>
+    <div class="partner-grid">
+      <div class="partner-card">
+        <div class="partner-header">
+          <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAAdVBMVEUjLz7///8cKTkhLT0WJTYTIzQOIDIZJzcAFywAEyoAByQAECj19vcAGS7v8PHW2Nvm5+hTW2cIHDDf4eOipqySl51tdHxdZG6xtLkxO0gAAB56gIgpNUSBho2rrrNmbXa6vcFLU16JjpXOz9I8RlPDxckAAAMqqCy5AAACfUlEQVRYhe1V2Y7bMAwUdfuIJcvytb6P9P8/sZQTFCg29r4WhechAkhxRI7GCiE3bty48b+CCp0kkaSECKlCgEt+xKXAH4c5py7rl3KztvALF6WvcCvt/BDitV8Fz0fMNdMFA9tTOJAtiYEsIaxNIV0oiQwUX9U72bPzBnKYh7weAZ7xCrAzDABMKvD4OIOiyuvSXBAQqp2g6muGNMlTWIUsAUslrwCWBak0pcJd1AcKIYTuABJewCzdBh6Mlh6s3gEa5tR1OeP5WpZdCRA5LOKtBQZZj4J499gA7Fj34orAzfBGpGqAtgbzy0ItASpO2y0kisGd12Or8Kzq4YkErC2gG2D8aqCcwBJGaJSPBVJ0/HQAYmGLuYpQgyh0M8/Q6QHmEebHIZAUdQbbqREYyaDRjOk5EPAJigxavqTZBhPHasoYw4YMPZ/BgmlZj4NAjrtxsRFTFo2Flpj80jOWW5jPZRRYmpkUthSegkgUrXFEoyKbZArnsiZosF90EI0Zblvj0uAu3hUFGl9Nx0LUoWC6LacaHj20+94Lpmg4hRL2WshxpiD7vrfq4vwARul3r70jDJNcSHFKwS+bC5CkHvxan9hZ+C6+fC1IP75s6uXHtKqgmJw4/1rY3gzT1BVnBEQs6IOu1R9UeIHGj7qKPQxns6oePWibvJf8Owc6cV8LsMkTXXbaZFLZ8MXNHYuclByvkx7KO61zbzA1txq2K7H5o8xez+LW+G7KA6rVz8URNLmWHeTXUst+NfAJ6VYrRagpL5+UMAfetrfp39WZGZbwT8H6+qf6QKGczAf/fPWdmqas9uhtQPaDlf+AcqmT+ADq+eFWbty4ceOfw2/KDSaCQgTeSAAAAABJRU5ErkJggg==" style="width:36px;height:36px;border-radius:8px;object-fit:cover">
+          <div><span class="partner-name">AWS Strands</span><br><span class="partner-status">&#9679; Active</span></div>
+        </div>
+        <div class="partner-body">
+          <p>Device Connect launched at GTC as the device control layer inside Strands Robots. Executive alignment at VP level across Agentic AI and Manufacturing.</p>
+          <p><strong style="color:var(--text-primary)">Strategic value:</strong> Fastest path to edge developer adoption. Proves the execution layer beneath cloud-to-edge agent workflows.</p>
+        </div>
+      </div>
+      <div class="partner-card">
+        <div class="partner-header">
+          <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAAZlBMVEX6+fUUFBMAAAD////9/Pj29fH///3///ttbWvY19QRERDe3dkNDQy9vLnv7urp6OQ6OjmJiIZOTUxEREO0tLEyMTCtrKmlpKEqKinR0Mx2dnSPjoyBgX5UVFJjYmHDw7+Yl5QdHRzi9ahqAAABsklEQVRYhe2V25aCMAxFtYFWsSBeEe/+/09Om6RQRoQ4j7M4LzYU0pPdps5mkyZN+t9KSD2B8Pv1ElVgUON4/U0GKBVqoV2gKSjhCwMrNUep1Ec5Rmolt2A2IUFlfKgyP95ouQP8wsmeoMmXKbEDk7MBt2ydNBWpvREmgK1tEpy9b9j5B3YrxJiscUFKotDSniwId9Jc/Ou2jDASFHWR1cDQqyvmOXjfmjGKEoRtL5b0u4ww5pIa4OZfVjeAk20xljiWYGSEbjFTqb9gNM9QblLE209jAUZt6dy6N+FO24EYr0KMyaPtnM6YMT7GaiCEtOpM04ZeEePBEtsRA1z3Ea3SkaIuMkcRRkI4VxpQPRifwxQgtAAL29ruEOMZi5sP1sDYnG0W9yRirAUYaePeRJcRY7wPWGCEb2KMfDKLzxYYoVWRMjrYHl06ihFeePMcFpFOWXMZjWIMmHLQjaBqtz/M159q0Iue855GXcQN/hEjv7vpJND3NusIxjDd/QcKHYWX0TBGMkjHLn5M/Y1dREXaV28NbinU8Vd611EobnBU/2lMSe9zPIGrRONJkyZN6uoHDOIUEM1IBJkAAAAASUVORK5CYII=" style="width:36px;height:36px;border-radius:8px;object-fit:cover">
+          <div><span class="partner-name">Anthropic</span><br><span class="partner-status">&#9679; Active</span></div>
+        </div>
+        <div class="partner-body">
+          <p>Working internally on aligned concepts for agent-to-device interaction. Strong interest in partnering with Arm to co-define how agents securely interact with physical systems.</p>
+          <p><strong style="color:var(--text-primary)">Strategic value:</strong> Shape the next agent-to-device protocol standard. Co-design how agents securely discover and govern physical devices.</p>
+        </div>
+      </div>
+      <div class="partner-card">
+        <div class="partner-header">
+          <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAALVBMVEVHcEz56iL36CL46SL46SLp2x/v4SHy5CH25yLy5CHr3B7z5SH56iNsYg366yPgZOpEAAAADnRSTlMAfdW+7ypHkqpsFVn5D6HFyscAAAFgSURBVFiF7ZbbloMgDEXDTUCQ///cUaQOlwhR3rp6XmqbZhtCEgD46RvEUFk6IOBSswB+WtWyKAXLC0Bg0bryVRsltxeAsEazAL3rFUBEMwOrjHsFCN2VUwB+GmAmAZ88TgD4LCBQKroLCL39IwEIeewDCE01AMhZQNCzgOEihgAxCwhuFhAmAVJYI7j0+xMX2jZN3nXmLKZQlkSz0AD86gTV2LIhd+du8u3TrV33AaxaqLz/D+beVp9Dg7wBGGwQCYzAUcDNMEZXKlrD7RSzKMHVgDp5gzweVVp87XVeWwyHLFD9AQyehf/n4fDxCEBmgJE/XgwXwBOOId76+wtAOcbWTg5oZzlrAAw+nzQ1xbBBCoSopfI3qZCo/k1TbSeAeJmJKvzd+QPtJpKUN5VIxCf+eR55CunBvfjQWvoD4fytpLP4D8CTDJ6KTXXNTdJFqpQrNu55APtLX7z1p+/WH3dSSkdHSX6PAAAAAElFTkSuQmCC" style="width:36px;height:36px;border-radius:8px;object-fit:cover">
+          <div><span class="partner-name">Artly</span><br><span class="partner-status">&#9679; Active</span></div>
+        </div>
+        <div class="partner-body">
+          <p>Robotic barista deployments across 20+ locations. Biggest bottleneck: custom integration code per device pairing per site. Device Connect turns each new location into a config change, not a re-integration project.</p>
+          <p><strong style="color:var(--text-primary)">Strategic value:</strong> Production-grade validation with real customers. Proves Device Connect eliminates linear scaling costs in multi-site robotics.</p>
+        </div>
+      </div>
+      <div class="partner-card">
+        <div class="partner-header">
+          <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAAAYFBMVEWfAAD////n2dn07u7l1dX59vbHnp7Yv7/s4eG5f3/WurvOrK2lOjvUtreqUlOjKy2kNDbeysrFmprBkJCxaGmgFBefAAWvYmOsWlrw5+ezbW6pS0ygAwmnQ0SmPj+iIyawMi+mAAABCklEQVRIicWW63KDIBCFOaKIF5JYNalJ2r7/W9aITqeyWM9MOtlfupwPF1x2Ueo1dnBWZzoxx13qk9FA81a0pUbaTa6+3dAbAPnZP18AW/RKlYjKazvqq5/3CsjSBDamfx/lGNYfBNItPepfPvdwJZF4xNmGOJBNwFWYRgbKSY/z2u8iwM3rww25R4DBAyYccSJw8Hp04dCHCNgZ+BTGoENfPeszKdpGSA2D2JpHawVAz4CYBF9F4OpnPRoJEKxbgHwnUC2A2wnkC1D9rZ0sYQH97wAdEr1oelvpH0enBp18fHrTB4g+onwRoMsMX8joUskXY77c0w2Fb1l8U1R021V8Y38Yd3V4sn0DqkEJ7bnezC4AAAAASUVORK5CYII=" style="width:36px;height:36px;border-radius:8px;object-fit:cover">
+          <div><span class="partner-name">CMU Cloud Lab</span><br><span class="partner-status">&#9679; Active</span></div>
+        </div>
+        <div class="partner-body">
+          <p>600+ remotely controlled scientific instruments where safety is critical — a single bad actuation can destroy an experiment. First external contributor to the Device Connect codebase.</p>
+          <p><strong style="color:var(--text-primary)">Strategic value:</strong> Validates policy-aware orchestration for safety-critical environments. Produces open-source implementations and academic publications.</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:2.5rem;">
+      <h3 style="font-size:1.1rem;font-weight:700;margin-bottom:1.2rem">Target Industries</h3>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1.2rem;text-align:center;">
+          <svg width="36" height="36" viewBox="0 0 36 36" fill="none" style="margin-bottom:0.5rem;"><rect x="8" y="14" width="10" height="8" rx="2" stroke="#00d4ff" stroke-width="1.5" fill="none"/><circle cx="13" cy="10" r="4" stroke="#00d4ff" stroke-width="1.5" fill="none"/><path d="M20 16h6M20 18h4M20 20h6" stroke="#00d4ff" stroke-width="1" opacity="0.5"/></svg>
+          <div style="font-size:0.85rem;font-weight:600;color:var(--text-primary);">Robotics</div>
+          <div style="font-size:0.72rem;color:var(--text-muted);margin-top:0.3rem;">Industrial, service, humanoid</div>
+        </div>
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1.2rem;text-align:center;">
+          <svg width="36" height="36" viewBox="0 0 36 36" fill="none" style="margin-bottom:0.5rem;"><rect x="6" y="10" width="24" height="16" rx="3" stroke="#00cc88" stroke-width="1.5" fill="none"/><circle cx="18" cy="18" r="4" stroke="#00cc88" stroke-width="1.5" fill="none"/><circle cx="18" cy="18" r="1.5" fill="#00cc88"/></svg>
+          <div style="font-size:0.85rem;font-weight:600;color:var(--text-primary);">Smart Spaces</div>
+          <div style="font-size:0.72rem;color:var(--text-muted);margin-top:0.3rem;">Retail, hospitality, facilities</div>
+        </div>
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1.2rem;text-align:center;">
+          <svg width="36" height="36" viewBox="0 0 36 36" fill="none" style="margin-bottom:0.5rem;"><rect x="10" y="8" width="16" height="20" rx="2" stroke="#a855f7" stroke-width="1.5" fill="none"/><circle cx="18" cy="15" r="3" stroke="#a855f7" stroke-width="1.5" fill="none"/><path d="M12 22h12M14 25h8" stroke="#a855f7" stroke-width="1" opacity="0.5"/></svg>
+          <div style="font-size:0.85rem;font-weight:600;color:var(--text-primary);">Lab Automation</div>
+          <div style="font-size:0.72rem;color:var(--text-muted);margin-top:0.3rem;">Research, pharma, scientific</div>
+        </div>
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1.2rem;text-align:center;">
+          <svg width="36" height="36" viewBox="0 0 36 36" fill="none" style="margin-bottom:0.5rem;"><path d="M18 8v6l4 2M18 8a10 10 0 110 20 10 10 0 010-20z" stroke="#ffc107" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+          <div style="font-size:0.85rem;font-weight:600;color:var(--text-primary);">Automotive</div>
+          <div style="font-size:0.72rem;color:var(--text-muted);margin-top:0.3rem;">Manufacturing, fleet, autonomy</div>
+        </div>
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1.2rem;text-align:center;">
+          <svg width="36" height="36" viewBox="0 0 36 36" fill="none" style="margin-bottom:0.5rem;"><rect x="8" y="12" width="20" height="12" rx="2" stroke="#ff6b35" stroke-width="1.5" fill="none"/><path d="M12 12V10a6 6 0 0112 0v2" stroke="#ff6b35" stroke-width="1.5" fill="none"/><circle cx="18" cy="18" r="2" fill="#ff6b35"/></svg>
+          <div style="font-size:0.85rem;font-weight:600;color:var(--text-primary);">Edge & IoT</div>
+          <div style="font-size:0.72rem;color:var(--text-muted);margin-top:0.3rem;">Sensors, gateways, infrastructure</div>
+        </div>
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:1.2rem;text-align:center;">
+          <svg width="36" height="36" viewBox="0 0 36 36" fill="none" style="margin-bottom:0.5rem;"><path d="M10 26V14l8-6 8 6v12H10z" stroke="#00d4ff" stroke-width="1.5" fill="none"/><rect x="15" y="20" width="6" height="6" stroke="#00d4ff" stroke-width="1" fill="none"/></svg>
+          <div style="font-size:0.85rem;font-weight:600;color:var(--text-primary);">Enterprise</div>
+          <div style="font-size:0.72rem;color:var(--text-muted);margin-top:0.3rem;">Supply chain, logistics, ops</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SILICON -->
+<section id="silicon" style="padding:3.5rem 0">
+  <div class="container">
+    <div class="section-header">
+      <div class="eyebrow orange">Platform Strategy</div>
+      <h2>Part of Arm's Silicon Offerings</h2>
+      <p>Agent Fabric will ship as part of Arm's edge SDK for high-value solutions, giving developers cross-device orchestration out of the box on Arm silicon. Hardware-agnostic to maximize adoption, with Arm advantage through distribution and optimization.</p>
+    </div>
+    <div class="card-grid cols-2">
+      <div class="card">
+        <div class="card-label orange">Edge SDK</div>
+        <h3>Built into Arm Silicon</h3>
+        <p>Device Connect ships as part of the Edge SDK. Developers on Arm silicon get device orchestration, discovery, and secure invocation out of the box. No cross-device orchestration layer exists in the SDK today.</p>
+      </div>
+      <div class="card">
+        <div class="card-label orange">Security by Design</div>
+        <h3>Hardware-Backed Governance</h3>
+        <p>Agent-to-device policy enforcement running on-device in sub-millisecond latency. Planned capabilities include hardware-isolated governance, encrypted model weights, and measured boot for trusted agent execution.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ROADMAP -->
+<section id="roadmap">
+  <div class="container">
+    <div class="section-header">
+      <div class="eyebrow purple">Roadmap</div>
+      <h2>What's Ahead</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;">
+      <div class="card" style="border-left:3px solid #00d4ff;">
+        <div class="card-label cyan">Summer 2026</div>
+        <h3>Agent Fabric Launch</h3>
+        <p>Edge governance, hosted infrastructure, expanded framework support (Claude, OpenAI, Google ADK). Production-ready for partner deployments.</p>
+      </div>
+      <div class="card" style="border-left:3px solid #00cc88;">
+        <div class="card-label green">GTM Opportunities</div>
+        <h3>Key Events</h3>
+        <p style="line-height:2;">
+          <strong style="color:var(--text-primary);">Super AI Singapore</strong> — June 2026<br>
+          <strong style="color:var(--text-primary);">AWS re:Invent</strong> — November 2026<br>
+          <strong style="color:var(--text-primary);">Arm Partner Meeting</strong> — Annual showcase
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ASK -->
+<section id="ask" style="padding:4.5rem 0">
+  <div class="container">
+    <div class="collapsible-trigger open" onclick="toggleCollapsible(this)">
+      <div style="display:flex;align-items:center;gap:0.8rem">
+        <div class="eyebrow orange" style="margin:0">The Ask</div>
+        <h4 style="font-size:1rem;font-weight:700;color:var(--text-primary)">What we need</h4>
+      </div>
+      <span class="arrow">&#9662;</span>
+    </div>
+    <div class="collapsible-body">
+      <div class="ask-grid" style="margin-top:0;border-radius:0 0 10px 10px">
+        <div class="ask-card"><div class="ask-number">01</div><h3>Partner Introductions</h3><p>Intros to robotics companies (e.g. SoftBank Robotics) and their enterprise customers facing time-to-value challenges. The model: we bring Device Connect and the agent integration, the partner brings the use case.</p></div>
+        <div class="ask-card"><div class="ask-number">02</div><h3>Silicon Alignment</h3><p>Endorsement for Device Connect in Edge SDK for high-value solutions, and alignment for cloud compute. No cross-device orchestration exists in the SDK today. Primary mechanism for silicon pull-through. Target: 2027+.</p></div>
+        <div class="ask-card"><div class="ask-number">03</div><h3>Executive Support</h3><p>If we hit blockers with framework providers or partner engagements. . May need more formal support as we ramp in Q2-Q3.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div style="text-align:center;padding:32px 20px 28px;border-top:1px solid #1a2030;margin-top:40px;">
+  <div style="font-size:14px;color:#4a5568;"><strong style="color:#7a8299;font-weight:600;">Agent Fabric</strong> by <span style="color:#00c1de;font-weight:800;">Arm</span></div>
+</div>
+
+<script>
+// Nav scroll tracking
+const sections=document.querySelectorAll('section[id]');
+const navLinks=document.querySelectorAll('.nav-links a[data-section]');
+function updateActiveNav(){let c='';const y=window.scrollY+window.innerHeight*0.4;sections.forEach(s=>{if(y>=s.offsetTop)c=s.id});if(window.innerHeight+window.scrollY>=document.body.scrollHeight-100)c='ask';navLinks.forEach(a=>{a.classList.toggle('active',a.dataset.section===c)})}
+window.addEventListener('scroll',updateActiveNav,{passive:true});updateActiveNav();
+
+// Robot list expand
+function toggleRobotList(){const p=document.getElementById('robot-list');const s=document.getElementById('robot-stat');p.classList.toggle('open');s.querySelector('.expand-hint').textContent=p.classList.contains('open')?'\u25B4 click to collapse':'\u25BE click to view full listing of robots'}
+
+// Collapsible sections
+function toggleCollapsible(t){t.classList.toggle('open');t.nextElementSibling.classList.toggle('open')}
+
+// PRESENTATION MODE v2 — Consistent layout, progressive reveals
+let presStep=0,presSubStep=0,presActive=false;
+const PO=document.createElement('div');
+PO.id='pres-overlay';
+PO.style.cssText='display:none;position:fixed;inset:0;z-index:9000;background:#0a0a0f;overflow-y:auto;';
+document.body.appendChild(PO);
+
+const W='<div style="max-width:820px;margin:0 auto;padding:80px 40px 100px;">';
+const EYE=(color,text)=>`<div style="font-size:0.68rem;font-weight:600;text-transform:uppercase;letter-spacing:0.12em;color:${color};margin-bottom:0.6rem;">${text}</div>`;
+const H2=t=>`<h2 style="font-size:1.4rem;font-weight:800;color:#e8e8ed;margin-bottom:1rem;letter-spacing:-0.02em;">${t}</h2>`;
+const SUB=t=>`<p style="font-size:0.92rem;color:#8888a0;line-height:1.65;margin-bottom:1.2rem;">${t}</p>`;
+const VIS=show=>show?'opacity:1;transform:translateY(0);transition:all 0.4s;':'opacity:0;transform:translateY(16px);pointer-events:none;transition:all 0.4s;';
+
+function q(sel){return document.querySelector(sel);}
+function qa(sel){return document.querySelectorAll(sel);}
+function oh(sel){const e=q(sel);return e?e.outerHTML:'';}
+function ih(sel){const e=q(sel);return e?e.innerHTML:'';}
+
+const slides=[
+  // 0: Title
+  {steps:0,build:s=>{
+    const anim=q('.hero+div[style*="max-width:820px"]');
+    const animHTML=anim?anim.innerHTML:'';
+    return `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:90vh;text-align:center;padding:40px;">
+    <h1 style="font-size:3.2rem;font-weight:800;letter-spacing:-0.04em;color:#fff;margin-bottom:1rem;">Agent Fabric</h1>
+    <p style="font-size:1.15rem;color:#8888a0;max-width:620px;line-height:1.7;">AI agents can reason and plan, but they have no standard way to discover, invoke, or govern physical devices. We built that layer.</p>
+    <div style="max-width:820px;width:100%;margin:1.5rem auto 0;">${animHTML}</div>
+  </div>`;
+  }},
+
+  // 1: Problem header → then each problem + visual 1 by 1
+  {steps:3,build:s=>{
+    const cards=qa('#problem .card');
+    let h=W+EYE('#ff6b35','The Problem')+H2('Time-to-value for Physical AI is unacceptable');
+    h+=SUB('Partner conversations reveal 3 key problems impacting time to value: integration is bespoke for every device, agents have no way to discover or control physical systems, and security for agent-to-device interaction is unsolved.');
+
+    // Problem visuals (inline SVGs)
+    const visuals=[
+      // P1: Messy integration lines
+      `<svg viewBox="0 0 400 160" fill="none" style="width:100%;border-radius:8px;background:#08080d;">
+        <rect x="20" y="15" width="70" height="28" rx="5" fill="#111119" stroke="#a855f7" stroke-width="1"/><text x="55" y="33" text-anchor="middle" fill="#a855f7" font-size="8" font-family="system-ui">Agent A</text>
+        <rect x="165" y="15" width="70" height="28" rx="5" fill="#111119" stroke="#a855f7" stroke-width="1"/><text x="200" y="33" text-anchor="middle" fill="#a855f7" font-size="8" font-family="system-ui">Agent B</text>
+        <rect x="310" y="15" width="70" height="28" rx="5" fill="#111119" stroke="#a855f7" stroke-width="1"/><text x="345" y="33" text-anchor="middle" fill="#a855f7" font-size="8" font-family="system-ui">Agent C</text>
+        <line x1="40" y1="43" x2="40" y2="110" stroke="#ff4466" stroke-width="0.8" opacity="0.4"/><line x1="60" y1="43" x2="150" y2="110" stroke="#ff4466" stroke-width="0.8" opacity="0.3"/>
+        <line x1="75" y1="43" x2="260" y2="110" stroke="#ff4466" stroke-width="0.8" opacity="0.3"/><line x1="180" y1="43" x2="40" y2="110" stroke="#ff4466" stroke-width="0.8" opacity="0.3"/>
+        <line x1="200" y1="43" x2="150" y2="110" stroke="#ff4466" stroke-width="0.8" opacity="0.4"/><line x1="220" y1="43" x2="370" y2="110" stroke="#ff4466" stroke-width="0.8" opacity="0.3"/>
+        <line x1="330" y1="43" x2="150" y2="110" stroke="#ff4466" stroke-width="0.8" opacity="0.3"/><line x1="345" y1="43" x2="260" y2="110" stroke="#ff4466" stroke-width="0.8" opacity="0.4"/>
+        <line x1="360" y1="43" x2="370" y2="110" stroke="#ff4466" stroke-width="0.8" opacity="0.4"/>
+        <text x="120" y="80" fill="#ff4466" font-size="7" font-family="system-ui" opacity="0.5">ROS2</text><text x="220" y="75" fill="#ff4466" font-size="7" font-family="system-ui" opacity="0.5">MQTT</text>
+        <text x="300" y="85" fill="#ff4466" font-size="7" font-family="system-ui" opacity="0.5">gRPC</text><text x="60" y="90" fill="#ff4466" font-size="7" font-family="system-ui" opacity="0.5">REST</text>
+        <rect x="10" y="110" width="70" height="28" rx="5" fill="#111119" stroke="#00cc88" stroke-width="1"/><text x="45" y="128" text-anchor="middle" fill="#00cc88" font-size="8" font-family="system-ui">Robot</text>
+        <rect x="120" y="110" width="70" height="28" rx="5" fill="#111119" stroke="#00cc88" stroke-width="1"/><text x="155" y="128" text-anchor="middle" fill="#00cc88" font-size="8" font-family="system-ui">Camera</text>
+        <rect x="230" y="110" width="70" height="28" rx="5" fill="#111119" stroke="#00cc88" stroke-width="1"/><text x="265" y="128" text-anchor="middle" fill="#00cc88" font-size="8" font-family="system-ui">Sensor</text>
+        <rect x="340" y="110" width="50" height="28" rx="5" fill="#111119" stroke="#00cc88" stroke-width="1"/><text x="365" y="128" text-anchor="middle" fill="#00cc88" font-size="8" font-family="system-ui">Motor</text>
+        <text x="200" y="160" text-anchor="middle" fill="#ff4466" font-size="8" font-family="system-ui" opacity="0.6">N agents × M devices = N×M custom integrations</text>
+        <text x="200" y="174" text-anchor="middle" fill="#555568" font-size="7" font-family="system-ui">Cost scales linearly. Breaks when anything changes.</text>
+      </svg>`,
+
+      // P2: Gap — agents on left, devices on right, nothing in between
+      `<svg viewBox="0 0 400 160" fill="none" style="width:100%;border-radius:8px;background:#08080d;">
+        <rect x="20" y="30" width="100" height="30" rx="6" fill="#111119" stroke="#a855f7" stroke-width="1"/><text x="70" y="49" text-anchor="middle" fill="#a855f7" font-size="9" font-family="system-ui">AI Agents</text>
+        <text x="70" y="75" text-anchor="middle" fill="#555568" font-size="7" font-family="system-ui">Reason &amp; plan</text>
+        <rect x="280" y="30" width="100" height="30" rx="6" fill="#111119" stroke="#00cc88" stroke-width="1"/><text x="330" y="49" text-anchor="middle" fill="#00cc88" font-size="9" font-family="system-ui">Devices</text>
+        <text x="330" y="75" text-anchor="middle" fill="#555568" font-size="7" font-family="system-ui">Sense &amp; act</text>
+        <line x1="130" y1="45" x2="270" y2="45" stroke="#ff4466" stroke-width="1.5" stroke-dasharray="6,4" opacity="0.4"/>
+        <text x="200" y="42" text-anchor="middle" fill="#ff4466" font-size="10" font-family="system-ui" font-weight="700">?</text>
+        <rect x="140" y="95" width="120" height="45" rx="8" fill="none" stroke="#ff4466" stroke-width="1" stroke-dasharray="4,3" opacity="0.3"/>
+        <text x="200" y="114" text-anchor="middle" fill="#ff4466" font-size="8" font-family="system-ui" opacity="0.6">No standard layer</text>
+        <text x="200" y="128" text-anchor="middle" fill="#ff4466" font-size="8" font-family="system-ui" opacity="0.6">bridges the gap</text>
+        <text x="70" y="115" text-anchor="middle" fill="#555568" font-size="7" font-family="system-ui">IoT platforms =</text>
+        <text x="70" y="128" text-anchor="middle" fill="#555568" font-size="7" font-family="system-ui">telemetry only</text>
+        <text x="330" y="115" text-anchor="middle" fill="#555568" font-size="7" font-family="system-ui">Agent frameworks =</text>
+        <text x="330" y="128" text-anchor="middle" fill="#555568" font-size="7" font-family="system-ui">cloud only</text>
+      </svg>`,
+
+      // P3: Security — unprotected path with warning
+      `<svg viewBox="0 0 400 160" fill="none" style="width:100%;border-radius:8px;background:#08080d;">
+        <rect x="30" y="40" width="90" height="35" rx="6" fill="#111119" stroke="#a855f7" stroke-width="1"/><text x="75" y="62" text-anchor="middle" fill="#a855f7" font-size="9" font-family="system-ui">AI Agent</text>
+        <line x1="120" y1="57" x2="250" y2="57" stroke="#ff4466" stroke-width="1.5"/>
+        <polygon points="248,53 256,57 248,61" fill="#ff4466"/>
+        <rect x="260" y="40" width="110" height="35" rx="6" fill="#111119" stroke="#00cc88" stroke-width="1"/><text x="315" y="62" text-anchor="middle" fill="#00cc88" font-size="9" font-family="system-ui">Robot Arm</text>
+        <text x="188" y="50" text-anchor="middle" fill="#ff4466" font-size="8" font-family="system-ui">no policy check</text>
+        <circle cx="188" cy="90" r="14" fill="none" stroke="#ff4466" stroke-width="1.5"/>
+        <text x="188" y="94" text-anchor="middle" fill="#ff4466" font-size="14" font-family="system-ui" font-weight="700">!</text>
+        <text x="188" y="118" text-anchor="middle" fill="#ff4466" font-size="8" font-family="system-ui" opacity="0.7">Hallucination → actuation</text>
+        <text x="188" y="132" text-anchor="middle" fill="#ff4466" font-size="8" font-family="system-ui" opacity="0.7">Credential escalation</text>
+        <text x="188" y="146" text-anchor="middle" fill="#ff4466" font-size="8" font-family="system-ui" opacity="0.7">No audit trail</text>
+        <text x="188" y="168" text-anchor="middle" fill="#555568" font-size="7" font-family="system-ui">A robot that receives a bad command moves. It might not ask for confirmation.</text>
+      </svg>`
+    ];
+
+    if(s===0){
+      h+='<div style="text-align:center;padding:40px 0;color:#555568;font-size:0.9rem;">Three problems compound &#8594;</div>';
+    } else {
+      const i=s-1;
+      h+='<div style="margin-top:0.8rem;"><div>'+cards[i].outerHTML.replace('<div class="card"','<div class="card" style="min-height:160px;"')+'</div></div>';
+      h+='<div style="margin-top:0.6rem;">'+visuals[i]+'</div>';
+      h+='<div style="display:flex;gap:8px;justify-content:center;margin-top:1rem;">';
+      for(let j=0;j<3;j++){h+='<div style="width:8px;height:8px;border-radius:50%;background:'+(j===i?'#ff6b35':'#2a2a3a')+';"></div>';}
+      h+='</div>';
+    }
+    return h+'</div>';
+  }},
+
+  // 3: Quotes
+  {steps:0,build:s=>{
+    let h=W+'<div style="text-align:left;">'+EYE('#ff6b35','What We Hear')+'</div>';
+    h+='<div style="text-align:center;padding:40px;color:#555568;">Partner validation details available on request</div>';
+    return h+'</div>';
+  }},
+
+  // 4: Solution diagram → capabilities 1 by 1
+  {steps:3,build:s=>{
+    const caps=qa('#solution .card-grid.cols-3 .card');
+    let h=W+EYE('#00d4ff','The Solution')+H2('The missing layer between agents and physical devices');
+    h+=(oh('#solution svg[viewBox="0 0 800 200"]')||'');
+    h+='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:1.2rem;">';
+    caps.forEach((c,i)=>{h+='<div style="min-height:220px;display:flex;'+VIS(i<s)+'">'+c.outerHTML.replace('<div class="card"','<div class="card" style="flex:1;display:flex;flex-direction:column;"')+'</div>';});
+    return h+'</div></div>';
+  }},
+
+  // 5: Stats + robots
+  {steps:1,build:s=>{
+    let h=W+EYE('#00d4ff','Device Connect')+H2('By the Numbers');
+    h+=oh('#stats-row')||'';
+    if(s>=1){const rl=q('#robot-list');if(rl)h+='<div style="background:#111119;border:1px solid #1e1e2a;border-radius:0 0 12px 12px;padding:0.8rem 1.2rem;margin-top:-1px;'+VIS(true)+'">'+rl.innerHTML+'</div>';}
+    return h+'</div>';
+  }},
+
+  // 6: Shipped + Building Next
+  {steps:0,build:s=>{
+    let h=W+EYE('#00d4ff','Progress');
+    h+=(oh('#solution .card-grid.cols-2')||'');
+    const link=q('#solution a[href*="deviceconnect.dev"]');
+    if(link)h+='<div style="margin-top:1.2rem;text-align:center;">'+link.outerHTML+'</div>';
+    return h+'</div>';
+  }},
+
+  // 6: Validation partners
+  {steps:0,build:s=>{
+    let h=W+EYE('#00cc88','Validation');
+    h+=H2('Validation Partners');
+    h+=SUB('Strategic partnerships across AI frameworks, robotics, and research validate Device Connect against real hardware and production workloads.');
+    h+='<div style="transform:scale(0.92);transform-origin:top center;">'+(oh('#traction .partner-grid')||'')+'</div>';
+    return h+'</div>';
+  }},
+
+  // 7: Pipeline
+  {steps:0,build:s=>{
+    let h=W+EYE('#00cc88','Ecosystem');
+    h+=(oh('#traction .pipeline-section')||'');
+    return h+'</div>';
+  }},
+
+  // 8: Roadmap
+  {steps:0,build:s=>{
+    let h=W+EYE('#a855f7','Roadmap');
+    const rc=q('#roadmap .container');
+    if(rc){const hdr=rc.querySelector('.section-header');const tl=rc.querySelector('.timeline');
+      if(hdr){h+=hdr.querySelector('h2')?'<h2 style="font-size:1.4rem;font-weight:800;color:#e8e8ed;margin-bottom:1rem;">'+hdr.querySelector('h2').textContent+'</h2>':'';}
+      if(tl)h+='<div style="transform:scale(0.9);transform-origin:top center;">'+tl.outerHTML+'</div>';
+    }
+    return h+'</div>';
+  }},
+
+  // 9: The Ask
+  {steps:0,build:s=>{
+    let h=W+EYE('#ffc107','The Ask')+H2('What we need');
+    const grid=q('#ask .ask-grid');
+    if(grid)h+=grid.outerHTML;
+    return h+'</div>';
+  }},
+];
+
+function render(){
+  PO.innerHTML=slides[presStep].build(presSubStep);
+  PO.scrollTop=0;
+  document.getElementById('pres-counter').textContent=(presStep+1)+' / '+slides.length;
+}
+function enterPres(){
+  presActive=true;presStep=0;presSubStep=0;
+  PO.style.display='block';
+  document.querySelector('.pres-controls').style.display='flex';
+  document.querySelector('.pres-btn').style.display='none';
+  document.body.style.overflow='hidden';
+  render();
+}
+function exitPres(){
+  presActive=false;
+  PO.style.display='none';
+  document.querySelector('.pres-controls').style.display='none';
+  document.querySelector('.pres-btn').style.display='block';
+  document.body.style.overflow='';
+}
+function presNext(){
+  const mx=slides[presStep].steps||0;
+  if(presSubStep<mx){presSubStep++;render();return;}
+  if(presStep<slides.length-1){presStep++;presSubStep=0;render();}
+}
+function presPrev(){
+  if(presSubStep>0){presSubStep--;render();return;}
+  if(presStep>0){presStep--;presSubStep=slides[presStep].steps||0;render();}
+}
+document.addEventListener('keydown',e=>{
+  if(!presActive)return;
+  if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();presNext();}
+  if(e.key==='ArrowLeft'){e.preventDefault();presPrev();}
+  if(e.key==='Escape')exitPres();
+});
+</script>
+
+<div class="pres-controls">
+  <button onclick="presPrev()">&#8592;</button>
+  <span class="pres-counter" id="pres-counter">1 / 10</span>
+  <button onclick="presNext()">&#8594;</button>
+  <button class="pres-exit" onclick="exitPres()">ESC</button>
+</div>
+
+</body>
+</html>
