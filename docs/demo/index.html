@@ -557,6 +557,83 @@ body.pres-mode .pres-btn{display:none}
       </div>
     </div>
 
+    <!-- How It Works: Warehouse Example -->
+    <div class="highlight-card" style="margin-top:2rem;">
+      <div class="card-label cyan" style="margin-bottom:0.8rem">How It Works</div>
+      <h3 style="font-size:1.1rem;font-weight:700;color:var(--text-primary);margin-bottom:0.5rem;">The directory and phone system for physical devices</h3>
+      <p style="font-size:0.85rem;color:var(--text-secondary);line-height:1.65;margin-bottom:1.2rem;">Imagine a warehouse with 200 robots, 50 cameras, and 30 temperature sensors. Every device registers itself — what it is, what it can do, and where it is. An agent can ask <em>"show me all idle cameras in warehouse-A"</em> and get back a list with exactly what each camera can do. Then invoke any function on any device, securely.</p>
+
+      <svg viewBox="0 0 800 320" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;border-radius:10px;background:#08080d;border:1px solid #1e1e2a;">
+        <!-- Agent -->
+        <rect x="30" y="110" width="130" height="100" rx="10" fill="#111119" stroke="#a855f7" stroke-width="1.5"/>
+        <text x="95" y="145" text-anchor="middle" fill="#a855f7" font-size="12" font-weight="700" font-family="system-ui">AI Agent</text>
+        <text x="95" y="165" text-anchor="middle" fill="#555568" font-size="9" font-family="system-ui">"Show me all idle</text>
+        <text x="95" y="178" text-anchor="middle" fill="#555568" font-size="9" font-family="system-ui">cameras in warehouse-A"</text>
+        <text x="95" y="200" text-anchor="middle" fill="#a855f7" font-size="8" font-family="system-ui" opacity="0.6">discover_devices()</text>
+
+        <!-- Arrow: Agent → Device Connect -->
+        <line x1="160" y1="160" x2="260" y2="160" stroke="#00d4ff" stroke-width="1.5"/>
+        <polygon points="258,156 266,160 258,164" fill="#00d4ff"/>
+        <circle r="3" fill="#00d4ff" opacity="0.8"><animateMotion dur="1.5s" repeatCount="indefinite" path="M160,160 L260,160"/><animate attributeName="opacity" values="0;1;1;0" dur="1.5s" repeatCount="indefinite"/></circle>
+
+        <!-- Device Connect Hub -->
+        <rect x="270" y="60" width="260" height="200" rx="12" fill="rgba(0,212,255,0.04)" stroke="#00d4ff" stroke-width="2"/>
+        <text x="400" y="88" text-anchor="middle" fill="#00d4ff" font-size="13" font-weight="700" font-family="system-ui">Device Connect</text>
+
+        <!-- Registry inside -->
+        <rect x="295" y="100" width="210" height="40" rx="6" fill="#111119" stroke="#1e1e2a" stroke-width="1"/>
+        <text x="400" y="116" text-anchor="middle" fill="#8888a0" font-size="9" font-weight="600" font-family="system-ui">Registry — Device Directory</text>
+        <text x="400" y="132" text-anchor="middle" fill="#555568" font-size="8" font-family="system-ui">who / what / where / capabilities</text>
+
+        <!-- Security inside -->
+        <rect x="295" y="150" width="100" height="35" rx="6" fill="#111119" stroke="#1e1e2a" stroke-width="1"/>
+        <text x="345" y="168" text-anchor="middle" fill="#8888a0" font-size="8" font-weight="600" font-family="system-ui">Security</text>
+        <text x="345" y="180" text-anchor="middle" fill="#555568" font-size="7" font-family="system-ui">Device identity</text>
+
+        <!-- Messaging inside -->
+        <rect x="405" y="150" width="100" height="35" rx="6" fill="#111119" stroke="#1e1e2a" stroke-width="1"/>
+        <text x="455" y="168" text-anchor="middle" fill="#8888a0" font-size="8" font-weight="600" font-family="system-ui">Messaging</text>
+        <text x="455" y="180" text-anchor="middle" fill="#555568" font-size="7" font-family="system-ui">Pub/sub mesh</text>
+
+        <!-- Scale label -->
+        <text x="400" y="210" text-anchor="middle" fill="#555568" font-size="8" font-family="system-ui">LAN peer-to-peer → 1000s across sites</text>
+
+        <!-- Arrows: DC → Devices -->
+        <line x1="530" y1="120" x2="590" y2="80" stroke="#00d4ff" stroke-width="1" opacity="0.5"/>
+        <line x1="530" y1="160" x2="590" y2="160" stroke="#00d4ff" stroke-width="1" opacity="0.5"/>
+        <line x1="530" y1="200" x2="590" y2="240" stroke="#00d4ff" stroke-width="1" opacity="0.5"/>
+
+        <!-- Animated dots DC → devices -->
+        <circle r="2.5" fill="#00cc88" opacity="0.8"><animateMotion dur="2s" repeatCount="indefinite" path="M530,120 L590,80"/><animate attributeName="opacity" values="0;1;1;0" dur="2s" repeatCount="indefinite"/></circle>
+        <circle r="2.5" fill="#00cc88" opacity="0.8"><animateMotion dur="2.2s" repeatCount="indefinite" begin="0.5s" path="M530,160 L590,160"/><animate attributeName="opacity" values="0;1;1;0" dur="2.2s" repeatCount="indefinite" begin="0.5s"/></circle>
+        <circle r="2.5" fill="#00cc88" opacity="0.8"><animateMotion dur="1.8s" repeatCount="indefinite" begin="1s" path="M530,200 L590,240"/><animate attributeName="opacity" values="0;1;1;0" dur="1.8s" repeatCount="indefinite" begin="1s"/></circle>
+
+        <!-- Device: Cameras cluster -->
+        <rect x="595" y="50" width="180" height="55" rx="8" fill="#111119" stroke="#00cc88" stroke-width="1.5"/>
+        <text x="685" y="72" text-anchor="middle" fill="#00cc88" font-size="10" font-weight="700" font-family="system-ui">50 Cameras</text>
+        <text x="685" y="88" text-anchor="middle" fill="#555568" font-size="8" font-family="system-ui">cam-007: idle, warehouse-A, Acme</text>
+        <circle cx="615" cy="77" r="8" fill="#0a1a12" stroke="#00cc88" stroke-width="1"/>
+        <circle cx="615" cy="77" r="3" fill="#00cc88" opacity="0.5"/>
+
+        <!-- Device: Robots cluster -->
+        <rect x="595" y="130" width="180" height="55" rx="8" fill="#111119" stroke="#00cc88" stroke-width="1.5"/>
+        <text x="685" y="152" text-anchor="middle" fill="#00cc88" font-size="10" font-weight="700" font-family="system-ui">200 Robots</text>
+        <text x="685" y="168" text-anchor="middle" fill="#555568" font-size="8" font-family="system-ui">arm-042: busy, warehouse-B, UR</text>
+        <rect x="608" y="148" width="16" height="20" rx="2" fill="none" stroke="#00cc88" stroke-width="1"/>
+        <circle cx="616" cy="154" r="2" fill="#00cc88" opacity="0.5"/>
+
+        <!-- Device: Sensors cluster -->
+        <rect x="595" y="210" width="180" height="55" rx="8" fill="#111119" stroke="#00cc88" stroke-width="1.5"/>
+        <text x="685" y="232" text-anchor="middle" fill="#00cc88" font-size="10" font-weight="700" font-family="system-ui">30 Sensors</text>
+        <text x="685" y="248" text-anchor="middle" fill="#555568" font-size="8" font-family="system-ui">temp-012: 22.5°C, warehouse-A</text>
+        <circle cx="616" cy="237" r="8" fill="#0a1a12" stroke="#00cc88" stroke-width="1"/>
+        <path d="M613 237v-4M616 237v-6M619 237v-3" stroke="#00cc88" stroke-width="1" stroke-linecap="round"/>
+
+        <!-- Bottom label -->
+        <text x="400" y="300" text-anchor="middle" fill="#555568" font-size="9" font-family="system-ui">Each device gets its own cryptographic identity. Networking, discovery, and security handled automatically.</text>
+      </svg>
+    </div>
+
     <div class="highlight-card" style="margin-top:2rem">
       <div class="card-label cyan" style="margin-bottom:1rem">Framework Support</div>
       <div class="fw-grid">
