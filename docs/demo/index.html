@@ -1054,7 +1054,7 @@ const slides=[
     return h+'</div>';
   }},
 
-  // 8: Roadmap
+  // 8: Roadmap + learn more
   {steps:0,build:s=>{
     let h=W+EYE('#a855f7','Roadmap')+H2("What's Ahead");
     const cards=q('#roadmap .container');
@@ -1062,6 +1062,7 @@ const slides=[
       const grid=cards.querySelector('div[style*="display:grid"]');
       if(grid)h+=grid.outerHTML;
     }
+    h+='<a href="https://deviceconnect.dev" target="_blank" style="display:block;text-align:center;margin-top:2rem;padding:14px 20px;border-radius:10px;border:1px solid #1e1e2a;background:#111119;color:#00d4ff;font-size:0.85rem;font-weight:600;text-decoration:none;">Learn more at deviceconnect.dev &rarr;</a>';
     return h+'</div>';
   }},
 
