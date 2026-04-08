@@ -10,12 +10,18 @@
 <title>Device Connect Portal</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-html,body{height:100%;width:100%;overflow:hidden;-webkit-overflow-scrolling:touch}
+html,body{height:100%;width:100%;overflow:hidden;background:#0d0d2b;-webkit-overflow-scrolling:touch}
 iframe{position:fixed;top:0;left:0;width:100%;height:100%;border:none}
+.loading{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);color:#8888A0;font-family:system-ui,sans-serif;font-size:14px}
 </style>
 </head>
 <body>
-<iframe src="https://fabric.deviceconnect.dev" allow="clipboard-write" scrolling="yes"></iframe>
-<script>var f=document.querySelector("iframe");if(f){var s=f.src;f.src=s+(s.includes("?")?"\</body>":"?")+"_t="+Date.now();}</script>
+<div class="loading">Loading portal…</div>
+<iframe id="frame" allow="clipboard-write" scrolling="yes"></iframe>
+<script>
+// Set iframe src via JS only (never cached in HTML attribute)
+document.getElementById('frame').src = "https://fabric.deviceconnect.dev/?_t=" + Date.now();
+document.getElementById('frame').onload = function(){ document.querySelector('.loading').style.display='none'; };
+</script>
 </body>
 </html>
