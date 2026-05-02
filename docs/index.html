@@ -864,21 +864,26 @@ result = <span class="fn">invoke_device</span>(<span class="str">"sensor-001"</s
     var id = a.getAttribute('href').slice(1);
     if (id) navMap[id] = a;
   });
+  var spySections = Object.keys(navMap)
+    .map(function(id) { return document.getElementById(id); })
+    .filter(Boolean);
   function setActive(id) {
     Object.keys(navMap).forEach(function(k) {
       navMap[k].classList.toggle('active', k === id);
     });
   }
-  var spy = new IntersectionObserver(function(entries) {
-    var visible = entries
-      .filter(function(e) { return e.isIntersecting; })
-      .sort(function(a, b) { return b.intersectionRatio - a.intersectionRatio; });
-    if (visible.length) setActive(visible[0].target.id);
-  }, { rootMargin: '-40% 0px -50% 0px', threshold: [0, 0.25, 0.5, 0.75, 1] });
-  Object.keys(navMap).forEach(function(id) {
-    var sec = document.getElementById(id);
-    if (sec) spy.observe(sec);
-  });
+  function spyTick() {
+    var y = window.scrollY + 140;
+    var current = null;
+    for (var i = 0; i < spySections.length; i++) {
+      if (spySections[i].offsetTop <= y) current = spySections[i];
+    }
+    if (current) setActive(current.id);
+    else Object.keys(navMap).forEach(function(k) { navMap[k].classList.remove('active'); });
+  }
+  window.addEventListener('scroll', spyTick, { passive: true });
+  window.addEventListener('resize', spyTick, { passive: true });
+  spyTick();
 })();
 </script>
 
