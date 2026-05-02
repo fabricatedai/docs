@@ -662,7 +662,7 @@ a.pkg:hover .pkg-arrow { color: var(--arm); transform: translate(2px, -2px); }
   <div class="screen-num">03 &middot; Packages</div>
   <h2 class="h-l">Three packages.</h2>
   <p class="lede">
-    Device Connect ships as three pip packages. One runs on devices, one runs in agents, and the third (optional) runs on a server when you graduate from D2D to a managed fleet. They talk over a mesh network that supports three transport protocols.
+    Device Connect ships as three pip packages. One runs on devices, one runs in agents, and the third (optional) runs on a server when you graduate from D2D to a managed fleet. They communicate over a network with three messaging options.
   </p>
 
   <div class="pkg-row">
@@ -687,8 +687,8 @@ a.pkg:hover .pkg-arrow { color: var(--arm); transform: translate(2px, -2px); }
   </div>
 
   <div class="mesh-band">
-    <span class="mesh-eyb">Messaging mesh</span>
-    <span class="mesh-content"><b>Zenoh</b> (default, P2P LAN, zero infra)<span class="sep"></span><b>NATS</b> (cloud identity, JWT/NKey)<span class="sep"></span><b>MQTT</b> (existing IoT brokers). Pluggable transport between all three packages.</span>
+    <span class="mesh-eyb">Messaging options</span>
+    <span class="mesh-content"><b>Zenoh</b> (default, P2P LAN, zero infra)<span class="sep"></span><b>NATS</b> (cloud identity, JWT/NKey)<span class="sep"></span><b>MQTT</b> (existing IoT brokers). Pick what fits your network.</span>
   </div>
 </section>
 
