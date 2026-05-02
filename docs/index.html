@@ -177,7 +177,7 @@ main, header, footer, section, .nav { position: relative; z-index: 1; }
 .hero-cta-2.in { opacity: 1; transform: translateY(0); }
 .hero-cta-2:hover { border-color: var(--arm); background: rgba(0,193,222,0.06); }
 .hero-meta {
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+  display: grid; grid-template-columns: repeat(2, max-content); gap: 64px;
   border-top: 1px solid var(--line); padding-top: 18px; max-width: 720px;
   margin-top: 32px;
   opacity: 0; transform: translateY(20px);
@@ -532,8 +532,7 @@ a.pkg:hover .pkg-arrow { color: var(--arm); transform: translate(2px, -2px); }
     <a class="hero-cta-2" id="hcta2" href="https://github.com/arm/device-connect" target="_blank" rel="noopener">View on GitHub</a>
     <dl class="hero-meta" id="hmeta">
       <div><dt>Built by</dt><dd>Arm</dd></div>
-      <div><dt>License</dt><dd>Apache 2.0<span class="sub">Open source</span></dd></div>
-      <div><dt>Status</dt><dd>Public preview<span class="sub">Production pilots underway</span></dd></div>
+      <div><dt>License</dt><dd>Apache 2.0</dd></div>
     </dl>
   </div>
 </section>
