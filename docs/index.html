@@ -473,6 +473,57 @@ a.pkg:hover .pkg-arrow { color: var(--arm); transform: translate(2px, -2px); }
 .install-link { display: inline-flex; align-items: center; gap: 8px; margin-top: 14px; padding: 10px 14px; background: rgba(255,255,255,0.04); border: 1px solid var(--line2); border-radius: 999px; font-family: var(--fm); font-size: 11.5px; color: var(--text); letter-spacing: 0.04em; transition: border-color .2s, background .2s; }
 .install-link:hover { border-color: var(--arm); background: rgba(0,193,222,0.06); color: #fff; }
 
+/* ==== OG-STYLE LINK CARD ==== */
+.og-card {
+  display: flex; align-items: stretch;
+  background: rgba(8,8,12,0.6);
+  backdrop-filter: blur(20px) saturate(140%); -webkit-backdrop-filter: blur(20px) saturate(140%);
+  border: 1px solid var(--line); border-radius: 14px;
+  overflow: hidden; text-decoration: none; color: inherit;
+  transition: border-color .2s, transform .2s, background .2s;
+  margin-top: 18px; max-width: 720px;
+}
+.og-card:hover {
+  border-color: rgba(0,193,222,0.45);
+  transform: translateY(-2px);
+  background: rgba(12,12,16,0.7);
+}
+.og-thumb {
+  width: 152px; flex-shrink: 0;
+  background: #0a1420;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.og-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.og-body { padding: 16px 20px; flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+.og-source {
+  font-family: var(--fm); font-size: 10.5px; color: var(--text3);
+  letter-spacing: 0.14em; text-transform: uppercase; font-weight: 600;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.og-source .arm-tag {
+  background: #fff; color: #000; font-weight: 700; font-size: 10px;
+  padding: 2px 6px; border-radius: 3px; letter-spacing: 0;
+  font-family: var(--fs); text-transform: lowercase;
+}
+.og-title {
+  font-family: var(--fs); font-weight: 600; font-size: 16px;
+  color: #fff; letter-spacing: -0.012em; line-height: 1.3;
+}
+.og-desc {
+  font-size: 13px; color: var(--text2); line-height: 1.5;
+}
+.og-foot {
+  font-family: var(--fm); font-size: 11px; color: var(--arm);
+  letter-spacing: 0.06em; margin-top: 4px;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.og-card:hover .og-foot { color: #fff; }
+@media (max-width: 600px) {
+  .og-card { flex-direction: column; }
+  .og-thumb { width: 100%; height: 120px; }
+}
+
 /* ==== FOOTER ==== */
 .foot {
   padding: 56px 0 40px; border-top: 1px solid var(--line); margin-top: 0;
@@ -822,9 +873,15 @@ result = <span class="fn">invoke_device</span>(<span class="str">"sensor-001"</s
     </div>
   </div>
 
-  <div style="margin-top: 18px; display: flex; gap: 12px; flex-wrap: wrap;">
-    <a class="install-link" href="https://learn.arm.com/learning-paths/embedded-and-microcontrollers/device-connect-d2d/" target="_blank" rel="noopener">Follow the learning path &middot; learn.arm.com &rarr;</a>
-  </div>
+  <a class="og-card" href="https://learn.arm.com/learning-paths/embedded-and-microcontrollers/device-connect-d2d/" target="_blank" rel="noopener">
+    <div class="og-thumb"><img src="https://learn.arm.com/img/social-image.png" alt="" loading="lazy"></div>
+    <div class="og-body">
+      <div class="og-source"><span class="arm-tag">arm</span> Learning Paths</div>
+      <div class="og-title">Device-to-Device communication with Device Connect</div>
+      <div class="og-desc">Stand up peer-to-peer communication between two devices, with no broker or cloud service in between.</div>
+      <div class="og-foot">learn.arm.com &rarr;</div>
+    </div>
+  </a>
 
 </section>
 
